@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Calendar</string>
+    <string name="back"><![CDATA[<-]]></string>
+    <string name="forward"><![CDATA[->]]></string>
+    <string name="capital_calendar_title">Ημερολόγιο</string>
+    <string name="synday_gr">ΚΥΡ</string>
+    <string name="monday_gr">ΔΕΥ</string>
+    <string name="tuesday_gr">ΤΡΙ</string>
+    <string name="wednesday_gr">ΤΕΤ</string>
+    <string name="thursday_gr">ΠΕΜ</string>
+    <string name="friday_gr">ΠΑΡ</string>
+    <string name="saturday_gr">ΣΑΒ</string>
+    <string name="capital_b_o_s">CAPITAL B.O.S</string>
+    <string name="calendar_event">Πρόγραμμα Συμβάντων</string>
+    <string name="calendar_view">Προβολή Ημερολογίου</string>
+    <string name="days_view">Μέρες</string>
+    <string name="week_view">Εβδομάδα</string>
+    <string name="month_view">Μήνας</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_edit_delete_event_popupmsg">Προσθήκη/Επεξεργασία/Διαγραφή συμβάντων</string>
+    <string name="month_cell_example">ΔΕΚ</string>
+    <string name="example_month_hour_cell">ΔΕΚ</string>
+    <string name="example_hour_hour_cell">10:00</string>
+</resources>

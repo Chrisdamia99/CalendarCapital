@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="100dp">
+
+    <TextView
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:id="@+id/dateTV"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:text="@string/example_month_hour_cell"/>
+    <TextView
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:id="@+id/timeTV"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:text="@string/example_hour_hour_cell"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/lightgray"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/event1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@color/blue"
+            android:gravity="center"
+            android:lines="2"
+            android:text="Event 1"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_toRightOf="@id/event1"
+            android:background="@color/blue"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:id="@+id/event2"
+            android:textSize="18sp"
+            android:lines="2"
+            android:textColor="@color/white"
+            android:text="Event 2"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@color/blue"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_toRightOf="@id/event2"
+            android:id="@+id/event3"
+            android:textSize="18sp"
+            android:lines="2"
+            android:textColor="@color/white"
+            android:text="Event 3"/>
+
+        <TextView
+            android:id="@+id/comment1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/event1"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@color/blue"
+            android:gravity="center"
+            android:lines="2"
+            android:text="Comment 1"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/comment2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_below="@id/event2"
+            android:layout_toRightOf="@id/comment1"
+            android:background="@color/blue"
+            android:gravity="center"
+            android:lines="2"
+            android:text="Comment 2"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/coment3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@color/blue"
+            android:gravity="center"
+            android:lines="2"
+            android:layout_below="@id/event3"
+            android:layout_toRightOf="@id/comment2"
+            android:text="Comment 3"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+
+    </RelativeLayout>
+
+
+
+
+</LinearLayout>

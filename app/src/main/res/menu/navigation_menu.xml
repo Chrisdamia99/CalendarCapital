@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+<!--    <item-->
+<!--        android:id="@+id/menuProfile"-->
+<!--        android:icon="@drawable/capital_icon"-->
+<!--        android:title="@string/capital_b_o_s"/>-->
+
+    <item
+        android:id="@+id/menuSchedule"
+        android:icon="@drawable/schedule"
+        android:title="@string/calendar_event"/>
+
+    <item android:title="@string/calendar_view">
+
+        <menu>
+
+            <item
+                android:id="@+id/daysView"
+                android:title="@string/days_view"/>
+
+
+            <!--To be asked
+             <item-->
+
+<!--                android:id="threeDaysView"-->
+<!--                android:title="3 Days"/>-->
+
+            <item
+                android:id="@+id/weekView"
+                android:title="@string/week_view"/>
+
+            <item
+                android:id="@+id/monthView"
+                android:title="@string/month_view"/>
+
+
+
+
+        </menu>
+
+
+    </item>
+
+    <group
+        android:id="@+id/refSyncGroup"
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/refreshItem"
+            android:title="Ανανέωση"
+            android:icon="@drawable/refresh"/>
+
+        <item
+            android:id="@+id/syncItem"
+            android:title="Συγχρονισμός"
+            android:icon="@drawable/sync"/>
+
+
+    </group>
+
+</menu>

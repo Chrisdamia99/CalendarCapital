@@ -194,12 +194,15 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
         {
             while (cursor.moveToNext())
             {
-                if (CalendarUtils.stringToLocalDate(cursor.getString(3)).equals(CalendarUtils.DailyViewFormattedDate(CalendarUtils.selectedDate))
-                        && LocalTime.parse(cursor.getString(4)).equals(CalendarUtils.formattedShortTime(event.getTime()))) {
-                    textView.setText(cursor.getString(2)  );
-                }
-                else{
-                    Toast.makeText(context, "Error parsing localDate", Toast.LENGTH_SHORT).show();
+                try {
+                    if (CalendarUtils.stringToLocalDate(cursor.getString(3)).equals(CalendarUtils.stringToLocalDate(CalendarUtils.selectedDate.toString()))
+                            && LocalTime.parse(cursor.getString(4)).equals(CalendarUtils.formattedTime(event.getTime()))) {
+                        textView.setText(cursor.getString(2));
+                    } else {
+                        Toast.makeText(context, "Error parsing localDate", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }

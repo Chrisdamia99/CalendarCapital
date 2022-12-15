@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.provider.CalendarContract;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -12,8 +14,6 @@ import java.util.ArrayList;
 public class Event {
 
 
-    Context context;
-    MyDatabaseHelper myDB;
 
     public static ArrayList<Event> eventsList = new ArrayList<>();
 
@@ -56,8 +56,11 @@ public class Event {
 
     }
 
-
-
+    @NonNull
+    @Override
+    public String toString() {
+        return name + "\n" + comment + "\n" + date + "\n" + CalendarUtils.formattedShortTime(time);
+    }
 
     public String getComment() {
         return comment;

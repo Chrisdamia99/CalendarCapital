@@ -65,6 +65,23 @@
         android:textAlignment="center"
         android:textColor="@color/black"/>
 
+    <TextView
+        android:id="@+id/changeTimeTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:text="Change time"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:textColor="@color/black"/>
+
+
+
+
+
+
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

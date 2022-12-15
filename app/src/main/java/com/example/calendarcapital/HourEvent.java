@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import java.time.LocalTime;
 import java.util.ArrayList;
 
@@ -34,5 +36,11 @@ public class HourEvent {
 
     public void setEvents(ArrayList<Event> events) {
         this.events = events;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return  events.toString();
     }
 }

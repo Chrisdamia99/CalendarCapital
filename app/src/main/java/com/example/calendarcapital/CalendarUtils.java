@@ -13,6 +13,7 @@ public class CalendarUtils {
 
 
     public static LocalDate selectedDate;
+    public static LocalTime selectedTime;
 
 
 

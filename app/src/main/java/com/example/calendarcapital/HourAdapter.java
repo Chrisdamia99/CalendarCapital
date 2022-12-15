@@ -74,15 +74,10 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
                              HourEvent event = new HourEvent(LocalTime.parse(cursor.getString(4)),eventArrayDB);
                              event.setEvents(eventArrayDB);
                              event.setTime(LocalTime.parse(cursor.getString(4)));
+                             //Καλείτε η setHour και δίνω στην λίστα τις τιμές της ώρες από την βάση δεδομένων και το αντίστοιχο event
+                             setHour(convertView,time);
 
-//                             LocalDate dateDB = CalendarUtils.stringToLocalDate(cursor.getString(3));
-//                             LocalTime timeDB = LocalTime.parse(cursor.getString(4));
-//                             String titleDB = cursor.getString(1);
-//                             String commentDB = cursor.getString(2);
-//                             Event eventDB = new Event(titleDB,commentDB,dateDB,timeDB);
-//                             ArrayList<Event> eventarrayDB = new ArrayList<>();
-//                             eventarrayDB.add(eventDB);
-//                             HourEvent hourEventDB = new HourEvent(timeDB,eventarrayDB);
+
 
                          }
                      }
@@ -95,9 +90,8 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
 
 
 
-    private LocalTime setHour(View convertView, LocalTime time) {
+    private void setHour(View convertView, LocalTime time) {
 
-        LocalTime timeOfEvent;
 
         TextView timeTv = convertView.findViewById(R.id.timeTV);
         TextView dayofmonthTV = convertView.findViewById(R.id.dateTV);
@@ -106,7 +100,6 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
         timeTv.setText(CalendarUtils.formattedShortTime(time));
         dayofmonthTV.setText(CalendarUtils.DailyViewFormattedDate(CalendarUtils.selectedDate));
 
-        return  timeOfEvent = LocalTime.parse(CalendarUtils.formattedShortTime(time));
     }
     private void setEvents(View convertView, ArrayList<Event> events) {
         TextView event1 = convertView.findViewById(R.id.event1);

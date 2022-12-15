@@ -2,6 +2,7 @@ package com.example.calendarcapital;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -10,18 +11,23 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 public class EventEdit extends AppCompatActivity {
 
     private EditText eventNameET, eventCommentET;
-    private TextView eventDateTV, eventTimeTV;
-
+    private TextView eventDateTV, eventTimeTV,changeTimeTV;
+    int hour,min;
     private LocalDate date;
-    private LocalTime time;
+    private static LocalTime time;
 
 
 
@@ -31,9 +37,12 @@ public class EventEdit extends AppCompatActivity {
         setContentView(R.layout.activity_event_edit);
         initWidgets();
         time = LocalTime.now();
-        eventDateTV.setText("Date: " + CalendarUtils.formattedDate(CalendarUtils.selectedDate));
         eventTimeTV.setText("Time: " + CalendarUtils.formattedTime(time));
         date = CalendarUtils.selectedDate;
+        eventDateTV.setText("Date: " + CalendarUtils.formattedDate(date));
+
+
+
 
 
     }
@@ -44,7 +53,27 @@ public class EventEdit extends AppCompatActivity {
     eventCommentET = findViewById(R.id.eventCommentET);
     eventDateTV = findViewById(R.id.eventDateET);
     eventTimeTV = findViewById(R.id.eventTimeET);
+    changeTimeTV= findViewById(R.id.changeTimeTV);
 
+
+    }
+
+    void showTime(int hours, int minute)
+    {
+
+        TimePickerDialog timePickerDialog;
+        timePickerDialog = new TimePickerDialog(EventEdit.this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+               eventTimeTV.setText( selectedHour + ":" + selectedMinute);
+                hour=selectedHour;
+                min=selectedMinute;
+//                time = LocalTime.parse(selectedHour + ":" + selectedMinute);
+
+            }
+        }, hours, minute, false);//Yes 24 hour time
+        timePickerDialog.setTitle("Select Time");
+        timePickerDialog.show();
 
     }
 
@@ -62,6 +91,7 @@ public class EventEdit extends AppCompatActivity {
 
         finish();
     }
+
 
 
 }

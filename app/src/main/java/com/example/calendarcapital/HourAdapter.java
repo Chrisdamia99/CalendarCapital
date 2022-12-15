@@ -39,48 +39,74 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.hour_cell, parent, false);
 
 
-        setHour(convertView,event.time);
+        compareAndGetValuesFromDB(convertView,event.time);
+
         setEvents(convertView, event.events);
 
         return convertView;
     }
 
 
-
-//    void storeDataInArrays()
-//    {
-//        Cursor cursor = myDB.readAllData();
-//        if (cursor.getCount() == 0)
-//        {
-//            try {
-//                Toast.makeText(context, "No data to show", Toast.LENGTH_SHORT).show();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }else
-//        {
-//            while (cursor.moveToNext())
-//            {
-//
-//            }
-//        }
-//    }
+            private void compareAndGetValuesFromDB(View convertView, LocalTime time)
+             { Cursor cursor = myDB.readAllData();
 
 
+                 if (cursor.getCount() == 0)
+                 {
+                     try{
+
+                             setHour(convertView,time);
+
+                         Toast.makeText(context, "No data to present.", Toast.LENGTH_SHORT).show();
+                     } catch (Exception e) {
+                         e.printStackTrace();
+                     }
+                 }else
+                 {
+                     while (cursor.moveToNext())
+                     {
+                         if (LocalTime.parse(cursor.getString(4)).equals(time))
+                         {
+                             Event eventDB = new Event(cursor.getString(1),cursor.getString(2),
+                                     CalendarUtils.stringToLocalDate(cursor.getString(3)),LocalTime.parse(cursor.getString(4)));
+                             ArrayList<Event> eventArrayDB = new ArrayList<>();
+                             eventArrayDB.add(eventDB);
+                             HourEvent event = new HourEvent(LocalTime.parse(cursor.getString(4)),eventArrayDB);
+                             event.setEvents(eventArrayDB);
+                             event.setTime(LocalTime.parse(cursor.getString(4)));
+
+//                             LocalDate dateDB = CalendarUtils.stringToLocalDate(cursor.getString(3));
+//                             LocalTime timeDB = LocalTime.parse(cursor.getString(4));
+//                             String titleDB = cursor.getString(1);
+//                             String commentDB = cursor.getString(2);
+//                             Event eventDB = new Event(titleDB,commentDB,dateDB,timeDB);
+//                             ArrayList<Event> eventarrayDB = new ArrayList<>();
+//                             eventarrayDB.add(eventDB);
+//                             HourEvent hourEventDB = new HourEvent(timeDB,eventarrayDB);
+
+                         }
+                     }
+                 }
 
 
-    private void setHour(View convertView, LocalTime time) {
+
+                }
 
 
+
+
+    private LocalTime setHour(View convertView, LocalTime time) {
+
+        LocalTime timeOfEvent;
 
         TextView timeTv = convertView.findViewById(R.id.timeTV);
         TextView dayofmonthTV = convertView.findViewById(R.id.dateTV);
 
 
         timeTv.setText(CalendarUtils.formattedShortTime(time));
-
-
         dayofmonthTV.setText(CalendarUtils.DailyViewFormattedDate(CalendarUtils.selectedDate));
+
+        return  timeOfEvent = LocalTime.parse(CalendarUtils.formattedShortTime(time));
     }
     private void setEvents(View convertView, ArrayList<Event> events) {
         TextView event1 = convertView.findViewById(R.id.event1);
@@ -152,61 +178,14 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
 
     private void setEvent(TextView textView, Event event) {
 
-        Cursor cursor = myDB.readAllData();
-        if (cursor.getCount()==0)
-        {
-            try {
-                Toast.makeText(context, "No data to show", Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }else
-        {
-            while (cursor.moveToNext())
-            {
-                try {
-                    if (CalendarUtils.stringToLocalDate(cursor.getString(3)).equals(CalendarUtils.stringToLocalDate(CalendarUtils.selectedDate.toString()))
-                            && LocalTime.parse(cursor.getString(4)).equals(CalendarUtils.formattedTime(event.getTime()))) {
-                        textView.setText(cursor.getString(1));
-                    } else {
-                        Toast.makeText(context, "Error parsing localDate", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-//        textView.setText(event.getName());
+        textView.setText(event.getName());
         textView.setVisibility(View.VISIBLE);
 
     }
 
     private void setComment(TextView textView, Event event){
-        Cursor cursor = myDB.readAllData();
-        if (cursor.getCount()==0)
-        {
-            try {
-                Toast.makeText(context, "No data to show", Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }else
-        {
-            while (cursor.moveToNext())
-            {
-                try {
-                    if (CalendarUtils.stringToLocalDate(cursor.getString(3)).equals(CalendarUtils.stringToLocalDate(CalendarUtils.selectedDate.toString()))
-                            && LocalTime.parse(cursor.getString(4)).equals(CalendarUtils.formattedTime(event.getTime()))) {
-                        textView.setText(cursor.getString(2));
-                    } else {
-                        Toast.makeText(context, "Error parsing localDate", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-//        textView.setText(event.getComment());
+
+        textView.setText(event.getComment());
         textView.setVisibility(View.VISIBLE);
 
     }

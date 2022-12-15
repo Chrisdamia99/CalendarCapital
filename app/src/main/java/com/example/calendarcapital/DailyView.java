@@ -37,7 +37,7 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
     private TextView dayOfWeekTV;
     private ListView hourListView;
     private FloatingActionButton floatAddBtnDailyView;
-    MyDatabaseHelper myDB;
+    MyDatabaseHelper myDB = new MyDatabaseHelper(this);
     ArrayList<String> event_id, event_title, event_comment, event_date, event_time;
     static String dayOfWeek;
 
@@ -128,11 +128,54 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
           dayOfWeek = selectedDate.getDayOfWeek().getDisplayName(TextStyle.FULL, locale);
         dayOfWeekTV.setText(dayOfWeek);
         setHourAdapter();
+//        compareArrayDatabaseAndLocal();
     }
 
     public void setHourAdapter() {
-        HourAdapter hourAdapter = new HourAdapter(getApplicationContext(), hourEventList());
+        HourAdapter hourAdapter = new HourAdapter(getApplicationContext(), hourEventListFromDatabase());
         hourListView.setAdapter(hourAdapter);
+    }
+
+    private void compareArrayDatabaseAndLocal()
+    {
+        if(!hourEventListFromDatabase().equals(hourEventList()))
+        {
+            HourAdapter hourAdapterDB = new HourAdapter(getApplicationContext(), hourEventList());
+            hourListView.setAdapter(hourAdapterDB);
+        }else
+        {
+
+        }
+    }
+
+    @NonNull
+    private ArrayList<HourEvent> hourEventListFromDatabase()
+    {
+        ArrayList<HourEvent> eventsDB = new ArrayList<>();
+        Cursor cursor = myDB.readAllData();
+       if (cursor.getCount() == 0)
+       {
+           Toast.makeText(this, "Error read data failed", Toast.LENGTH_SHORT).show();
+           hourEventList();
+       }else
+       {
+           while (cursor.moveToNext())
+           {
+               LocalDate dateDB = CalendarUtils.stringToLocalDate(cursor.getString(3));
+               LocalTime timeDB = LocalTime.parse(cursor.getString(4));
+               String titleDB = cursor.getString(1);
+               String commentDB = cursor.getString(2);
+               Event eventDB = new Event(titleDB,commentDB,dateDB,timeDB);
+               ArrayList<Event> eventarrayDB = new ArrayList<>();
+                eventarrayDB.add(eventDB);
+               HourEvent hourEventDB = new HourEvent(timeDB,eventarrayDB);
+
+
+               eventsDB.add(hourEventDB);
+
+           }
+       }
+       return  eventsDB;
     }
 
 

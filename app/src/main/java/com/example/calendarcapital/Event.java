@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class Event {
 
@@ -29,6 +31,7 @@ public class Event {
         }
         return events;
     }
+
 
     public static ArrayList<Event> eventsForDateAndTime(LocalDate date, LocalTime time)
     {
@@ -61,6 +64,10 @@ public class Event {
     public String toString() {
         return name + "\n" + comment + "\n" + date + "\n" + CalendarUtils.formattedShortTime(time);
     }
+
+
+
+
 
     public String getComment() {
         return comment;

@@ -12,11 +12,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -46,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     private RecyclerView calendarRecyclerView;
     private FloatingActionButton floatAddBtnMonthAdd;
     private ListView monthListView;
+    private  MyDatabaseHelper myDB = new MyDatabaseHelper(this);
+
 
 
     @Override
@@ -84,6 +88,33 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        monthListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object listItem = monthListView.getItemAtPosition(position).toString();
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage(listItem.toString()).setPositiveButton("Edit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                        startActivity(getIntent());
+
+                    }
+                });
+                builder.show();
+            }
+        });
+    }
 
     private void initWidgets()
     {
@@ -106,10 +137,18 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     }
 
 
+
     private void setMonthAdapter() {
-        MonthAdapter monthAdapter = new MonthAdapter(getApplicationContext(), monthEventList());
-        monthListView.setAdapter(monthAdapter);
+        HourAdapter hourAdapter = new HourAdapter(getApplicationContext(), DailyView.hourEventListFromDatabase(getApplicationContext(),myDB));
+
+//        MonthAdapter monthAdapter = new MonthAdapter(getApplicationContext(), DailyView.hourEventListFromDatabase(getApplicationContext(),myDB));
+        monthListView.setAdapter(hourAdapter);
     }
+
+//    private void setMonthAdapter() {
+//        MonthAdapter monthAdapter = new MonthAdapter(getApplicationContext(), monthEventList());
+//        monthListView.setAdapter(monthAdapter);
+//    }
 
     private ArrayList<MonthEvent> monthEventList() {
         ArrayList<MonthEvent> list = new ArrayList<>();

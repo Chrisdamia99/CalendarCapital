@@ -9,10 +9,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.Observable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,23 +28,25 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
+import java.io.Console;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-public class DailyView extends AppCompatActivity implements CalendarAdapter.OnItemListener, NavigationView.OnNavigationItemSelectedListener{
+public class DailyView extends AppCompatActivity implements CalendarAdapter.OnItemListener, NavigationView.OnNavigationItemSelectedListener {
 
     private TextView monthDayText;
     private TextView dayOfWeekTV;
     private ListView hourListView;
     private FloatingActionButton floatAddBtnDailyView;
-    MyDatabaseHelper myDB = new MyDatabaseHelper(this);
-    static String dayOfWeek,eventResumt;
+    private MyDatabaseHelper myDB = new MyDatabaseHelper(this);
+    static String dayOfWeek, eventResumt;
     private static LocalTime time;
-
 
 
     @Override
@@ -55,9 +60,6 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
 
 
         setNavigationViewListener();
-
-
-
 
 
         findViewById(R.id.imageMenu).setOnClickListener(new View.OnClickListener() {
@@ -76,8 +78,6 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
         });
 
 
-
-
         NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setItemIconTintList(null);
     }
@@ -90,19 +90,17 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
     }
 
 
-
     @Override
     protected void onResume() {
         super.onResume();
         setDayView();
 
 
-
         //onItemClick για να δειχνει την ωρα την ημερομηνια και τα comment!
         hourListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Object listItem = hourListView.getItemAtPosition(position).toString();
+                Object listItem = hourListView.getItemAtPosition(position).toString();
 
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(DailyView.this);
@@ -130,55 +128,59 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
 
         Locale locale = new Locale("el", "GR");
         monthDayText.setText(CalendarUtils.monthDayFromDate(selectedDate));
-          dayOfWeek = selectedDate.getDayOfWeek().getDisplayName(TextStyle.FULL, locale);
+        dayOfWeek = selectedDate.getDayOfWeek().getDisplayName(TextStyle.FULL, locale);
         dayOfWeekTV.setText(dayOfWeek);
         setHourAdapter();
     }
 
     public void setHourAdapter() {
-        HourAdapter hourAdapter = new HourAdapter(getApplicationContext(), hourEventListFromDatabase());
+        HourAdapter hourAdapter = new HourAdapter(getApplicationContext(), hourEventListFromDatabase(getApplicationContext(), myDB));
         hourListView.setAdapter(hourAdapter);
     }
 
 
-
     @NonNull
-    private ArrayList<HourEvent> hourEventListFromDatabase()
-    {
+    public static ArrayList<HourEvent> hourEventListFromDatabase(Context context, MyDatabaseHelper myDB) {
         ArrayList<HourEvent> eventsDB = new ArrayList<>();
         Cursor cursor = myDB.readAllData();
 
 
-            if (cursor.getCount() == 0) {
-                Toast.makeText(this, "Error read data failed", Toast.LENGTH_SHORT).show();
-                hourEventList();
-            } else {
-                while (cursor.moveToNext()) {
-                    LocalDate dateDB = CalendarUtils.stringToLocalDate(cursor.getString(3));
-                    LocalTime timeDB = LocalTime.parse(cursor.getString(4));
-                    String titleDB = cursor.getString(1);
-                    String commentDB = cursor.getString(2);
-                    Event eventDB = new Event(titleDB, commentDB, dateDB, timeDB);
-                    ArrayList<Event> eventarrayDB = Event.eventsForDateAndTime(selectedDate, timeDB);
-                    eventarrayDB.add(eventDB);
-                    HourEvent hourEventDB = new HourEvent(timeDB, eventarrayDB);
-                    eventsDB.add(hourEventDB);
+        if (cursor.getCount() == 0) {
+            Toast.makeText(context, "Error read data failed", Toast.LENGTH_SHORT).show();
+            hourEventList();
+        } else {
+            while (cursor.moveToNext()) {
+                LocalDate dateDB = CalendarUtils.stringToLocalDate(cursor.getString(3));
+                LocalTime timeDB = LocalTime.parse(cursor.getString(4));
+                String titleDB = cursor.getString(1);
+                String commentDB = cursor.getString(2);
+                Event eventDB = new Event(titleDB, commentDB, dateDB, timeDB);
+                ArrayList<Event> eventarrayDB = Event.eventsForDateAndTime(selectedDate, timeDB);
 
-                }
+                eventarrayDB.add(eventDB);
+
+
+                HourEvent hourEventDB = new HourEvent(timeDB, eventarrayDB);
+
+                eventsDB.add(hourEventDB);
+
             }
+        }
 
 
-       return  eventsDB;
+            Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
+
+
+
+        return eventsDB;
     }
 
 
-
-    private ArrayList<HourEvent> hourEventList() {
+    public static ArrayList<HourEvent> hourEventList() {
 
         ArrayList<HourEvent> list = new ArrayList<>();
 
-        for (int hour = 0; hour < 24; hour++)
-        {
+        for (int hour = 0; hour < 24; hour++) {
             LocalTime time = LocalTime.of(hour, 0);
             ArrayList<Event> events = Event.eventsForDateAndTime(selectedDate, time);
             HourEvent hourEvent = new HourEvent(time, events);
@@ -200,9 +202,7 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
     }
 
 
-
-    public void EventAlertDialog()
-    {
+    public void EventAlertDialog() {
 
 
         LayoutInflater layoutInflater = LayoutInflater.from(this);
@@ -241,16 +241,14 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
     }
 
 
-
-    public void newEventAction()
-    {
+    public void newEventAction() {
         startActivity(new Intent(this, EventEdit.class));
     }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.menuSchedule:
                 break;
             case R.id.daysView:
@@ -278,8 +276,6 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
         }
 
 
-
-
         return true;
     }
 
@@ -288,12 +284,11 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-        @Override
-        public void onItemClick(int position, LocalDate date) {
+    @Override
+    public void onItemClick(int position, LocalDate date) {
 
 
-
-        }
+    }
 
 }
 

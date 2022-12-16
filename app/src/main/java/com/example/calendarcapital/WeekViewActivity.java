@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -21,6 +22,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -38,7 +40,8 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView2;
     private ListView eventListView;
-    ArrayList<String> event_id, event_title, event_comments, event_date,event_time;
+    private  MyDatabaseHelper myDB = new MyDatabaseHelper(this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -65,11 +68,6 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
             }
         });
 
-        event_id = new ArrayList<>();
-       event_title = new ArrayList<>();
-        event_comments = new ArrayList<>();
-        event_date = new ArrayList<>();
-        event_time= new ArrayList<>();
 
 //        storeDataInArrays(event_id,event_time,event_date,monthDayFromDate(selectedDate),monthYearFromDate(selectedDate),myDB);
         //String event, String time,String date, String month, String year, SQLiteDatabase database
@@ -98,7 +96,7 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 7);
         calendarRecyclerView2.setLayoutManager(layoutManager);
         calendarRecyclerView2.setAdapter(calendarAdapter);
-//        setEventAdpater(myDB);
+        setEventListView();
     }
 
 
@@ -125,7 +123,29 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
     protected void onResume()
     {
         super.onResume();
-//        setEventAdpater(myDB);
+        eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object listItem = eventListView.getItemAtPosition(position).toString();
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(WeekViewActivity.this);
+                builder.setMessage(listItem.toString()).setPositiveButton("Edit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                        startActivity(getIntent());
+
+                    }
+                });
+                builder.show();
+            }
+        });
     }
 
 //    private void setEventAdpater(DBOpenHelper dbOpenHelper)
@@ -135,6 +155,12 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
 //        EventAdapter eventAdapter = new EventAdapter(getApplicationContext(), dailyEvents);
 //        eventListView.setAdapter(eventAdapter);
 //    }
+
+    private void setEventListView()
+    {
+        HourAdapter hourAdapter = new HourAdapter(getApplicationContext(), DailyView.hourEventListFromDatabase(getApplicationContext(),myDB));
+        eventListView.setAdapter(hourAdapter);
+    }
 
     public void EventAlertDialog()
     {

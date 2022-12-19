@@ -80,7 +80,10 @@ public class EventEdit extends AppCompatActivity {
     public void saveEventAction(View view) {
         MyDatabaseHelper myDB = new MyDatabaseHelper(EventEdit.this);
 
+        for (int i=0; i<Event.eventsList.size(); i++)
+        {
 
+        }
 
         String eventName = eventNameET.getText().toString();
         String eventComment = eventCommentET.getText().toString();

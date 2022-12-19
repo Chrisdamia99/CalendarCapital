@@ -34,6 +34,7 @@ import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -139,9 +140,13 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
 
     private void setMonthAdapter() {
-        HourAdapter hourAdapter = new HourAdapter(getApplicationContext(), DailyView.hourEventListFromDatabase(getApplicationContext(),myDB));
+        HourAdapter hourAdapter = new HourAdapter(getApplicationContext(), AllEventsList.hourEventListFromDatabase(getApplicationContext(),myDB));
 
-//        MonthAdapter monthAdapter = new MonthAdapter(getApplicationContext(), DailyView.hourEventListFromDatabase(getApplicationContext(),myDB));
+            hourAdapter.sort((o1, o2) -> o1.events.get(0).getDate().compareTo(o2.events.get(0).getDate()));
+        hourAdapter.sort((o1, o2) -> o1.events.get(0).getTime().compareTo(o2.events.get(0).getTime()));
+
+
+
         monthListView.setAdapter(hourAdapter);
     }
 
@@ -150,19 +155,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 //        monthListView.setAdapter(monthAdapter);
 //    }
 
-    private ArrayList<MonthEvent> monthEventList() {
-        ArrayList<MonthEvent> list = new ArrayList<>();
 
-        for (int month = 0; month < 42; month++)
-        {
-            LocalDate date = LocalDate.of(selectedDate.getYear(),selectedDate.getMonth(),selectedDate.getDayOfMonth());
-            ArrayList<Event> events = Event.eventsForDate(date);
-            MonthEvent monthEvent = new MonthEvent(date,events);
-            list.add(monthEvent);
-        }
-        return list;
-
-    }
 
     public void previousMonthAction(View view)
     {
@@ -206,6 +199,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
             public void onClick(View v) {
                 newEventAction();
                 ad.hide();
+                startActivity(getIntent());
             }
         });
 
@@ -244,6 +238,8 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         switch (item.getItemId())
         {
             case R.id.menuSchedule:
+                Intent i4  = new Intent(MainActivity.this, MenuScheduleAllEvents.class);
+                startActivity(i4);
                 break;
             case R.id.daysView:
                 Intent i = new Intent(MainActivity.this, DailyView.class);

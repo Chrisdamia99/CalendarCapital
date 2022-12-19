@@ -47,9 +47,18 @@ public class Event {
         return events;
     }
 
+    private String id;
     private String name,comment;
     private LocalDate date;
     private LocalTime time;
+
+    public Event(String id,String name,String comment, LocalDate date, LocalTime time) {
+        this.comment = comment;
+        this.name = name;
+        this.date = date;
+        this.time = time;
+
+    }
 
     public Event(String name,String comment, LocalDate date, LocalTime time) {
         this.comment = comment;
@@ -99,5 +108,13 @@ public class Event {
 
     public void setTime(LocalTime time) {
         this.time = time;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

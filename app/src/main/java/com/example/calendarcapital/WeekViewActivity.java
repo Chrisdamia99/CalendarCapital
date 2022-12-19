@@ -40,12 +40,11 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView2;
     private ListView eventListView;
-    private  MyDatabaseHelper myDB = new MyDatabaseHelper(this);
+    private MyDatabaseHelper myDB = new MyDatabaseHelper(this);
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_week_view);
         final DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
@@ -69,26 +68,20 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         });
 
 
-//        storeDataInArrays(event_id,event_time,event_date,monthDayFromDate(selectedDate),monthYearFromDate(selectedDate),myDB);
-        //String event, String time,String date, String month, String year, SQLiteDatabase database
-
         NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setItemIconTintList(null);
 
 
-
     }
 
-    private void initWidgets()
-    {
+    private void initWidgets() {
         calendarRecyclerView2 = findViewById(R.id.calendarRecyclerView2);
         monthYearText = findViewById(R.id.monthYearTV);
         eventListView = findViewById(R.id.eventListView);
         floatBtnEvent = findViewById(R.id.floatAddBtn);
     }
 
-    private void setWeekView()
-    {
+    private void setWeekView() {
         monthYearText.setText(monthYearFromDate(CalendarUtils.selectedDate));
         ArrayList<LocalDate> days = daysInWeekArray(CalendarUtils.selectedDate);
 
@@ -100,28 +93,24 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
     }
 
 
-    public void previousWeekAction(View view)
-    {
+    public void previousWeekAction(View view) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusWeeks(1);
         setWeekView();
     }
 
-    public void nextWeekAction(View view)
-    {
+    public void nextWeekAction(View view) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusWeeks(1);
         setWeekView();
     }
 
     @Override
-    public void onItemClick(int position, LocalDate date)
-    {
+    public void onItemClick(int position, LocalDate date) {
         CalendarUtils.selectedDate = date;
         setWeekView();
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
         eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -148,22 +137,17 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         });
     }
 
-//    private void setEventAdpater(DBOpenHelper dbOpenHelper)
-//    {
-//        ArrayList<Event> dailyEvents = Event.eventsForDate(CalendarUtils.selectedDate);
-//        Cursor data = myDB.ReadEvents(selectedDate.toString(), dbOpenHelper.getReadableDatabase());
-//        EventAdapter eventAdapter = new EventAdapter(getApplicationContext(), dailyEvents);
-//        eventListView.setAdapter(eventAdapter);
-//    }
 
-    private void setEventListView()
-    {
-        HourAdapter hourAdapter = new HourAdapter(getApplicationContext(), DailyView.hourEventListFromDatabase(getApplicationContext(),myDB));
+    private void setEventListView() {
+        HourAdapter hourAdapter = new HourAdapter(getApplicationContext(), AllEventsList.hourEventListFromDatabase(getApplicationContext(), myDB));
+
+
+        hourAdapter.sort((o1, o2) -> o1.events.get(0).getDate().compareTo(o2.events.get(0).getDate()));
+        hourAdapter.sort((o1, o2) -> o1.events.get(0).getTime().compareTo(o2.events.get(0).getTime()));
         eventListView.setAdapter(hourAdapter);
     }
 
-    public void EventAlertDialog()
-    {
+    public void EventAlertDialog() {
 
 
         LayoutInflater layoutInflater = LayoutInflater.from(this);
@@ -180,12 +164,15 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
             public void onClick(View v) {
                 newEventAction();
                 ad.hide();
-                    }
+
+                startActivity(getIntent());
+            }
         });
 
         rb2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 finish();
             }
         });
@@ -199,32 +186,22 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
 
         ad.setView(customView);
         ad.show();
-        ad.getWindow().setLayout(1000,800);
+        ad.getWindow().setLayout(1000, 800);
 
     }
 
-    public void newEventAction()
-    {
+    public void newEventAction() {
         startActivity(new Intent(this, EventEdit.class));
     }
 
-//    void storeDataInArrays(String event, String time,String date, String month, String year, SQLiteDatabase database){
-//
-//        myDB = new DBOpenHelper(context);
-//         database = myDB.getWritableDatabase();
-//        myDB.SaveEvent(event,time,date,month,year, database);
-//        myDB.close();
-//        Toast.makeText(context, "Event successfully saved.", Toast.LENGTH_SHORT).show();
-//
-//
-//    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.menuSchedule:
+                Intent i4 = new Intent(WeekViewActivity.this, MenuScheduleAllEvents.class);
+                startActivity(i4);
                 break;
             case R.id.daysView:
                 Intent i = new Intent(WeekViewActivity.this, DailyView.class);
@@ -250,8 +227,6 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
             default:
                 onNavigationItemSelected(item);
         }
-
-
 
 
         return true;

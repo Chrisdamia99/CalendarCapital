@@ -14,10 +14,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -39,25 +42,20 @@ import java.util.List;
 import java.util.Locale;
 
 
-
 //Implements calendaradapter onitemlistener
-public class MainActivity extends AppCompatActivity implements CalendarAdapter.OnItemListener, NavigationView.OnNavigationItemSelectedListener
-{
+public class MainActivity extends AppCompatActivity implements CalendarAdapter.OnItemListener, NavigationView.OnNavigationItemSelectedListener {
     //Declare 3 variables textview(monthyeartext), the RecyclerView(calendarrecycleview)
     //and a LocalDate which is selectedDate
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView;
     private FloatingActionButton floatAddBtnMonthAdd;
     private ListView monthListView;
-    private  MyDatabaseHelper myDB = new MyDatabaseHelper(this);
-
+    private MyDatabaseHelper myDB = new MyDatabaseHelper(this);
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
 
         setContentView(R.layout.activity_main);
@@ -65,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         CalendarUtils.selectedDate = LocalDate.now();
         setMonthView();
         setNavigationViewListener();
-         final DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
+        final DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
 
         floatAddBtnMonthAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         });
 
 
-
         NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setItemIconTintList(null);
 
@@ -97,11 +94,13 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Object listItem = monthListView.getItemAtPosition(position).toString();
 
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setMessage(listItem.toString()).setPositiveButton("Edit", new DialogInterface.OnClickListener() {
+                builder.setMessage(listItem.toString()).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+//                        myDB.deleteOneRow(Event.eventsList.get(position).getId());
+//                        finish();
+//                        startActivity(getIntent());
 
                     }
                 }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
@@ -117,37 +116,36 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         });
     }
 
-    private void initWidgets()
-    {
+    private void initWidgets() {
         calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
         monthYearText = findViewById(R.id.monthYearTV);
-       floatAddBtnMonthAdd = (FloatingActionButton) findViewById(R.id.floatAddBtnMonthView);
-       monthListView = findViewById(R.id.monthListView);
+        floatAddBtnMonthAdd = (FloatingActionButton) findViewById(R.id.floatAddBtnMonthView);
+        monthListView = findViewById(R.id.monthListView);
     }
 
-    private void setMonthView()
-    {
+    private void setMonthView() {
         monthYearText.setText(monthYearFromDate(CalendarUtils.selectedDate));
         ArrayList<LocalDate> daysInMonth = daysInMonthArray();
 
-        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, this);
+
+        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, this, getApplicationContext());
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 7);
         calendarRecyclerView.setLayoutManager(layoutManager);
         calendarRecyclerView.setAdapter(calendarAdapter);
+
         setMonthAdapter();
     }
 
 
-
     private void setMonthAdapter() {
-        HourAdapter hourAdapter = new HourAdapter(getApplicationContext(), AllEventsList.hourEventListFromDatabase(getApplicationContext(),myDB));
+        HourAdapter hourAdapter = new HourAdapter(getApplicationContext(), AllEventsList.hourEventListFromDatabase(getApplicationContext(), myDB));
 
-            hourAdapter.sort((o1, o2) -> o1.events.get(0).getDate().compareTo(o2.events.get(0).getDate()));
+        hourAdapter.sort((o1, o2) -> o1.events.get(0).getDate().compareTo(o2.events.get(0).getDate()));
         hourAdapter.sort((o1, o2) -> o1.events.get(0).getTime().compareTo(o2.events.get(0).getTime()));
 
-
-
         monthListView.setAdapter(hourAdapter);
+
+
     }
 
 //    private void setMonthAdapter() {
@@ -156,32 +154,48 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 //    }
 
 
-
-    public void previousMonthAction(View view)
-    {
+    public void previousMonthAction(View view) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusMonths(1);
         setMonthView();
     }
 
-    public void nextMonthAction(View view)
-    {
+    public void nextMonthAction(View view) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusMonths(1);
         setMonthView();
     }
 
+    boolean isDoubleClicked = false;
+
+    Handler handler = new Handler();
+
     @Override
-    public void onItemClick(int position, LocalDate date)
-    {
-        if(date != null)
-        {
+    public void onItemClick(int position, LocalDate date) {
+
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                isDoubleClicked = false;
+            }
+        };
+
+        if (isDoubleClicked) {
+            Intent i5 = new Intent(MainActivity.this, DailyView.class);
+            startActivity(i5);
+            isDoubleClicked = false;
+            handler.removeCallbacks(r);
+        } else {
+            isDoubleClicked = true;
+            handler.postDelayed(r, 500);
+        }
+
+        if (date != null) {
             CalendarUtils.selectedDate = date;
             setMonthView();
         }
     }
 
 
-    public void EventAlertDialog()
-    {
+    public void EventAlertDialog() {
 
 
         LayoutInflater layoutInflater = LayoutInflater.from(this);
@@ -219,26 +233,22 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
         ad.setView(customView);
         ad.show();
-        ad.getWindow().setLayout(1000,800);
+        ad.getWindow().setLayout(1000, 800);
 
     }
 
 
-    public void newEventAction()
-    {
+    public void newEventAction() {
         startActivity(new Intent(this, EventEdit.class));
     }
-
-
 
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.menuSchedule:
-                Intent i4  = new Intent(MainActivity.this, MenuScheduleAllEvents.class);
+                Intent i4 = new Intent(MainActivity.this, MenuScheduleAllEvents.class);
                 startActivity(i4);
                 break;
             case R.id.daysView:
@@ -264,8 +274,6 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
             default:
                 onNavigationItemSelected(item);
         }
-
-
 
 
         return true;

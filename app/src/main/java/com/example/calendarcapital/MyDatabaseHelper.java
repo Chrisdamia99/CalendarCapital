@@ -12,8 +12,7 @@ import androidx.annotation.Nullable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class MyDatabaseHelper  extends SQLiteOpenHelper {
-
+public  class MyDatabaseHelper  extends SQLiteOpenHelper {
     private Context context;
     private static final String DATABASE_NAME = "CalendarCapital.db";
     private static final  int DATABASE_VERSION =1;

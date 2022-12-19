@@ -1,5 +1,8 @@
 package com.example.calendarcapital;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,14 +18,19 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                                                                        // do adapt from class calendarviewholder
 { private final ArrayList<LocalDate> days;
     private final OnItemListener onItemListener;
+    private final Context context;
+    private  MyDatabaseHelper myDB ;
 
 
-    public CalendarAdapter(ArrayList<LocalDate> days, OnItemListener onItemListener)
+    public CalendarAdapter(ArrayList<LocalDate> days, OnItemListener onItemListener,Context context)
     {
+        this.context = context;
         this.days = days;
         this.onItemListener = onItemListener;
+        this.myDB = new MyDatabaseHelper(context.getApplicationContext());
     }
 
+    @SuppressLint("ResourceAsColor")
     @NonNull
     @Override
     public CalendarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
@@ -32,10 +40,18 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.calendar_cell, parent, false);
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+
+
+
         if(days.size() > 15) //month view
+        {
             layoutParams.height = (int) (parent.getHeight() * 0.166666666);
+
+        }
         else // week view
             layoutParams.height = (int) parent.getHeight();
+
+
 
         return new CalendarViewHolder(view, onItemListener, days);
     }
@@ -43,6 +59,8 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
     @Override
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position)
     {
+        Cursor cursor = myDB.readAllData();
+
         final LocalDate date = days.get(position);
 
         holder.dayOfMonth.setText(String.valueOf(date.getDayOfMonth()));
@@ -54,7 +72,18 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
         else
             holder.dayOfMonth.setTextColor(Color.LTGRAY);
 
+        while (cursor.moveToNext()) {
+            if (date.equals(CalendarUtils.stringToLocalDate(cursor.getString(3)))) {
+
+                holder.dayOfMonth.setBackgroundColor(Color.LTGRAY);
+            }
+
+        }
+
+
     }
+
+
 
     @Override
     public int getItemCount()

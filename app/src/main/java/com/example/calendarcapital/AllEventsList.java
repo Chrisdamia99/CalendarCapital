@@ -34,7 +34,7 @@ public class AllEventsList {
                 String id_event = cursor.getString(0);
                 Event eventDB = new Event(id_event,titleDB, commentDB, dateDB, timeDB);
 
-                if (CalendarUtils.monthDayFromDate(selectedDate).equals(CalendarUtils.monthDayFromDate(dateDB)))
+                if (CalendarUtils.formattedDate(selectedDate).equals(CalendarUtils.formattedDate(dateDB)))
                 {
                     ArrayList<Event> eventarrayDB = Event.eventsForDateAndTime(selectedDate, timeDB);
 

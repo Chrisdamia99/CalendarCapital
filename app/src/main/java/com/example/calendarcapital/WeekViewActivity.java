@@ -85,7 +85,7 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         monthYearText.setText(monthYearFromDate(CalendarUtils.selectedDate));
         ArrayList<LocalDate> days = daysInWeekArray(CalendarUtils.selectedDate);
 
-        CalendarAdapter calendarAdapter = new CalendarAdapter(days, this);
+        CalendarAdapter calendarAdapter = new CalendarAdapter(days, this, getApplicationContext());
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 7);
         calendarRecyclerView2.setLayoutManager(layoutManager);
         calendarRecyclerView2.setAdapter(calendarAdapter);

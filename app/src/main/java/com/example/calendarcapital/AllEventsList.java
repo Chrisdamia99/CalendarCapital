@@ -3,6 +3,7 @@ package com.example.calendarcapital;
 import static com.example.calendarcapital.CalendarUtils.selectedDate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.widget.Toast;
 
@@ -23,7 +24,7 @@ public class AllEventsList {
 
 
         if (cursor.getCount() == 0) {
-            Toast.makeText(context, "Error read data failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "No Events to present.", Toast.LENGTH_SHORT).show();
             hourEventList();
         } else {
             while (cursor.moveToNext()) {
@@ -32,10 +33,9 @@ public class AllEventsList {
                 String titleDB = cursor.getString(1);
                 String commentDB = cursor.getString(2);
                 String id_event = cursor.getString(0);
-                Event eventDB = new Event(id_event,titleDB, commentDB, dateDB, timeDB);
+                Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB);
 
-                if (CalendarUtils.formattedDate(selectedDate).equals(CalendarUtils.formattedDate(dateDB)))
-                {
+                if (CalendarUtils.formattedDate(selectedDate).equals(CalendarUtils.formattedDate(dateDB))) {
                     ArrayList<Event> eventarrayDB = Event.eventsForDateAndTime(selectedDate, timeDB);
 
                     eventarrayDB.add(eventDB);
@@ -48,16 +48,11 @@ public class AllEventsList {
                 }
 
 
-
                 Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
-
-
 
 
             }
         }
-
-
 
 
         Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
@@ -81,26 +76,23 @@ public class AllEventsList {
                 String titleDB = cursor.getString(1);
                 String commentDB = cursor.getString(2);
                 String id_event = cursor.getString(0);
-                Event eventDB = new Event(id_event,titleDB, commentDB, dateDB, timeDB);
+                Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB);
 
 
+                ArrayList<Event> eventarrayDB = Event.eventsForDateAndTime(selectedDate, timeDB);
 
-                    ArrayList<Event> eventarrayDB = Event.eventsForDateAndTime(selectedDate, timeDB);
+                eventarrayDB.add(eventDB);
+                HourEvent hourEventDB = new HourEvent(timeDB, eventarrayDB);
 
-                    eventarrayDB.add(eventDB);
-                    HourEvent hourEventDB = new HourEvent(timeDB, eventarrayDB);
-
-                    eventsDB.add(hourEventDB);
-
+                eventsDB.add(hourEventDB);
 
 
-
-
-
+                Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
 
             }
-        }
+            Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
 
+        }
 
 
         Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));

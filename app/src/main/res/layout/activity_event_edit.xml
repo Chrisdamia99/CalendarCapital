@@ -71,10 +71,26 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="40dp"
-        android:text="Change time"
+        android:text="@string/change_time"
+        android:drawablePadding="10dp"
         android:textSize="20sp"
         android:textAlignment="center"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        app:drawableRightCompat="@drawable/clock" />
+
+    <TextView
+        android:id="@+id/changeDateTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:text="@string/change_date"
+        android:drawablePadding="10dp"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        app:drawableRightCompat="@drawable/date" />
+
 
 
 
@@ -86,7 +102,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:textColor="@color/blue"
         android:background="@null"
         android:textStyle="bold"

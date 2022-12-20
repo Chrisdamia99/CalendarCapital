@@ -18,7 +18,7 @@ public  class MyDatabaseHelper  extends SQLiteOpenHelper {
     private static final  int DATABASE_VERSION =1;
 
     private static final String TABLE_NAME ="my_events_db";
-    private static final String COLUMN_ID ="_id";
+    public static final String COLUMN_ID ="_id";
     private static final String COLUMN_TITLE = "event_title";
     private static final String COLUMN_COMMENT = "event_comment";
     private static final String COLUMN_DATE = "event_date";

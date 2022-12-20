@@ -41,6 +41,7 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
 
         compareAndGetValuesFromDB(convertView,event.time);
 
+
         setEvents(convertView, event.events);
 
         return convertView;
@@ -76,8 +77,6 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
                              event.setTime(LocalTime.parse(cursor.getString(4)));
                              //Καλείτε η setHour και δίνω στην λίστα τις τιμές της ώρες από την βάση δεδομένων και το αντίστοιχο event
                              setHour(convertView,time);
-
-
 
                          }
                      }

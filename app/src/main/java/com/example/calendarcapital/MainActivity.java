@@ -2,7 +2,6 @@ package com.example.calendarcapital;
 
 import static com.example.calendarcapital.CalendarUtils.daysInMonthArray;
 import static com.example.calendarcapital.CalendarUtils.monthYearFromDate;
-import static com.example.calendarcapital.CalendarUtils.selectedDate;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -20,26 +19,19 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import java.util.Arrays;
 
 
 //Implements calendaradapter onitemlistener
@@ -47,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     //Declare 3 variables textview(monthyeartext), the RecyclerView(calendarrecycleview)
     //and a LocalDate which is selectedDate
     private TextView monthYearText;
+
+    String id_row;
     private RecyclerView calendarRecyclerView;
     private FloatingActionButton floatAddBtnMonthAdd;
     private ListView monthListView;
@@ -85,22 +79,41 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         navigationView.setItemIconTintList(null);
 
     }
+//
+//    void getAndSetIntent()
+//    {
+//        if (getIntent().hasExtra("id"))
+//        {
+//            id_row = getIntent().getStringExtra("id");
+//        }
+//    }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        DialogClickedItemAndDelete();
+
+
+    }
+
+    private void DialogClickedItemAndDelete()
+    {
+
+
         monthListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Object listItem = monthListView.getItemAtPosition(position).toString();
 
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setMessage(listItem.toString()).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        myDB.deleteOneRow(Event.eventsList.get(position).getId());
-//                        finish();
-//                        startActivity(getIntent());
+
+                        finish();
+                        startActivity(getIntent());
 
                     }
                 }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
@@ -147,6 +160,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
 
     }
+
 
 //    private void setMonthAdapter() {
 //        MonthAdapter monthAdapter = new MonthAdapter(getApplicationContext(), monthEventList());
@@ -205,35 +219,20 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         String message = getString(R.string.add_edit_delete_event_popupmsg);
         ad.setTitle(message);
         RadioButton rb1 = customView.findViewById(R.id.rbAdd);
-        RadioButton rb2 = customView.findViewById(R.id.rbDelete);
-        RadioButton rb3 = customView.findViewById(R.id.rbEdit);
+
 
         rb1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 newEventAction();
                 ad.hide();
-                startActivity(getIntent());
             }
         });
 
-        rb2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        rb3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
         ad.setView(customView);
         ad.show();
-        ad.getWindow().setLayout(1000, 800);
+        ad.getWindow().setLayout(600, 600);
 
     }
 

@@ -6,53 +6,24 @@
 
     <RadioGroup
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
 
         <RadioButton
             android:id="@+id/rbAdd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="110dp"
             android:layout_marginTop="5dp"
+            android:layout_gravity="center"
+            android:background="@color/lightgray"
+            android:button="@null"
+            android:checked="false"
+            android:drawableLeft="@drawable/add"
             android:text="ADD"
-            android:background="@color/lightgray"
-            android:textSize="20sp"
-            android:textStyle="bold"
             android:textAlignment="center"
-            android:button="@null"
-            android:checked="false"
-            android:drawableLeft="@null"
-            />
-
-        <RadioButton
-            android:id="@+id/rbEdit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="EDIT"
-            android:background="@color/lightgray"
-
-            android:textAlignment="center"
-            android:button="@null"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:checked="false"
-            android:drawableLeft="@null"/>
+            android:textStyle="bold" />
 
-        <RadioButton
-            android:id="@+id/rbDelete"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="DELETE"
-            android:background="@color/lightgray"
-
-            android:textAlignment="center"
-            android:button="@null"
-            android:layout_marginBottom="10dp"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:checked="false"
-            android:drawableLeft="@null"/>
     </RadioGroup>
 
 

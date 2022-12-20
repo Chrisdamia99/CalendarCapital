@@ -114,8 +114,6 @@ public class MenuScheduleAllEvents extends AppCompatActivity implements  Navigat
 
         final AlertDialog ad = new AlertDialog.Builder(this).create();
         RadioButton rb1 = customView.findViewById(R.id.rbAdd);
-        RadioButton rb2 = customView.findViewById(R.id.rbDelete);
-        RadioButton rb3 = customView.findViewById(R.id.rbEdit);
 
         rb1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,22 +125,6 @@ public class MenuScheduleAllEvents extends AppCompatActivity implements  Navigat
             }
         });
 
-        rb2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        rb3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        ad.setView(customView);
-        ad.show();
 
     }
 

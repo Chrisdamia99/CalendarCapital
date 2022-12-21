@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -31,7 +33,7 @@ import com.google.android.material.navigation.NavigationView;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 
 
 //Implements calendaradapter onitemlistener
@@ -41,10 +43,12 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     private TextView monthYearText;
 
     String id_row;
+    HourAdapter hourAdapter;
     private RecyclerView calendarRecyclerView;
     private FloatingActionButton floatAddBtnMonthAdd;
     private ListView monthListView;
     private MyDatabaseHelper myDB = new MyDatabaseHelper(this);
+
 
 
     @Override
@@ -57,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         CalendarUtils.selectedDate = LocalDate.now();
         setMonthView();
         setNavigationViewListener();
+        getAndSetIntent();
         final DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
 
         floatAddBtnMonthAdd.setOnClickListener(new View.OnClickListener() {
@@ -79,14 +84,42 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         navigationView.setItemIconTintList(null);
 
     }
-//
-//    void getAndSetIntent()
-//    {
-//        if (getIntent().hasExtra("id"))
-//        {
-//            id_row = getIntent().getStringExtra("id");
-//        }
-//    }
+
+
+
+    private void setMonthView() {
+        monthYearText.setText(monthYearFromDate(CalendarUtils.selectedDate));
+        ArrayList<LocalDate> daysInMonth = daysInMonthArray();
+
+
+        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, this, getApplicationContext());
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 7);
+        calendarRecyclerView.setLayoutManager(layoutManager);
+        calendarRecyclerView.setAdapter(calendarAdapter);
+
+        setMonthAdapter();
+    }
+
+    private void setMonthAdapter() {
+        hourAdapter = new HourAdapter(getApplicationContext(), AllEventsList.hourEventListFromDatabase(getApplicationContext(), myDB));
+
+        hourAdapter.sort((o1, o2) -> o1.events.get(0).getDate().compareTo(o2.events.get(0).getDate()));
+        hourAdapter.sort((o1, o2) -> o1.events.get(0).getTime().compareTo(o2.events.get(0).getTime()));
+
+
+        monthListView.setAdapter(hourAdapter);
+
+
+
+    }
+
+    void getAndSetIntent()
+    {
+        if (getIntent().hasExtra("id"))
+        {
+            id_row = getIntent().getStringExtra("id");
+        }
+    }
 
     @Override
     protected void onResume() {
@@ -100,27 +133,35 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     private void DialogClickedItemAndDelete()
     {
 
-
         monthListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Object listItem = monthListView.getItemAtPosition(position).toString();
+                EventCursorAdapter EC = new EventCursorAdapter(MainActivity.this,myDB.readAllData());
 
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setMessage(listItem.toString()).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                View view1 = getLayoutInflater().inflate(R.layout.show_event_from_listview,null);
+//                builder.setMessage(listItem.toString()).
+                        builder.setView(view1).setMessage(EC.convertToString(myDB.readAllData())).
+
+                        setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        finish();
-                        startActivity(getIntent());
+
+                        String id_row = hourAdapter.getItem(position).getEvents().get(0).getId();
+                        myDB.deleteOneRow(id_row);
+
+
+                        AllEventsList.reloadActivity(MainActivity.this);
 
                     }
                 }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                        startActivity(getIntent());
+                        AllEventsList.reloadActivity(MainActivity.this);
+
 
                     }
                 });
@@ -136,30 +177,9 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         monthListView = findViewById(R.id.monthListView);
     }
 
-    private void setMonthView() {
-        monthYearText.setText(monthYearFromDate(CalendarUtils.selectedDate));
-        ArrayList<LocalDate> daysInMonth = daysInMonthArray();
 
 
-        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, this, getApplicationContext());
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 7);
-        calendarRecyclerView.setLayoutManager(layoutManager);
-        calendarRecyclerView.setAdapter(calendarAdapter);
 
-        setMonthAdapter();
-    }
-
-
-    private void setMonthAdapter() {
-        HourAdapter hourAdapter = new HourAdapter(getApplicationContext(), AllEventsList.hourEventListFromDatabase(getApplicationContext(), myDB));
-
-        hourAdapter.sort((o1, o2) -> o1.events.get(0).getDate().compareTo(o2.events.get(0).getDate()));
-        hourAdapter.sort((o1, o2) -> o1.events.get(0).getTime().compareTo(o2.events.get(0).getTime()));
-
-        monthListView.setAdapter(hourAdapter);
-
-
-    }
 
 
 //    private void setMonthAdapter() {

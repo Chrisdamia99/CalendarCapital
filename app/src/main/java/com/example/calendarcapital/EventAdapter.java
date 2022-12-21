@@ -20,6 +20,8 @@ public class EventAdapter extends ArrayAdapter<Event> {
 
     }
 
+
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -32,6 +34,8 @@ public class EventAdapter extends ArrayAdapter<Event> {
 
         String eventTitle = CalendarUtils.formattedTime(event.getTime())+ "\n" + event.getName() +  "\n" + event.getComment();
         eventCellTV.setText(eventTitle);
+
+
         return convertView;
     }
 

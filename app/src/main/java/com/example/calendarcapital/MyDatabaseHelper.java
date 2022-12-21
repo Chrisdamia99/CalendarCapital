@@ -72,6 +72,8 @@ MyDatabaseHelper(@Nullable Context context)
         }
     }
 
+
+
     Cursor readAllData(){
         String query = "SELECT * FROM " + TABLE_NAME;
         SQLiteDatabase db = this.getReadableDatabase();

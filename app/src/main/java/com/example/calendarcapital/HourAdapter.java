@@ -2,6 +2,7 @@ package com.example.calendarcapital;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +22,7 @@ import java.util.List;
 public class HourAdapter extends ArrayAdapter<HourEvent> {
 
     Context context = this.getContext();
-
+    Activity activity;
     MyDatabaseHelper myDB = new MyDatabaseHelper(context);
 
 
@@ -29,6 +30,8 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
         super(context, 0, hourEvents);
 
     }
+
+
 
     @NonNull
     @Override
@@ -44,8 +47,11 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
 
         setEvents(convertView, event.events);
 
+
         return convertView;
     }
+
+
 
 
             private void compareAndGetValuesFromDB(View convertView, LocalTime time)
@@ -78,7 +84,10 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
                              //Καλείτε η setHour και δίνω στην λίστα τις τιμές της ώρες από την βάση δεδομένων και το αντίστοιχο event
                              setHour(convertView,time);
 
+
+
                          }
+
                      }
                  }
 

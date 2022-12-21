@@ -19,6 +19,8 @@ import android.widget.RadioButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
+import kotlinx.coroutines.scheduling.Task;
+
 public class MenuScheduleAllEvents extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener {
 
     private MyDatabaseHelper myDB = new MyDatabaseHelper(this);
@@ -78,8 +80,9 @@ public class MenuScheduleAllEvents extends AppCompatActivity implements  Navigat
                 Object listItem = MenuSceduleEventListView.getItemAtPosition(position).toString();
 
 
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(MenuScheduleAllEvents.this);
-                builder.setMessage(listItem.toString()).setPositiveButton("Edit", new DialogInterface.OnClickListener() {
+                builder.setMessage(listItem.toString()).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 

@@ -2,6 +2,7 @@ package com.example.calendarcapital;
 
 import static com.example.calendarcapital.CalendarUtils.selectedDate;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,6 +16,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class AllEventsList {
+
+    public static void reloadActivity(Activity activity)
+    {
+        activity.finish();
+        activity.overridePendingTransition(0, 0);
+        activity.startActivity(activity.getIntent());
+        activity.overridePendingTransition(0, 0);
+
+    }
 
 
     @NonNull

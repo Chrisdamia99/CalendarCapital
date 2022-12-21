@@ -1,6 +1,7 @@
 package com.example.calendarcapital;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.provider.CalendarContract;
 import android.widget.Toast;
@@ -53,10 +54,13 @@ public class Event {
     private LocalTime time;
 
     public Event(String id,String name,String comment, LocalDate date, LocalTime time) {
+        this.id=id;
         this.comment = comment;
         this.name = name;
         this.date = date;
         this.time = time;
+
+
 
     }
 

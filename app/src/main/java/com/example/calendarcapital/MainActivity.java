@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -136,37 +137,48 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         monthListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object listItem = monthListView.getItemAtPosition(position).toString();
-                EventCursorAdapter EC = new EventCursorAdapter(MainActivity.this,myDB.readAllData());
+                View view1 = getLayoutInflater().inflate(R.layout.show_event_from_listview, null);
+                View view121 = getLayoutInflater().inflate(R.layout.hour_cell, null);
+                EventCursorAdapter EC = new EventCursorAdapter(MainActivity.this, myDB.readAllData());
+                Cursor cursor = EC.getCursor();
+                cursor.moveToPosition(position);
+                View view2 = EC.getView(position,view1,parent);
+                View view3 = monthListView.getChildAt(position - monthListView.getFirstVisiblePosition());
+                View view4 = EC.newView(EC.mContext,EC.mCursor,parent);
 
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                View view1 = getLayoutInflater().inflate(R.layout.show_event_from_listview,null);
-//                builder.setMessage(listItem.toString()).
-                        builder.setView(view1).setMessage(EC.convertToString(myDB.readAllData())).
-
-                        setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
 
 
-                        String id_row = hourAdapter.getItem(position).getEvents().get(0).getId();
-                        myDB.deleteOneRow(id_row);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
 
-                        AllEventsList.reloadActivity(MainActivity.this);
+                    builder.setView(view2).
 
-                    }
-                }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        AllEventsList.reloadActivity(MainActivity.this);
+                            setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
 
-                    }
-                });
-                builder.show();
-            }
+                                    String id_row = hourAdapter.getItem(position).getEvents().get(0).getId();
+                                    myDB.deleteOneRow(id_row);
+
+
+                                    AllEventsList.reloadActivity(MainActivity.this);
+
+                                }
+                            }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    AllEventsList.reloadActivity(MainActivity.this);
+
+
+                                }
+                            });
+
+                    builder.show();
+                }
+
         });
     }
 

@@ -1,5 +1,6 @@
 package com.example.calendarcapital;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;
@@ -9,10 +10,12 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 
-public class EventCursorAdapter extends CursorAdapter {
+public class EventCursorAdapter extends CursorAdapter  {
 
     Context mContext;
+
     Cursor mCursor;
+
 
     public EventCursorAdapter(Context context, Cursor c) {
         super(context, c, 0);
@@ -31,6 +34,7 @@ public class EventCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+
         TextView id_lv_tv = (TextView) view.findViewById(R.id.id_lv_tv);
         TextView title_lv_tv = (TextView) view.findViewById(R.id.title_lv_tv);
         TextView comment_lv_tv = (TextView) view.findViewById(R.id.comment_lv_tv);
@@ -49,14 +53,21 @@ public class EventCursorAdapter extends CursorAdapter {
         date_lv_tv.setText(date);
         time_lv_tv.setText(time);
 
+
     }
+
 
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        position = mCursor.getPosition();
-            mCursor.getColumnIndex("_id");
-            return super.getView(position, convertView, parent);
+
+        mCursor.moveToPosition(position);
+        if (position == 0) {
+            // This empty view should never be visible. Only positions 1+ are valid. Position 0 is reserved for action buttons.
+            // It is only created temporally when activity is created.
+            return super.getView(mCursor.getPosition(),convertView,parent);
+        }
+        return super.getView(position , convertView, parent);
 
 
     }

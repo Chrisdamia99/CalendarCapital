@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.SimpleCursorAdapter;
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         setMonthView();
         setNavigationViewListener();
         getAndSetIntent();
+
+
         final DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
 
         floatAddBtnMonthAdd.setOnClickListener(new View.OnClickListener() {
@@ -131,52 +134,44 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
     }
 
-    private void DialogClickedItemAndDelete()
-    {
-
+    public  void DialogClickedItemAndDelete()
+    {                EventCursorAdapter EC = new EventCursorAdapter(MainActivity.this, myDB.readAllData());
+            Cursor cursor= myDB.readAllData();
+                test2 test2 = new test2(getApplicationContext(),AllEventsList.hourEventListFromDatabase(getApplicationContext(), myDB));
         monthListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 View view1 = getLayoutInflater().inflate(R.layout.show_event_from_listview, null);
-                View view121 = getLayoutInflater().inflate(R.layout.hour_cell, null);
-                EventCursorAdapter EC = new EventCursorAdapter(MainActivity.this, myDB.readAllData());
-                Cursor cursor = EC.getCursor();
-                cursor.moveToPosition(position);
-                View view2 = EC.getView(position,view1,parent);
-                View view3 = monthListView.getChildAt(position - monthListView.getFirstVisiblePosition());
-                View view4 = EC.newView(EC.mContext,EC.mCursor,parent);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
 
+                builder.setView(test2.getView(position,view1,parent)).
+
+                        setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
 
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-
-
-                    builder.setView(view2).
-
-                            setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                                String id_row = hourAdapter.getItem(position).getEvents().get(0).getId();
+                                myDB.deleteOneRow(id_row);
 
 
-                                    String id_row = hourAdapter.getItem(position).getEvents().get(0).getId();
-                                    myDB.deleteOneRow(id_row);
+                                AllEventsList.reloadActivity(MainActivity.this);
+
+                            }
+                        }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                AllEventsList.reloadActivity(MainActivity.this);
 
 
-                                    AllEventsList.reloadActivity(MainActivity.this);
+                            }
+                        });
 
-                                }
-                            }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    AllEventsList.reloadActivity(MainActivity.this);
+                builder.show();
 
 
-                                }
-                            });
-
-                    builder.show();
                 }
 
         });

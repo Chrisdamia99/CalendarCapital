@@ -42,8 +42,8 @@ public class EventEdit extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_edit);
         initWidgets();
-        time = LocalTime.now();
-        eventTimeTV.setText("Time: " + CalendarUtils.formattedTime(time));
+        time = LocalTime.parse(CalendarUtils.formattedShortTime(LocalTime.now()));
+        eventTimeTV.setText("Time: " + CalendarUtils.formattedShortTime(time));
         date = CalendarUtils.selectedDate;
         eventDateTV.setText("Date: " + CalendarUtils.formattedDate(date));
 

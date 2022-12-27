@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:id="@+id/dateTV"
-        android:textSize="20sp"
+        android:textSize="12sp"
         android:textColor="@color/black"
         android:text="@string/example_month_hour_cell"/>
     <TextView

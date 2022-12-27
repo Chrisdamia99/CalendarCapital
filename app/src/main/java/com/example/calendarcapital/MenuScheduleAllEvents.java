@@ -26,6 +26,7 @@ public class MenuScheduleAllEvents extends AppCompatActivity implements  Navigat
     private MyDatabaseHelper myDB = new MyDatabaseHelper(this);
     private FloatingActionButton floatAddBtnMenuView;
     private ListView MenuSceduleEventListView;
+    HourAdapter hourAdapter;
 
 
 
@@ -89,7 +90,18 @@ public class MenuScheduleAllEvents extends AppCompatActivity implements  Navigat
         floatAddBtnMenuView = findViewById(R.id.floatAddBtnMenuView);
     }
 
+    public void setHourAdapter() {
+        hourAdapter = new HourAdapter(getApplicationContext(), AllEventsList.hourEventListFromDatabaseToShowAllEvents(getApplicationContext(), myDB));
+        hourAdapter.sort((o1, o2) -> o1.events.get(0).getTime().compareTo(o2.events.get(0).getTime()));
+        hourAdapter.sort((o1, o2) -> o1.events.get(0).getDate().compareTo(o2.events.get(0).getDate()));
 
+        hourAdapter.notifyDataSetChanged();
+
+
+        MenuSceduleEventListView.setAdapter(hourAdapter);
+        hourAdapter.notifyDataSetChanged();
+
+    }
 
     @Override
     protected void onResume() {
@@ -97,41 +109,72 @@ public class MenuScheduleAllEvents extends AppCompatActivity implements  Navigat
         setHourAdapter();
 
 
+        hourAdapter.notifyDataSetChanged();
+        DialogClickedItemAndDelete();
 
-        //onItemClick για να δειχνει την ωρα την ημερομηνια και τα comment!
+
+    }
+
+    private void DialogClickedItemAndDelete()
+    {
+        EventCursorAdapter CA = new EventCursorAdapter(getApplicationContext(),myDB.readAllData());
+
         MenuSceduleEventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object listItem = MenuSceduleEventListView.getItemAtPosition(position).toString();
+                View view1 = getLayoutInflater().inflate(R.layout.show_event_from_listview, null);
+//                private ArrayList<MlaData> MlaDats = new ArrayList<MlaData>();
+                HourEvent myEvent = (HourEvent) MenuSceduleEventListView.getAdapter().getItem(position);
+
+                String myEventId= myEvent.getEvents().get(0).getId();
+                String myTitle = myEvent.getEvents().get(0).getName();
+                String myComment = myEvent.getEvents().get(0).getComment();
+                String myDate = String.valueOf(myEvent.getEvents().get(0).getDate());
+                String myTime = String.valueOf(myEvent.getEvents().get(0).getTime());
+
+
+                View viewFinal;
 
 
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MenuScheduleAllEvents.this);
-                builder.setMessage(listItem.toString()).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                        startActivity(getIntent());
+                viewFinal = CA.setAllFields(view1,myEventId,myTitle,myComment,myDate,myTime);
+//                    viewFinal = SD.getView(position, view1, parent);
 
-                    }
-                });
+
+                builder.setView(viewFinal).
+
+                        setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+
+                                String id_row = hourAdapter.getItem(position).getEvents().get(0).getId();
+                                myDB.deleteOneRow(id_row);
+
+
+                                AllEventsList.reloadActivity(MenuScheduleAllEvents.this);
+
+                            }
+                        }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                AllEventsList.reloadActivity(MenuScheduleAllEvents.this);
+
+
+                            }
+                        });
+
+
                 builder.show();
             }
+
         });
-
-
     }
 
 
-    public void setHourAdapter() {
-        HourAdapter hourAdapter = new HourAdapter(getApplicationContext(), AllEventsList.hourEventListFromDatabaseToShowAllEvents(getApplicationContext(), myDB));
-        MenuSceduleEventListView.setAdapter(hourAdapter);
-    }
+
 
 
     public void EventAlertDialog() {

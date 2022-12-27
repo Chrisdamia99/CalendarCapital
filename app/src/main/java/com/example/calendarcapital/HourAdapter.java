@@ -60,7 +60,7 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
                  {
                      try{
 
-                             setHour(convertView,time);
+
 
                          Toast.makeText(context, "No data to present.", Toast.LENGTH_SHORT).show();
                      } catch (Exception e) {
@@ -80,7 +80,7 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
                              event.setEvents(eventArrayDB);
                              event.setTime(LocalTime.parse(cursor.getString(4)));
                              //Καλείτε η setHour και δίνω στην λίστα τις τιμές της ώρες από την βάση δεδομένων και το αντίστοιχο event
-                             setHour(convertView,time);
+                             setHour(convertView,time, LocalDate.parse(cursor.getString(3)));
 
 
 
@@ -95,7 +95,7 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
 
 
 
-    private void setHour(View convertView, LocalTime time) {
+    private void setHour(View convertView, LocalTime time,LocalDate date) {
 
 
         TextView timeTv = convertView.findViewById(R.id.timeTV);
@@ -103,9 +103,11 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
 
 
         timeTv.setText(CalendarUtils.formattedShortTime(time));
-        dayofmonthTV.setText(CalendarUtils.DailyViewFormattedDate(CalendarUtils.selectedDate));
+        dayofmonthTV.setText(CalendarUtils.formattedDate(date));
 
     }
+
+
     private void setEvents(View convertView, ArrayList<Event> events) {
         TextView event1 = convertView.findViewById(R.id.event1);
         TextView event2 = convertView.findViewById(R.id.event2);

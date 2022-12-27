@@ -17,10 +17,13 @@ import android.database.Observable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +46,7 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
     private TextView monthDayText;
     private TextView dayOfWeekTV;
     private ListView hourListView;
+    HourAdapter hourAdapter;
     private FloatingActionButton floatAddBtnDailyView;
     private MyDatabaseHelper myDB = new MyDatabaseHelper(this);
     static String dayOfWeek, eventResumt;
@@ -62,6 +66,8 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
         setNavigationViewListener();
 
 
+
+
         findViewById(R.id.imageMenu).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,6 +83,29 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
             }
         });
 
+        findViewById(R.id.menu_new).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(getApplicationContext(),v);
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+
+                        switch (item.getItemId()) {
+                            case R.id.refreshItemOnLay:
+                                AllEventsList.reloadActivity(DailyView.this);
+                                return true;
+                            case R.id.previousAct:
+                                onBackPressed();
+                        }
+
+                        return false;
+                    }
+                });
+                popupMenu.inflate(R.menu.menu_up_inlayout);
+                popupMenu.show();
+            }
+        });
+
 
         NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setItemIconTintList(null);
@@ -87,41 +116,6 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
         dayOfWeekTV = findViewById(R.id.dayOfWeekTv);
         hourListView = findViewById(R.id.hourListView);
         floatAddBtnDailyView = findViewById(R.id.floatAddBtnDailyView);
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        setDayView();
-
-
-        //onItemClick για να δειχνει την ωρα την ημερομηνια και τα comment!
-        hourListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object listItem = hourListView.getItemAtPosition(position).toString();
-
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(DailyView.this);
-                builder.setMessage(listItem.toString()).setPositiveButton("Edit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                        startActivity(getIntent());
-
-                    }
-                });
-                builder.show();
-            }
-        });
-
-
     }
 
     private void setDayView() {
@@ -135,13 +129,86 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
 
 
     public void setHourAdapter() {
-        HourAdapter hourAdapter = new HourAdapter(getApplicationContext(), AllEventsList.hourEventListFromDatabase(getApplicationContext(), myDB));
+         hourAdapter = new HourAdapter(getApplicationContext(), AllEventsList.hourEventListFromDatabase(getApplicationContext(), myDB));
 
 
         hourAdapter.sort((o1, o2) -> o1.events.get(0).getDate().compareTo(o2.events.get(0).getDate()));
         hourAdapter.sort((o1, o2) -> o1.events.get(0).getTime().compareTo(o2.events.get(0).getTime()));
         hourListView.setAdapter(hourAdapter);
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setDayView();
+
+        hourAdapter.notifyDataSetChanged();
+        DialogClickedItemAndDelete();
+
+
+
+    }
+
+    private void DialogClickedItemAndDelete()
+    {
+        EventCursorAdapter CA = new EventCursorAdapter(getApplicationContext(),myDB.readAllData());
+
+        hourListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                View view1 = getLayoutInflater().inflate(R.layout.show_event_from_listview, null);
+//                private ArrayList<MlaData> MlaDats = new ArrayList<MlaData>();
+                HourEvent myEvent = (HourEvent) hourListView.getAdapter().getItem(position);
+
+                String myEventId= myEvent.getEvents().get(0).getId();
+                String myTitle = myEvent.getEvents().get(0).getName();
+                String myComment = myEvent.getEvents().get(0).getComment();
+                String myDate = String.valueOf(myEvent.getEvents().get(0).getDate());
+                String myTime = String.valueOf(myEvent.getEvents().get(0).getTime());
+
+
+                View viewFinal;
+
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(DailyView.this);
+
+                viewFinal = CA.setAllFields(view1,myEventId,myTitle,myComment,myDate,myTime);
+//                    viewFinal = SD.getView(position, view1, parent);
+
+
+                builder.setView(viewFinal).
+
+                        setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+
+                                String id_row = hourAdapter.getItem(position).getEvents().get(0).getId();
+                                myDB.deleteOneRow(id_row);
+
+
+                                AllEventsList.reloadActivity(DailyView.this);
+
+                            }
+                        }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                AllEventsList.reloadActivity(DailyView.this);
+
+
+                            }
+                        });
+
+
+                builder.show();
+            }
+
+        });
+    }
+
+
 
 
     public void previousDayAction(View view) {
@@ -221,6 +288,29 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
 
 
         return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_up_inlayout, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.refreshItemOnLay:
+                AllEventsList.reloadActivity(DailyView.this);
+                return true;
+            case R.id.previousAct:
+                onBackPressed();
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void setNavigationViewListener() {

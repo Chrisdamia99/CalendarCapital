@@ -14,12 +14,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.RadioButton;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
-import kotlinx.coroutines.scheduling.Task;
 
 public class MenuScheduleAllEvents extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener {
 
@@ -56,6 +56,31 @@ public class MenuScheduleAllEvents extends AppCompatActivity implements  Navigat
             }
         });
 
+        findViewById(R.id.menu_new).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(getApplicationContext(),v);
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+
+                        switch (item.getItemId()) {
+                            case R.id.refreshItemOnLay:
+                                AllEventsList.reloadActivity(MenuScheduleAllEvents.this);
+                                return true;
+                            case R.id.previousAct:
+                                onBackPressed();
+                        }
+
+                        return false;
+                    }
+                });
+                popupMenu.inflate(R.menu.menu_up_inlayout);
+                popupMenu.show();
+            }
+        });
+
+        NavigationView navigationView = findViewById(R.id.navigationView);
+        navigationView.setItemIconTintList(null);
     }
 
     private void initWidgets() {

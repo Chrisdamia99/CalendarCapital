@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+
+
+
+        <item
+            android:id="@+id/refreshItemOnLay"
+            android:title="Ανανέωση"
+            android:icon="@drawable/refresh"
+            android:iconTint="@color/white"
+            app:showAsAction="ifRoom"/>
+
+        <item
+            android:id="@+id/previousAct"
+            android:title="Πίσω"
+            android:icon="@drawable/back_toactivity"
+            android:iconTint="@color/white"
+            app:showAsAction="never"/>
+
+
+</menu>

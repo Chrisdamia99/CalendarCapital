@@ -22,9 +22,7 @@ import java.util.List;
 public class HourAdapter extends ArrayAdapter<HourEvent> {
 
     Context context = this.getContext();
-    Activity activity;
     MyDatabaseHelper myDB = new MyDatabaseHelper(context);
-
 
     public HourAdapter(@NonNull Context context, List<HourEvent> hourEvents) {
         super(context, 0, hourEvents);
@@ -94,7 +92,6 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
 
 
                 }
-
 
 
 

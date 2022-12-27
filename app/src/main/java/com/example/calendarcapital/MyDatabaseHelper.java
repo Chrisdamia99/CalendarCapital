@@ -107,6 +107,8 @@ MyDatabaseHelper(@Nullable Context context)
         }
     }
 
+
+
     void deleteOneRow(String row_id)
     {
         SQLiteDatabase db = this.getWritableDatabase();

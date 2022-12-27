@@ -19,11 +19,15 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +44,7 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView2;
     private ListView eventListView;
+    HourAdapter hourAdapter;
     private MyDatabaseHelper myDB = new MyDatabaseHelper(this);
 
 
@@ -53,6 +58,7 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         setNavigationViewListener();
 
 
+
         findViewById(R.id.imageMenu).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,6 +70,29 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
             @Override
             public void onClick(View v) {
                 EventAlertDialog();
+            }
+        });
+
+        findViewById(R.id.menu_new).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(getApplicationContext(),v);
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+
+                        switch (item.getItemId()) {
+                            case R.id.refreshItemOnLay:
+                                AllEventsList.reloadActivity(WeekViewActivity.this);
+                                return true;
+                            case R.id.previousAct:
+                                onBackPressed();
+                        }
+
+                        return false;
+                    }
+                });
+                popupMenu.inflate(R.menu.menu_up_inlayout);
+                popupMenu.show();
             }
         });
 
@@ -92,6 +121,16 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         setEventListView();
     }
 
+    private void setEventListView() {
+        hourAdapter = new HourAdapter(getApplicationContext(), AllEventsList.hourEventListFromDatabase(getApplicationContext(), myDB));
+
+
+        hourAdapter.sort((o1, o2) -> o1.events.get(0).getDate().compareTo(o2.events.get(0).getDate()));
+        hourAdapter.sort((o1, o2) -> o1.events.get(0).getTime().compareTo(o2.events.get(0).getTime()));
+        eventListView.setAdapter(hourAdapter);
+    }
+
+
 
     public void previousWeekAction(View view) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusWeeks(1);
@@ -103,49 +142,80 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         setWeekView();
     }
 
-    @Override
-    public void onItemClick(int position, LocalDate date) {
-        CalendarUtils.selectedDate = date;
-        setWeekView();
-    }
+//    @Override
+//    public void onItemClick(int position, LocalDate date) {
+//        CalendarUtils.selectedDate = date;
+//        setWeekView();
+//    }
 
     @Override
     protected void onResume() {
         super.onResume();
+        setWeekView();
+        hourAdapter.notifyDataSetChanged();
+        DialogClickedItemAndDelete();
+    }
+
+
+    private void DialogClickedItemAndDelete()
+    {
+        EventCursorAdapter CA = new EventCursorAdapter(getApplicationContext(),myDB.readAllData());
+
         eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object listItem = eventListView.getItemAtPosition(position).toString();
+                View view1 = getLayoutInflater().inflate(R.layout.show_event_from_listview, null);
+//                private ArrayList<MlaData> MlaDats = new ArrayList<MlaData>();
+                HourEvent myEvent = (HourEvent) eventListView.getAdapter().getItem(position);
+
+                String myEventId= myEvent.getEvents().get(0).getId();
+                String myTitle = myEvent.getEvents().get(0).getName();
+                String myComment = myEvent.getEvents().get(0).getComment();
+                String myDate = String.valueOf(myEvent.getEvents().get(0).getDate());
+                String myTime = String.valueOf(myEvent.getEvents().get(0).getTime());
+
+
+                View viewFinal;
+
 
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(WeekViewActivity.this);
-                builder.setMessage(listItem.toString()).setPositiveButton("Edit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                        startActivity(getIntent());
+                viewFinal = CA.setAllFields(view1,myEventId,myTitle,myComment,myDate,myTime);
+//                    viewFinal = SD.getView(position, view1, parent);
 
-                    }
-                });
+
+                builder.setView(viewFinal).
+
+                        setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+
+                                String id_row = hourAdapter.getItem(position).getEvents().get(0).getId();
+                                myDB.deleteOneRow(id_row);
+
+
+                                AllEventsList.reloadActivity(WeekViewActivity.this);
+
+                            }
+                        }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                AllEventsList.reloadActivity(WeekViewActivity.this);
+
+
+                            }
+                        });
+
+
                 builder.show();
             }
+
         });
     }
 
 
-    private void setEventListView() {
-        HourAdapter hourAdapter = new HourAdapter(getApplicationContext(), AllEventsList.hourEventListFromDatabase(getApplicationContext(), myDB));
-
-
-        hourAdapter.sort((o1, o2) -> o1.events.get(0).getDate().compareTo(o2.events.get(0).getDate()));
-        hourAdapter.sort((o1, o2) -> o1.events.get(0).getTime().compareTo(o2.events.get(0).getTime()));
-        eventListView.setAdapter(hourAdapter);
-    }
 
     public void EventAlertDialog() {
 
@@ -178,6 +248,59 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         startActivity(new Intent(this, EventEdit.class));
     }
 
+
+    boolean isDoubleClicked = false;
+
+    Handler handler = new Handler();
+
+    @Override
+    public void onItemClick(int position, LocalDate date) {
+
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                isDoubleClicked = false;
+            }
+        };
+
+        if (isDoubleClicked) {
+            Intent i5 = new Intent(WeekViewActivity.this, DailyView.class);
+            startActivity(i5);
+            isDoubleClicked = false;
+            handler.removeCallbacks(r);
+        } else {
+            isDoubleClicked = true;
+            handler.postDelayed(r, 500);
+        }
+
+        if (date != null) {
+            CalendarUtils.selectedDate = date;
+            setWeekView();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_up_inlayout, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.refreshItemOnLay:
+                AllEventsList.reloadActivity(WeekViewActivity.this);
+                return true;
+            case R.id.previousAct:
+                onBackPressed();
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

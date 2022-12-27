@@ -36,9 +36,10 @@
                 android:src="@drawable/ic_menu"
                 app:tint="@color/white" />
 
+
             <TextView
                 android:id="@+id/textTitle"
-                android:layout_width="match_parent"
+                android:layout_width="280dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:text="@string/capital_calendar_title"
@@ -46,6 +47,14 @@
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/menu_new"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                app:srcCompat="@drawable/bullets"
+                app:tint="@color/white" />
+
         </LinearLayout>
 
 

@@ -24,4 +24,19 @@
     <string name="example_hour_hour_cell">10:00</string>
     <string name="change_time">Change time</string>
     <string name="change_date">Change Date</string>
+    <string name="event_title">Event title</string>
+    <string name="comments">Comments</string>
+    <string name="event_comment">Event comment</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="save">Save</string>
+    <string name="event">Event:</string>
+    <string name="event_info">Event Info</string>
+    <string name="id">ID:</string>
+    <string name="title">Title:</string>
+    <string name="date_info">Date:</string>
+    <string name="time_info">Time:</string>
+    <string name="comment_info">Comment:</string>
+    <string name="event_title_hint">Event title</string>
+    <string name="event_comment_hint">Event comment</string>
 </resources>

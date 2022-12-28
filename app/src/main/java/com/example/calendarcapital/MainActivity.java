@@ -11,34 +11,27 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CursorAdapter;
-import android.widget.ListAdapter;
+
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+
 
 
 //Implements calendaradapter onitemlistener
@@ -294,32 +287,32 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     }
 
 
-    public void EventAlertDialog() {
-
-
-        LayoutInflater layoutInflater = LayoutInflater.from(this);
-        View customView = layoutInflater.inflate(R.layout.custom_dialog, null);
-
-        final AlertDialog ad = new AlertDialog.Builder(this).create();
-        String message = getString(R.string.add_edit_delete_event_popupmsg);
-        ad.setTitle(message);
-        RadioButton rb1 = customView.findViewById(R.id.rbAdd);
-
-
-        rb1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                newEventAction();
-                ad.hide();
-            }
-        });
-
-
-        ad.setView(customView);
-        ad.show();
-        ad.getWindow().setLayout(600, 600);
-
-    }
+//    public void EventAlertDialog() {
+//
+//
+//        LayoutInflater layoutInflater = LayoutInflater.from(this);
+//        View customView = layoutInflater.inflate(R.layout.custom_dialog, null);
+//
+//        final AlertDialog ad = new AlertDialog.Builder(this).create();
+//        String message = getString(R.string.add_edit_delete_event_popupmsg);
+//        ad.setTitle(message);
+//        RadioButton rb1 = customView.findViewById(R.id.rbAdd);
+//
+//
+//        rb1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                newEventAction();
+//                ad.hide();
+//            }
+//        });
+//
+//
+//        ad.setView(customView);
+//        ad.show();
+//        ad.getWindow().setLayout(600, 600);
+//
+//    }
 
 
     public void newEventAction() {

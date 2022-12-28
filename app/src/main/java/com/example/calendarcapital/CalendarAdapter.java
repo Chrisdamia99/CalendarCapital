@@ -11,20 +11,17 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends the recyclerview that
                                                                        // do adapt from class calendarviewholder
 { private final ArrayList<LocalDate> days;
     private final OnItemListener onItemListener;
-    private final Context context;
     private  MyDatabaseHelper myDB ;
 
 
     public CalendarAdapter(ArrayList<LocalDate> days, OnItemListener onItemListener,Context context)
     {
-        this.context = context;
         this.days = days;
         this.onItemListener = onItemListener;
         this.myDB = new MyDatabaseHelper(context.getApplicationContext());

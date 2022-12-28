@@ -1,7 +1,6 @@
 package com.example.calendarcapital;
 
 import static com.example.calendarcapital.CalendarUtils.selectedDate;
-import static com.example.calendarcapital.CalendarUtils.selectedTime;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -9,13 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.Observable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,19 +21,13 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
-import java.io.Console;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+
 import java.util.Locale;
 
 public class DailyView extends AppCompatActivity implements CalendarAdapter.OnItemListener, NavigationView.OnNavigationItemSelectedListener {
@@ -49,8 +38,8 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
     HourAdapter hourAdapter;
     private FloatingActionButton floatAddBtnDailyView;
     private MyDatabaseHelper myDB = new MyDatabaseHelper(this);
-    static String dayOfWeek, eventResumt;
-    private static LocalTime time;
+    static String dayOfWeek;
+
 
 
     @Override
@@ -240,30 +229,30 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
     }
 
 
-    public void EventAlertDialog() {
-
-
-        LayoutInflater layoutInflater = LayoutInflater.from(this);
-        View customView = layoutInflater.inflate(R.layout.custom_dialog, null);
-
-        final AlertDialog ad = new AlertDialog.Builder(this).create();
-        RadioButton rb1 = customView.findViewById(R.id.rbAdd);
-
-
-        rb1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                newEventAction();
-                ad.hide();
-            }
-        });
-
-
-
-        ad.setView(customView);
-        ad.show();
-
-    }
+//    public void EventAlertDialog() {
+//
+//
+//        LayoutInflater layoutInflater = LayoutInflater.from(this);
+//        View customView = layoutInflater.inflate(R.layout.custom_dialog, null);
+//
+//        final AlertDialog ad = new AlertDialog.Builder(this).create();
+//        RadioButton rb1 = customView.findViewById(R.id.rbAdd);
+//
+//
+//        rb1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                newEventAction();
+//                ad.hide();
+//            }
+//        });
+//
+//
+//
+//        ad.setView(customView);
+//        ad.show();
+//
+//    }
 
 
     public void newEventAction() {

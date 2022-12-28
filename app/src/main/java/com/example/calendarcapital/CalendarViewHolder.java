@@ -1,7 +1,6 @@
 package com.example.calendarcapital;
 
-import android.content.Context;
-import android.database.Cursor;
+
 import android.view.View;
 import android.widget.TextView;
 

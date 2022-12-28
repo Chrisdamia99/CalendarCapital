@@ -1,18 +1,12 @@
 package com.example.calendarcapital;
 
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.provider.CalendarContract;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+
 
 public class Event {
 

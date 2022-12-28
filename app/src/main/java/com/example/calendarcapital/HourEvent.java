@@ -1,8 +1,5 @@
 package com.example.calendarcapital;
 
-import android.content.Context;
-import android.database.Cursor;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 

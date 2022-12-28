@@ -1,9 +1,7 @@
 package com.example.calendarcapital;
 
 import static com.example.calendarcapital.CalendarUtils.daysInWeekArray;
-import static com.example.calendarcapital.CalendarUtils.monthDayFromDate;
 import static com.example.calendarcapital.CalendarUtils.monthYearFromDate;
-import static com.example.calendarcapital.CalendarUtils.selectedDate;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -13,14 +11,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,9 +22,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -233,32 +225,32 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
 
 
 
-    public void EventAlertDialog() {
-
-
-        LayoutInflater layoutInflater = LayoutInflater.from(this);
-        View customView = layoutInflater.inflate(R.layout.custom_dialog, null);
-
-        final AlertDialog ad = new AlertDialog.Builder(this).create();
-        ad.setTitle("Προσθήκη/Επεξεργασία/Διαγραφή συμβάντων");
-        RadioButton rb1 = customView.findViewById(R.id.rbAdd);
-
-        rb1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                newEventAction();
-                ad.hide();
-
-            }
-        });
-
-
-
-        ad.setView(customView);
-        ad.show();
-        ad.getWindow().setLayout(1000, 800);
-
-    }
+//    public void EventAlertDialog() {
+//
+//
+//        LayoutInflater layoutInflater = LayoutInflater.from(this);
+//        View customView = layoutInflater.inflate(R.layout.custom_dialog, null);
+//
+//        final AlertDialog ad = new AlertDialog.Builder(this).create();
+//        ad.setTitle("Προσθήκη/Επεξεργασία/Διαγραφή συμβάντων");
+//        RadioButton rb1 = customView.findViewById(R.id.rbAdd);
+//
+//        rb1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                newEventAction();
+//                ad.hide();
+//
+//            }
+//        });
+//
+//
+//
+//        ad.setView(customView);
+//        ad.show();
+//        ad.getWindow().setLayout(1000, 800);
+//
+//    }
 
     public void newEventAction() {
         startActivity(new Intent(this, EventEdit.class));

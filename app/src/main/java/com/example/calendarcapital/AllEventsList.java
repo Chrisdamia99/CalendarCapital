@@ -4,7 +4,6 @@ import static com.example.calendarcapital.CalendarUtils.selectedDate;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.widget.Toast;
 
@@ -35,7 +34,7 @@ public class AllEventsList {
 
         if (cursor.getCount() == 0) {
             Toast.makeText(context, "No Events to present.", Toast.LENGTH_SHORT).show();
-            hourEventList();
+
         } else {
             while (cursor.moveToNext()) {
                 LocalDate dateDB = CalendarUtils.stringToLocalDate(cursor.getString(3));
@@ -78,7 +77,7 @@ public class AllEventsList {
 
         if (cursor.getCount() == 0) {
             Toast.makeText(context, "Error read data failed", Toast.LENGTH_SHORT).show();
-            hourEventList();
+
         } else {
             while (cursor.moveToNext()) {
                 LocalDate dateDB = CalendarUtils.stringToLocalDate(cursor.getString(3));
@@ -112,30 +111,30 @@ public class AllEventsList {
     }
 
 
-    public static ArrayList<HourEvent> hourEventList() {
-
-        ArrayList<HourEvent> list = new ArrayList<>();
-
-        for (int hour = 0; hour < 24; hour++) {
-            LocalTime time = LocalTime.of(hour, 0);
-            ArrayList<Event> events = Event.eventsForDateAndTime(selectedDate, time);
-            HourEvent hourEvent = new HourEvent(time, events);
-            list.add(hourEvent);
-        }
-        return list;
-    }
-
-
-    private ArrayList<MonthEvent> monthEventList() {
-        ArrayList<MonthEvent> list = new ArrayList<>();
-
-        for (int month = 0; month < 42; month++) {
-            LocalDate date = LocalDate.of(selectedDate.getYear(), selectedDate.getMonth(), selectedDate.getDayOfMonth());
-            ArrayList<Event> events = Event.eventsForDate(date);
-            MonthEvent monthEvent = new MonthEvent(date, events);
-            list.add(monthEvent);
-        }
-        return list;
-
-    }
+//    public static ArrayList<HourEvent> hourEventList() {
+//
+//        ArrayList<HourEvent> list = new ArrayList<>();
+//
+//        for (int hour = 0; hour < 24; hour++) {
+//            LocalTime time = LocalTime.of(hour, 0);
+//            ArrayList<Event> events = Event.eventsForDateAndTime(selectedDate, time);
+//            HourEvent hourEvent = new HourEvent(time, events);
+//            list.add(hourEvent);
+//        }
+//        return list;
+//    }
+//
+//
+//    private ArrayList<MonthEvent> monthEventList() {
+//        ArrayList<MonthEvent> list = new ArrayList<>();
+//
+//        for (int month = 0; month < 42; month++) {
+//            LocalDate date = LocalDate.of(selectedDate.getYear(), selectedDate.getMonth(), selectedDate.getDayOfMonth());
+//            ArrayList<Event> events = Event.eventsForDate(date);
+//            MonthEvent monthEvent = new MonthEvent(date, events);
+//            list.add(monthEvent);
+//        }
+//        return list;
+//
+//    }
 }

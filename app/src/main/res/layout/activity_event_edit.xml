@@ -12,9 +12,10 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginStart="20dp"
-        android:layout_gravity="right"
+        android:layout_gravity="end"
         app:srcCompat="@drawable/bullets"
-        app:tint="@color/blue" />
+        app:tint="@color/blue"
+        tools:ignore="ContentDescription" />
 
 
     <TextView
@@ -22,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:text="Event: "
+        android:text="@string/event"
         android:textSize="20sp"
         android:textAlignment="center"
         android:textColor="@color/black"/>
@@ -34,15 +35,16 @@
         android:layout_gravity="center"
         android:textSize="20sp"
         android:ems="10"
-        android:hint="Event title"
+        android:hint="@string/event_title_hint"
         android:inputType="textCapSentences|textMultiLine"
-        android:maxLength="2000"/>
+        android:maxLength="2000"
+        android:importantForAutofill="no" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:text="Comments"
+        android:text="@string/comments"
         android:textSize="20sp"
         android:textAlignment="center"
         android:textColor="@color/black"/>
@@ -52,11 +54,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textSize="20sp"
-        android:hint="Event comment"
+        android:hint="@string/event_comment_hint"
         android:inputType="textCapSentences|textMultiLine"
         android:maxLength="2000"
         android:ems="10"
-        />
+        android:importantForAutofill="no" />
 
     <TextView
         android:id="@+id/eventDateET"
@@ -64,7 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:text="Date"
+        android:text="@string/date"
         android:textSize="20sp"
         android:textAlignment="center"
         android:textColor="@color/black"/>
@@ -75,7 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:text="Time"
+        android:text="@string/time"
         android:textSize="20sp"
         android:textAlignment="center"
         android:textColor="@color/black"/>
@@ -116,7 +118,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save"
+        android:text="@string/save"
         android:layout_marginTop="40dp"
         android:textColor="@color/blue"
         android:background="@null"

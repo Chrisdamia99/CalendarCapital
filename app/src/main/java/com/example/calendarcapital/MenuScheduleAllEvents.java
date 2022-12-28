@@ -44,7 +44,7 @@ public class MenuScheduleAllEvents extends AppCompatActivity implements  Navigat
         floatAddBtnMenuView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventAlertDialog();
+                newEventAction();
             }
         });
 
@@ -176,28 +176,33 @@ public class MenuScheduleAllEvents extends AppCompatActivity implements  Navigat
 
 
 
-
-    public void EventAlertDialog() {
-
-
-        LayoutInflater layoutInflater = LayoutInflater.from(this);
-        View customView = layoutInflater.inflate(R.layout.custom_dialog, null);
-
-        final AlertDialog ad = new AlertDialog.Builder(this).create();
-        RadioButton rb1 = customView.findViewById(R.id.rbAdd);
-
-        rb1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                newEventAction();
-                ad.hide();
-                finish();
-                startActivity(getIntent());
-            }
-        });
-
-
-    }
+//
+//    public void EventAlertDialog() {
+//
+//
+//        LayoutInflater layoutInflater = LayoutInflater.from(this);
+//        View customView = layoutInflater.inflate(R.layout.custom_dialog, null);
+//
+//        final AlertDialog ad = new AlertDialog.Builder(this).create();
+//        String message = getString(R.string.add_edit_delete_event_popupmsg);
+//        ad.setTitle(message);
+//        RadioButton rb1 = customView.findViewById(R.id.rbAdd);
+//
+//
+//        rb1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                newEventAction();
+//                ad.hide();
+//            }
+//        });
+//
+//
+//        ad.setView(customView);
+//        ad.show();
+//        ad.getWindow().setLayout(600, 600);
+//
+//    }
 
 
     public void newEventAction() {

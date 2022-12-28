@@ -8,65 +8,158 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-
+        android:layout_height="60dp"
         android:background="@color/blue"
-      />
-    <TextView
+        android:gravity="center"
+      >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Event Info"
+            android:textStyle="bold"
+
+            android:textColor="@color/white"
+            android:textSize="25sp" />
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+
+
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/id_lv_tv"
-        android:textColor="@color/black"
-        android:text="ID"
-        android:layout_marginTop="10dp"
-        android:textStyle="bold"
-        android:textSize="20sp"/>
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/title_lv_tv"
-        android:textColor="@color/black"
-        android:text="Title"
-        android:layout_marginTop="10dp"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-        android:textStyle="bold"
-        android:textSize="20sp"
+            android:textColor="@color/black"
+            android:text="ID:"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="Title:"
+            android:layout_marginTop="10dp"
+
+            android:textStyle="bold"
+            android:textSize="20sp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="Comment:"
+            android:layout_marginTop="10dp"
+
+            android:textStyle="bold"
+            android:textSize="20sp"
+            />
+
         />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/comment_lv_tv"
-        android:textColor="@color/black"
-        android:text="Comment"
-        android:layout_marginTop="10dp"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="Date:"
+            android:layout_marginTop="10dp"
 
-        android:textStyle="bold"
-        android:textSize="20sp"
-        />
+            android:textStyle="bold"
+            android:textSize="20sp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="Time:"
+            android:layout_marginTop="10dp"
+
+            android:textStyle="bold"
+            android:textSize="20sp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="50dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/id_lv_tv"
+            android:textColor="@color/black"
+            android:text="ID"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/title_lv_tv"
+            android:textColor="@color/black"
+            android:text="Title"
+            android:layout_marginTop="10dp"
+
+            android:textStyle="bold"
+            android:textSize="20sp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/comment_lv_tv"
+            android:textColor="@color/black"
+            android:text="Comment"
+            android:layout_marginTop="10dp"
+
+            android:textStyle="bold"
+            android:textSize="20sp"
+            />
 
         />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/date_lv_tv"
-        android:textColor="@color/black"
-        android:text="Date"
-        android:layout_marginTop="10dp"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/date_lv_tv"
+            android:textColor="@color/black"
+            android:text="Date"
+            android:layout_marginTop="10dp"
 
-        android:textStyle="bold"
-        android:textSize="20sp"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/time_lv_tv"
-        android:textColor="@color/black"
-        android:text="Time"
-        android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/time_lv_tv"
+            android:textColor="@color/black"
+            android:text="Time"
+            android:layout_marginTop="10dp"
 
-        android:textStyle="bold"
-        android:textSize="20sp"
-        />
+            android:textStyle="bold"
+            android:textSize="20sp"
+            />
+    </LinearLayout>
+
+    </LinearLayout>
+
 
 </LinearLayout>

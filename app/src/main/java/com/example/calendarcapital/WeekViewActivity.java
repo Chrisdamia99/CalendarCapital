@@ -69,7 +69,7 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         floatBtnEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventAlertDialog();
+                newEventAction();
             }
         });
 

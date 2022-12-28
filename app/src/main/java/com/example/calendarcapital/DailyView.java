@@ -79,7 +79,7 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
         floatAddBtnDailyView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventAlertDialog();
+                newEventAction();
             }
         });
 

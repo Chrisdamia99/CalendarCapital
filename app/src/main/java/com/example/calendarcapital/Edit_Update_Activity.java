@@ -4,11 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,38 +13,30 @@ import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.TimeZone;
 
-public class EventEdit extends AppCompatActivity {
+public class Edit_Update_Activity extends AppCompatActivity {
 
     private EditText eventNameET, eventCommentET;
     private TextView eventDateTV, eventTimeTV, changeTimeTV, changeDateTV;
     int hour, min;
     private LocalDate date;
     private static LocalTime time;
-
+    String id_row,title,comment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_edit);
+        setContentView(R.layout.activity_edit_update);
         initWidgets();
-        time = LocalTime.parse(CalendarUtils.formattedShortTime(LocalTime.now()));
-        eventTimeTV.setText("Time: " + CalendarUtils.formattedShortTime(time));
-        date = CalendarUtils.selectedDate;
-        eventDateTV.setText("Date: " + CalendarUtils.formattedDate(date));
-
+        getSetIntentData();
+//        time = LocalTime.parse(CalendarUtils.formattedShortTime(LocalTime.now()));
+//        eventTimeTV.setText("Time: " + CalendarUtils.formattedShortTime(time));
+//        date = CalendarUtils.selectedDate;
+//        eventDateTV.setText("Date: " + CalendarUtils.formattedDate(date));
 
         changeTimeTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,8 +52,7 @@ public class EventEdit extends AppCompatActivity {
             }
         });
 
-
-        findViewById(R.id.menu_new_add_edit).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.menu_new_upd).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PopupMenu popupMenu = new PopupMenu(getApplicationContext(),v);
@@ -74,7 +61,7 @@ public class EventEdit extends AppCompatActivity {
 
                         switch (item.getItemId()) {
                             case R.id.refreshItemOnLay:
-                                AllEventsList.reloadActivity(EventEdit.this);
+                                AllEventsList.reloadActivity(Edit_Update_Activity.this);
                                 return true;
                             case R.id.previousAct:
                                 onBackPressed();
@@ -87,18 +74,15 @@ public class EventEdit extends AppCompatActivity {
                 popupMenu.show();
             }
         });
-
-
     }
 
-
     private void initWidgets() {
-        eventNameET = findViewById(R.id.eventNameET);
-        eventCommentET = findViewById(R.id.eventCommentET);
-        eventDateTV = findViewById(R.id.eventDateET);
-        eventTimeTV = findViewById(R.id.eventTimeET);
-        changeTimeTV = findViewById(R.id.changeTimeTV);
-        changeDateTV = findViewById(R.id.changeDateTV);
+        eventNameET = findViewById(R.id.eventNameETupd);
+        eventCommentET = findViewById(R.id.eventCommentETupd);
+        eventDateTV = findViewById(R.id.eventDateETupd);
+        eventTimeTV = findViewById(R.id.eventTimeETupd);
+        changeTimeTV = findViewById(R.id.changeTimeTVupd);
+        changeDateTV = findViewById(R.id.changeDateTVupd);
 
 
     }
@@ -137,7 +121,7 @@ public class EventEdit extends AppCompatActivity {
 
     public void showChangeTime(int hours, int minute) {
         TimePickerDialog timePickerDialog;
-        timePickerDialog = new TimePickerDialog(EventEdit.this, new TimePickerDialog.OnTimeSetListener() {
+        timePickerDialog = new TimePickerDialog(Edit_Update_Activity.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                 hour = selectedHour;
@@ -187,21 +171,37 @@ public class EventEdit extends AppCompatActivity {
         timePickerDialog.show();
     }
 
+    void getSetIntentData()
+    {   if (getIntent().hasExtra("id")&& getIntent().hasExtra("title") && getIntent().hasExtra("comment") && getIntent().hasExtra("date") && getIntent().hasExtra("time"))
+    {
+        id_row = getIntent().getStringExtra("id");
+        title = getIntent().getStringExtra("title");
+        comment = getIntent().getStringExtra("comment");
+        date = LocalDate.parse(getIntent().getStringExtra("date"));
+        time = LocalTime.parse(getIntent().getStringExtra("time"));
+
+        eventNameET.setText(title);
+        eventCommentET.setText(comment);
+        eventDateTV.setText("Date: " + CalendarUtils.formattedDate(date));
+        eventTimeTV.setText("Time: " + CalendarUtils.formattedShortTime(time));
 
 
+    }
 
-    public void saveEventAction(View view) {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(EventEdit.this);
+    }
 
-
+    public void updEventAction(View view) {
+        MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
+        if (getIntent().hasExtra("id"))
+        {
+            id_row = getIntent().getStringExtra("id");
+        }
         String eventName = eventNameET.getText().toString();
         String eventComment = eventCommentET.getText().toString();
-        myDB.addEvent(eventName, eventComment, date, time);
+        myDB.updateData(id_row,eventName, eventComment, date, time);
 
-//        Event newEvent = new Event(eventName, eventComment, date, time);
-//        Event.eventsList.add(newEvent);
+        Intent i1 = new Intent(Edit_Update_Activity.this,MainActivity.class);
 
-        Intent i1 = new Intent(EventEdit.this,MainActivity.class);
         finish();
         overridePendingTransition(0, 0);
         startActivity(i1);
@@ -209,6 +209,4 @@ public class EventEdit extends AppCompatActivity {
 
 
     }
-
-
 }

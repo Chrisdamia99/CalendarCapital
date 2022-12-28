@@ -86,7 +86,7 @@ MyDatabaseHelper(@Nullable Context context)
         return cursor;
     }
 
-    void updateData(String row_id, String title, String comments, String date, String time)
+    void updateData(String row_id, String title, String comments, LocalDate date, LocalTime time)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();

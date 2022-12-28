@@ -176,6 +176,11 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
 
 
                 View viewFinal;
+                String id_row = hourAdapter.getItem(position).getEvents().get(0).getId();
+                String title_upd = hourAdapter.getItem(position).getEvents().get(0).getName();
+                String comment_upd = hourAdapter.getItem(position).getEvents().get(0).getComment();
+                String date_upd = String.valueOf(hourAdapter.getItem(position).getEvents().get(0).getDate());
+                String time_upd = String.valueOf(hourAdapter.getItem(position).getEvents().get(0).getTime());
 
 
 
@@ -205,6 +210,17 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
                                 AllEventsList.reloadActivity(WeekViewActivity.this);
 
 
+                            }
+                        }).setNeutralButton("Edit", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent i = new Intent(WeekViewActivity.this,Edit_Update_Activity.class);
+                                i.putExtra("id",id_row);
+                                i.putExtra("title",title_upd);
+                                i.putExtra("comment",comment_upd);
+                                i.putExtra("date",date_upd);
+                                i.putExtra("time",time_upd);
+                                startActivity(i);
                             }
                         });
 

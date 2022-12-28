@@ -35,7 +35,9 @@
         android:layout_gravity="center"
         android:textSize="20sp"
         android:ems="10"
-        android:inputType="text"/>
+        android:hint="Event title"
+        android:inputType="textCapSentences|textMultiLine"
+        android:maxLength="2000"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,9 +52,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:hint="Event comment"
         android:textSize="20sp"
         android:ems="10"
-        android:inputType="text"/>
+        android:inputType="textCapSentences|textMultiLine"
+        android:maxLength="2000"/>
 
     <TextView
         android:id="@+id/eventDateETupd"

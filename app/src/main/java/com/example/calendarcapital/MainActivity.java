@@ -123,23 +123,23 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         calendarRecyclerView.setLayoutManager(layoutManager);
         calendarRecyclerView.setAdapter(calendarAdapter);
 
-        setMonthAdapter();
+//        setMonthAdapter();
     }
 
-    private void setMonthAdapter() {
-        hourAdapter = new HourAdapter(getApplicationContext(), AllEventsList.hourEventListFromDatabase(getApplicationContext(), myDB));
-
-        hourAdapter.sort((o1, o2) -> o1.events.get(0).getDate().compareTo(o2.events.get(0).getDate()));
-        hourAdapter.sort((o1, o2) -> o1.events.get(0).getTime().compareTo(o2.events.get(0).getTime()));
-        hourAdapter.notifyDataSetChanged();
-
-
-        monthListView.setAdapter(hourAdapter);
-        hourAdapter.notifyDataSetChanged();
-
-
-
-    }
+//    private void setMonthAdapter() {
+//        hourAdapter = new HourAdapter(getApplicationContext(), AllEventsList.hourEventListFromDatabase(getApplicationContext(), myDB));
+//
+//        hourAdapter.sort((o1, o2) -> o1.events.get(0).getDate().compareTo(o2.events.get(0).getDate()));
+//        hourAdapter.sort((o1, o2) -> o1.events.get(0).getTime().compareTo(o2.events.get(0).getTime()));
+//        hourAdapter.notifyDataSetChanged();
+//
+//
+//        monthListView.setAdapter(hourAdapter);
+//        hourAdapter.notifyDataSetChanged();
+//
+//
+//
+//    }
 
 
 
@@ -148,8 +148,8 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         super.onResume();
 
 
-        hourAdapter.notifyDataSetChanged();
-        DialogClickedItemAndDelete();
+//        hourAdapter.notifyDataSetChanged();
+//        DialogClickedItemAndDelete();
 
 
     }

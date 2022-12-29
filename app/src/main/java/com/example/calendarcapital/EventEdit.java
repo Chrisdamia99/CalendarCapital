@@ -1,25 +1,36 @@
 package com.example.calendarcapital;
 
+import static com.example.calendarcapital.MyDatabaseHelper.COLUMN_ID;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 
+import android.content.Context;
 import android.content.Intent;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
+import java.util.Calendar;
 
 public class EventEdit extends AppCompatActivity {
 
@@ -28,7 +39,8 @@ public class EventEdit extends AppCompatActivity {
     int hour, min;
     private LocalDate date;
     private static LocalTime time;
-
+    private CheckBox alarmme;
+    Calendar calendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +102,7 @@ public class EventEdit extends AppCompatActivity {
         eventTimeTV = findViewById(R.id.eventTimeET);
         changeTimeTV = findViewById(R.id.changeTimeTV);
         changeDateTV = findViewById(R.id.changeDateTV);
+        alarmme = findViewById(R.id.alarmme);
 
 
     }
@@ -171,12 +184,34 @@ public class EventEdit extends AppCompatActivity {
 
 
 
+                if (Build.VERSION.SDK_INT>=23)
+                {
+                    calendar.set(calendar.get(Calendar.YEAR),
+                            calendar.get(Calendar.MONTH),
+                            calendar.get(Calendar.DAY_OF_MONTH),
+                            timePicker.getHour(),
+                            timePicker.getMinute(),0);
+                }else
+                {
+                    calendar.set(calendar.get(date.getYear()),
+                            calendar.get(date.getMonthValue()),
+                            calendar.get(date.getDayOfMonth()),
+                            timePicker.getCurrentHour(),
+                            timePicker.getCurrentMinute(),0);
+                }
+
+
+
+
 
             }
         }, hours, minute, true);//Yes 24 hour time
         timePickerDialog.setTitle("Select Time");
         timePickerDialog.show();
     }
+
+
+
 
 
 
@@ -188,9 +223,11 @@ public class EventEdit extends AppCompatActivity {
         String eventName = eventNameET.getText().toString();
         String eventComment = eventCommentET.getText().toString();
         myDB.addEvent(eventName, eventComment, date, time);
+//
+//        if (alarmme.isChecked()) {
+//
+//        }
 
-//        Event newEvent = new Event(eventName, eventComment, date, time);
-//        Event.eventsList.add(newEvent);
 
         Intent i1 = new Intent(EventEdit.this,MainActivity.class);
         finish();

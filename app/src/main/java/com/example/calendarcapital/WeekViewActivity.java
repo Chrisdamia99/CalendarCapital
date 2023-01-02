@@ -44,12 +44,11 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_week_view);
-        final DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
+
         initWidgets();
         setWeekView();
         setNavigationViewListener();
-
-
+        final DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
 
         findViewById(R.id.imageMenu).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +77,8 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
                                 return true;
                             case R.id.previousAct:
                                 onBackPressed();
+
+
                         }
 
                         return false;
@@ -91,6 +92,8 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
 
         NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setItemIconTintList(null);
+        drawerLayout.closeDrawer(GravityCompat.START);
+
 
 
     }
@@ -251,6 +254,24 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
 //        ad.getWindow().setLayout(1000, 800);
 //
 //    }
+//
+//    public void onBackPressed() {
+//
+//        DrawerLayout layoutMain = MainActivity.drawerLayout;
+//        DrawerLayout layoutDaily = DailyView.drawerLayout;
+//        if (layoutMain.isDrawerOpen(GravityCompat.END))
+//        {
+//            layoutMain.closeDrawer(GravityCompat.END);
+//        }else if(layoutDaily.isDrawerOpen(GravityCompat.END))
+//        {
+//            layoutDaily.closeDrawer(GravityCompat.END);
+//        }else {
+//            WeekViewActivity.super.onBackPressed();
+//        }
+//
+//
+//    }
+
 
     public void newEventAction() {
         startActivity(new Intent(this, EventEdit.class));
@@ -294,21 +315,7 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.refreshItemOnLay:
-                AllEventsList.reloadActivity(WeekViewActivity.this);
-                return true;
-            case R.id.previousAct:
-                onBackPressed();
 
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

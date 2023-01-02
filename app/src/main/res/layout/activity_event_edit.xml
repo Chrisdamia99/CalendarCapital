@@ -133,11 +133,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/save"
+        android:id="@+id/btnSave"
         android:layout_marginTop="30dp"
         android:textColor="@color/blue"
         android:background="@null"
         android:textStyle="bold"
-        android:onClick="saveEventAction"
         android:layout_gravity="center"
         android:textSize="20sp"/>
 

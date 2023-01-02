@@ -1,6 +1,8 @@
 package com.example.calendarcapital;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -33,6 +35,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_update);
         initWidgets();
         getSetIntentData();
+
 //        time = LocalTime.parse(CalendarUtils.formattedShortTime(LocalTime.now()));
 //        eventTimeTV.setText("Time: " + CalendarUtils.formattedShortTime(time));
 //        date = CalendarUtils.selectedDate;
@@ -65,6 +68,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
                                 return true;
                             case R.id.previousAct:
                                 onBackPressed();
+
+
                         }
 
                         return false;
@@ -188,6 +193,17 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
     }
 
+
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        final DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
+
+
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
     }
 
     public void updEventAction(View view) {

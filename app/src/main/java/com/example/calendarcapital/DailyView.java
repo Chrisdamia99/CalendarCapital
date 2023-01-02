@@ -41,7 +41,6 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
     static String dayOfWeek;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +48,7 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
         initWidgets();
         setDayView();
         setNavigationViewListener();
-        final DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
+       final DrawerLayout drawerLayout= findViewById(R.id.drawerLayout);
 
 
         setNavigationViewListener();
@@ -85,6 +84,7 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
                                 return true;
                             case R.id.previousAct:
                                 onBackPressed();
+
                         }
 
                         return false;
@@ -98,6 +98,8 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
 
         NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setItemIconTintList(null);
+        drawerLayout.closeDrawer(GravityCompat.START);
+
     }
 
     private void initWidgets() {
@@ -212,9 +214,22 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
 
         });
     }
-
-
-
+//    public void onBackPressed() {
+//
+//        DrawerLayout layoutMain = MainActivity.drawerLayout;
+//        DrawerLayout layoutWeek = WeekViewActivity.drawerLayout;
+//        if (layoutMain.isDrawerOpen(GravityCompat.END))
+//        {
+//            layoutMain.closeDrawer(GravityCompat.END);
+//        }else if(layoutWeek.isDrawerOpen(GravityCompat.END))
+//        {
+//            layoutWeek.closeDrawer(GravityCompat.END);
+//        }else {
+//            DailyView.super.onBackPressed();
+//        }
+//
+//
+//    }
 
     public void previousDayAction(View view) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusDays(1);
@@ -302,21 +317,7 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.refreshItemOnLay:
-                AllEventsList.reloadActivity(DailyView.this);
-                return true;
-            case R.id.previousAct:
-                onBackPressed();
 
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     private void setNavigationViewListener() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigationView);

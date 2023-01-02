@@ -3,6 +3,8 @@ package com.example.calendarcapital;
 import static com.example.calendarcapital.MyDatabaseHelper.COLUMN_ID;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
@@ -14,8 +16,10 @@ import android.content.Intent;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -36,6 +40,7 @@ public class EventEdit extends AppCompatActivity {
 
     private EditText eventNameET, eventCommentET;
     private TextView eventDateTV, eventTimeTV, changeTimeTV, changeDateTV;
+    Button btnSave;
     int hour, min;
     private LocalDate date;
     private static LocalTime time;
@@ -51,7 +56,14 @@ public class EventEdit extends AppCompatActivity {
         eventTimeTV.setText("Time: " + CalendarUtils.formattedShortTime(time));
         date = CalendarUtils.selectedDate;
         eventDateTV.setText("Date: " + CalendarUtils.formattedDate(date));
+        btnSave = findViewById(R.id.btnSave);
 
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveEventAction(v);
+            }
+        });
 
         changeTimeTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +92,8 @@ public class EventEdit extends AppCompatActivity {
                                 AllEventsList.reloadActivity(EventEdit.this);
                                 return true;
                             case R.id.previousAct:
-                                onBackPressed();
+                            onBackPressed();
+
                         }
 
                         return false;
@@ -209,10 +222,6 @@ public class EventEdit extends AppCompatActivity {
         timePickerDialog.setTitle("Select Time");
         timePickerDialog.show();
     }
-
-
-
-
 
 
 

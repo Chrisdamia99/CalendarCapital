@@ -68,6 +68,9 @@ public class MenuScheduleAllEvents extends AppCompatActivity implements  Navigat
                                 return true;
                             case R.id.previousAct:
                                 onBackPressed();
+                                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                                    drawerLayout.closeDrawer(GravityCompat.START);
+                                }
                         }
 
                         return false;

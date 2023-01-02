@@ -15,6 +15,13 @@
         android:theme="@style/Theme.CalendarCapital"
         tools:targetApi="31">
         <activity
+            android:name=".EventEdit"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".Edit_Update_Activity"
             android:exported="false">
             <meta-data
@@ -35,13 +42,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity
-            android:name=".EventEdit"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+
         <activity
             android:name=".WeekViewActivity"
             android:exported="false">
@@ -49,6 +50,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -62,6 +64,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
 
     </application>
 

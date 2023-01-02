@@ -11,14 +11,20 @@
             android:id="@+id/refreshItemOnLay"
             android:title="Ανανέωση"
             android:icon="@drawable/refresh"
-            android:iconTint="@color/white"
+            android:iconTint="@color/blue"
             app:showAsAction="ifRoom"/>
+
+        <item android:id="@+id/addEventMenu"
+                android:title="Προσθήκη Συμβάντων"
+                android:icon="@drawable/add"
+                android:iconTint="@color/blue"
+                app:showAsAction="never"/>
 
         <item
             android:id="@+id/previousAct"
             android:title="Πίσω"
             android:icon="@drawable/back_toactivity"
-            android:iconTint="@color/white"
+            android:iconTint="@color/blue"
             app:showAsAction="never"/>
 
 

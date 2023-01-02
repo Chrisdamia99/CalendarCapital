@@ -42,7 +42,8 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
 
         if(days.size() > 15) //month view
         {
-            layoutParams.height = (int) (parent.getHeight() * 0.166666666);
+//            layoutParams.height = (int) (parent.getHeight() * 0.166666666);
+            layoutParams.height = (int) (parent.getHeight() * 0.2);
 
         }
         else // week view
@@ -57,6 +58,10 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position)
     {
         Cursor cursor = myDB.readAllData();
+        holder.eventDayText.setVisibility(View.GONE);
+        holder.eventDayText2.setVisibility(View.GONE);
+
+
 
         final LocalDate date = days.get(position);
 
@@ -70,15 +75,32 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
             holder.dayOfMonth.setTextColor(Color.LTGRAY);
 
         while (cursor.moveToNext()) {
+
             if (date.equals(CalendarUtils.stringToLocalDate(cursor.getString(3)))) {
+                holder.eventDayText.setVisibility(View.VISIBLE);
+                holder.eventDayText2.setVisibility(View.VISIBLE);
+
+
+
+
+                    holder.eventDayText.setText(cursor.getString(1));
+                    holder.eventDayText2.setText(cursor.getString(1));
+
+                    holder.eventDayText.setBackgroundColor(Color.LTGRAY);
+                    holder.eventDayText2.setBackgroundColor(Color.LTGRAY);
 
                 holder.dayOfMonth.setBackgroundColor(Color.LTGRAY);
+
+
+            }
+
+
             }
 
         }
 
 
-    }
+
 
 
 

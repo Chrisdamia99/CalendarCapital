@@ -244,31 +244,6 @@ public class DailyView extends AppCompatActivity implements CalendarAdapter.OnIt
     }
 
 
-//    public void EventAlertDialog() {
-//
-//
-//        LayoutInflater layoutInflater = LayoutInflater.from(this);
-//        View customView = layoutInflater.inflate(R.layout.custom_dialog, null);
-//
-//        final AlertDialog ad = new AlertDialog.Builder(this).create();
-//        RadioButton rb1 = customView.findViewById(R.id.rbAdd);
-//
-//
-//        rb1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                newEventAction();
-//                ad.hide();
-//            }
-//        });
-//
-//
-//
-//        ad.setView(customView);
-//        ad.show();
-//
-//    }
-
 
     public void newEventAction() {
         startActivity(new Intent(this, EventEdit.class));

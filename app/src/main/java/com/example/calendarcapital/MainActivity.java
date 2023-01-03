@@ -1,13 +1,16 @@
 package com.example.calendarcapital;
 
 import static com.example.calendarcapital.CalendarUtils.daysInMonthArray;
+import static com.example.calendarcapital.CalendarUtils.daysInWeekArray;
 import static com.example.calendarcapital.CalendarUtils.monthYearFromDate;
 import static com.example.calendarcapital.CalendarUtils.selectedDate;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,12 +20,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.text.Layout;
 import android.view.LayoutInflater;
 
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.RadioButton;
@@ -32,19 +38,25 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
-
+import java.util.Locale;
 
 
 //Implements calendaradapter onitemlistener
-public class MainActivity extends AppCompatActivity implements CalendarAdapter.OnItemListener, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity  implements CalendarAdapter.OnItemListener, NavigationView.OnNavigationItemSelectedListener  {
     //Declare 3 variables textview(monthyeartext), the RecyclerView(calendarrecycleview)
     //and a LocalDate which is selectedDate
-    private TextView monthYearText;
+    FloatingActionButton floatAddBtnMonthAdd;
+    private TextView monthYearText,daysOfWeekMain;
+    LinearLayout daysOfWeek;
     private RecyclerView calendarRecyclerView;
+    private ListView monthListView;
+    NestedScrollView nestedScrollView;
+    HourAdapter hourAdapter;
     private MyDatabaseHelper myDB = new MyDatabaseHelper(this);
 
-
+     DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,18 +66,19 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         setContentView(R.layout.activity_main);
         initWidgets();
         CalendarUtils.selectedDate = LocalDate.now();
+        monthListView.setVisibility(View.GONE);
         setMonthView();
         setNavigationViewListener();
 
-        final DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
+        drawerLayout = findViewById(R.id.drawerLayout);
 
-//
-//        floatAddBtnMonthAdd.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                newEventAction();
-//            }
-//        });
+
+        floatAddBtnMonthAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newEventAction();
+            }
+        });
 
 
 
@@ -113,8 +126,196 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
     }
 
-    private Parcelable recyclerViewState;
 
+
+
+
+
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        setWeek();
+        hourAdapter.notifyDataSetChanged();
+        DialogClickedItemAndDelete();
+
+
+
+    }
+
+    private void DialogClickedItemAndDelete()
+    {
+        EventCursorAdapter CA = new EventCursorAdapter(getApplicationContext(),myDB.readAllData());
+
+        monthListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                View view1 = getLayoutInflater().inflate(R.layout.show_event_from_listview, null);
+//                private ArrayList<MlaData> MlaDats = new ArrayList<MlaData>();
+                HourEvent myEvent = (HourEvent) monthListView.getAdapter().getItem(position);
+
+                String myEventId= myEvent.getEvents().get(0).getId();
+                String myTitle = myEvent.getEvents().get(0).getName();
+                String myComment = myEvent.getEvents().get(0).getComment();
+                String myDate = String.valueOf(myEvent.getEvents().get(0).getDate());
+                String myTime = String.valueOf(myEvent.getEvents().get(0).getTime());
+
+
+                View viewFinal;
+                String id_row = hourAdapter.getItem(position).getEvents().get(0).getId();
+                String title_upd = hourAdapter.getItem(position).getEvents().get(0).getName();
+                String comment_upd = hourAdapter.getItem(position).getEvents().get(0).getComment();
+                String date_upd = String.valueOf(hourAdapter.getItem(position).getEvents().get(0).getDate());
+                String time_upd = String.valueOf(hourAdapter.getItem(position).getEvents().get(0).getTime());
+
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+                viewFinal = CA.setAllFields(view1,myEventId,myTitle,myComment,myDate,myTime);
+//                    viewFinal = SD.getView(position, view1, parent);
+
+
+                builder.setView(viewFinal).
+
+                        setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+
+                                String id_row = hourAdapter.getItem(position).getEvents().get(0).getId();
+                                myDB.deleteOneRow(id_row);
+
+
+                                AllEventsList.reloadActivity(MainActivity.this);
+
+                            }
+                        }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                AllEventsList.reloadActivity(MainActivity.this);
+
+
+                            }
+                        }).setNeutralButton("Edit", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent i = new Intent(MainActivity.this,Edit_Update_Activity.class);
+                                i.putExtra("id",id_row);
+                                i.putExtra("title",title_upd);
+                                i.putExtra("comment",comment_upd);
+                                i.putExtra("date",date_upd);
+                                i.putExtra("time",time_upd);
+                                startActivity(i);
+                            }
+                        });
+
+
+                builder.show();
+            }
+
+        });
+    }
+
+
+
+
+    private void initWidgets() {
+        calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
+        monthYearText = findViewById(R.id.monthYearTV);
+        floatAddBtnMonthAdd = findViewById(R.id.floatAddBtnMonthView);
+        monthListView = findViewById(R.id.monthListView);
+         nestedScrollView = findViewById(R.id.scrollView1);
+        daysOfWeekMain= findViewById(R.id.daysOfWeekMain);
+        daysOfWeek = findViewById(R.id.daysOfWeek);
+
+    }
+
+
+
+
+
+
+    public void previousMonthAction(View view) {
+
+
+        if (calendarRecyclerView.getMeasuredHeight() < 301) {
+            CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusWeeks(1);
+
+            setWeek();
+        }else if (calendarRecyclerView.getVisibility() == View.GONE){
+            CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusDays(1);
+            setDaily();
+
+        }else {
+            CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusMonths(1);
+            setMonthView();
+        }
+    }
+
+    public void nextMonthAction(View view) {
+
+        if (calendarRecyclerView.getMeasuredHeight() < 301) {
+            CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusWeeks(1);
+
+            setWeek();
+        }else if (calendarRecyclerView.getVisibility() == View.GONE){
+            CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusDays(1);
+            setDaily();
+        }else{
+            CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusMonths(1);
+            setMonthView();
+        }
+    }
+
+    boolean isDoubleClicked = false;
+
+    Handler handler = new Handler();
+
+    @Override
+    public void onItemClick(int position, LocalDate date) {
+
+
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                isDoubleClicked = false;
+            }
+        };
+
+        if (isDoubleClicked) {
+
+
+            setDaily();
+            drawerLayout.closeDrawer(GravityCompat.START);
+            daysOfWeekMain.setVisibility(View.VISIBLE);
+            isDoubleClicked = false;
+            handler.removeCallbacks(r);
+        } else {
+            isDoubleClicked = true;
+            handler.postDelayed(r, 500);
+        }
+
+        if (date != null) {
+            CalendarUtils.selectedDate = date;
+
+            if (calendarRecyclerView.getMeasuredHeight() < 301) {
+                setWeek();
+            } else if (calendarRecyclerView.getVisibility() == View.GONE){
+             setDaily();
+
+                }else {
+                setMonthView();
+
+                if (position > 12) {
+                    calendarRecyclerView.getLayoutManager().scrollToPosition(position);
+                }
+                }
+            }
+        }
 
 
     private void setMonthView() {
@@ -129,79 +330,65 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         calendarRecyclerView.setLayoutManager(layoutManager);
 
         calendarRecyclerView.setAdapter(calendarAdapter);
-
-
-
-    }
-
-
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-
-
+        ViewGroup.LayoutParams params = calendarRecyclerView.getLayoutParams();
+        params.height=1500;
+        calendarRecyclerView.setLayoutParams(params);
 
 
     }
 
 
+    private void setWeek()
+    {
+        monthYearText.setText(monthYearFromDate(CalendarUtils.selectedDate));
+        ArrayList<LocalDate> days = daysInWeekArray(CalendarUtils.selectedDate);
 
-    private void initWidgets() {
-        calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
-        monthYearText = findViewById(R.id.monthYearTV);
+        CalendarAdapter calendarAdapter = new CalendarAdapter(days, this, getApplicationContext());
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 7);
+        calendarRecyclerView.setLayoutManager(layoutManager);
+        calendarRecyclerView.setAdapter(calendarAdapter);
+        ViewGroup.LayoutParams params = calendarRecyclerView.getLayoutParams();
+        params.height=300;
+        calendarRecyclerView.setLayoutParams(params);
+        setEventListView();
+
+
     }
 
-
-
-
-
-
-    public void previousMonthAction(View view) {
-        CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusMonths(1);
-        setMonthView();
+    private void setDaily()
+    {
+        Locale locale = new Locale("el", "GR");
+        monthYearText.setText(CalendarUtils.monthDayFromDate(selectedDate));
+        String dayOfWeekmain = selectedDate.getDayOfWeek().getDisplayName(TextStyle.FULL, locale);
+        daysOfWeekMain.setText(dayOfWeekmain);
+        daysOfWeekMain.setVisibility(View.VISIBLE);
+        daysOfWeek.setVisibility(View.GONE);
+        calendarRecyclerView.setVisibility(View.GONE);
+        setEventListView();
     }
 
-    public void nextMonthAction(View view) {
-        CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusMonths(1);
-        setMonthView();
+    private void setAllEvents()
+    {
+        hourAdapter = new HourAdapter(getApplicationContext(), AllEventsList.hourEventListFromDatabaseToShowAllEvents(getApplicationContext(), myDB));
+        hourAdapter.sort((o1, o2) -> o1.events.get(0).getTime().compareTo(o2.events.get(0).getTime()));
+        hourAdapter.sort((o1, o2) -> o1.events.get(0).getDate().compareTo(o2.events.get(0).getDate()));
+
+        hourAdapter.notifyDataSetChanged();
+
+
+        monthListView.setAdapter(hourAdapter);
+        hourAdapter.notifyDataSetChanged();
     }
 
-    boolean isDoubleClicked = false;
+    private void setEventListView() {
+        hourAdapter = new HourAdapter(getApplicationContext(), AllEventsList.hourEventListFromDatabase(getApplicationContext(), myDB));
 
-    Handler handler = new Handler();
 
-    @Override
-    public void onItemClick(int position, LocalDate date) {
+        hourAdapter.sort((o1, o2) -> o1.events.get(0).getDate().compareTo(o2.events.get(0).getDate()));
+        hourAdapter.sort((o1, o2) -> o1.events.get(0).getTime().compareTo(o2.events.get(0).getTime()));
+        monthListView.setAdapter(hourAdapter);
 
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                isDoubleClicked = false;
-            }
-        };
-
-        if (isDoubleClicked) {
-            Intent i5 = new Intent(MainActivity.this, DailyView.class);
-            startActivity(i5);
-            isDoubleClicked = false;
-            handler.removeCallbacks(r);
-        } else {
-            isDoubleClicked = true;
-            handler.postDelayed(r, 500);
-        }
-
-        if (date != null) {
-            CalendarUtils.selectedDate = date;
-            setMonthView();
-
-            if (position>12) {
-                calendarRecyclerView.getLayoutManager().scrollToPosition(position);
-            }
-
-        }
+        monthListView.setVisibility(View.VISIBLE);
     }
 
 
@@ -211,22 +398,6 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     }
 
 
-//    public void onBackPressed() {
-//
-//        DrawerLayout layoutWeek = WeekViewActivity.drawerLayout;
-//        DrawerLayout layoutDaily = DailyView.drawerLayout;
-//        if (layoutWeek.isDrawerOpen(GravityCompat.END))
-//        {
-//            layoutWeek.closeDrawer(GravityCompat.END);
-//        }else if(layoutDaily.isDrawerOpen(GravityCompat.END))
-//        {
-//            layoutDaily.closeDrawer(GravityCompat.END);
-//        }else {
-//            MainActivity.super.onBackPressed();
-//        }
-//
-//
-//    }
 
 
     @Override
@@ -234,21 +405,35 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
         switch (item.getItemId()) {
             case R.id.menuSchedule:
-                Intent i4 = new Intent(MainActivity.this, MenuScheduleAllEvents.class);
-                startActivity(i4);
+                setAllEvents();
+                drawerLayout.closeDrawer(GravityCompat.START);
+                daysOfWeekMain.setVisibility(View.GONE);
+
+                calendarRecyclerView.setVisibility(View.GONE);
                 break;
             case R.id.daysView:
-                Intent i = new Intent(MainActivity.this, DailyView.class);
-                startActivity(i);
+                setDaily();
+                drawerLayout.closeDrawer(GravityCompat.START);
+                daysOfWeekMain.setVisibility(View.VISIBLE);
                 break;
 
             case R.id.weekView:
-                Intent i2 = new Intent(MainActivity.this, WeekViewActivity.class);
-                startActivity(i2);
+
+                setWeek();
+                drawerLayout.closeDrawer(GravityCompat.START);
+                daysOfWeekMain.setVisibility(View.GONE);
+                monthListView.setVisibility(View.VISIBLE);
+                calendarRecyclerView.setVisibility(View.VISIBLE);
+
                 break;
+
             case R.id.monthView:
-                finish();
-                startActivity(getIntent());
+                setMonthView();
+                drawerLayout.closeDrawer(GravityCompat.START);
+                daysOfWeekMain.setVisibility(View.GONE);
+                monthListView.setVisibility(View.GONE);
+                nestedScrollView.setVisibility(View.VISIBLE);
+                calendarRecyclerView.setVisibility(View.VISIBLE);
                 break;
             case R.id.refreshItem:
                 finish();

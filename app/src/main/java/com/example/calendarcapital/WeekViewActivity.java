@@ -228,50 +228,6 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
 
 
 
-//    public void EventAlertDialog() {
-//
-//
-//        LayoutInflater layoutInflater = LayoutInflater.from(this);
-//        View customView = layoutInflater.inflate(R.layout.custom_dialog, null);
-//
-//        final AlertDialog ad = new AlertDialog.Builder(this).create();
-//        ad.setTitle("Προσθήκη/Επεξεργασία/Διαγραφή συμβάντων");
-//        RadioButton rb1 = customView.findViewById(R.id.rbAdd);
-//
-//        rb1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                newEventAction();
-//                ad.hide();
-//
-//            }
-//        });
-//
-//
-//
-//        ad.setView(customView);
-//        ad.show();
-//        ad.getWindow().setLayout(1000, 800);
-//
-//    }
-//
-//    public void onBackPressed() {
-//
-//        DrawerLayout layoutMain = MainActivity.drawerLayout;
-//        DrawerLayout layoutDaily = DailyView.drawerLayout;
-//        if (layoutMain.isDrawerOpen(GravityCompat.END))
-//        {
-//            layoutMain.closeDrawer(GravityCompat.END);
-//        }else if(layoutDaily.isDrawerOpen(GravityCompat.END))
-//        {
-//            layoutDaily.closeDrawer(GravityCompat.END);
-//        }else {
-//            WeekViewActivity.super.onBackPressed();
-//        }
-//
-//
-//    }
-
 
     public void newEventAction() {
         startActivity(new Intent(this, EventEdit.class));

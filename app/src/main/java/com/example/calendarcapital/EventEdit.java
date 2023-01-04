@@ -1,22 +1,15 @@
 package com.example.calendarcapital;
 
-import static com.example.calendarcapital.MyDatabaseHelper.COLUMN_ID;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.app.AlarmManager;
 import android.app.DatePickerDialog;
-import android.app.PendingIntent;
+
 import android.app.TimePickerDialog;
 
-import android.content.Context;
 import android.content.Intent;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -26,15 +19,13 @@ import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.Year;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoField;
 import java.util.Calendar;
+import java.util.Date;
 
 public class EventEdit extends AppCompatActivity {
 
@@ -47,7 +38,8 @@ public class EventEdit extends AppCompatActivity {
     private CheckBox alarmme;
     Calendar calendar = Calendar.getInstance();
 
-    @Override
+
+        @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_edit);
@@ -92,7 +84,8 @@ public class EventEdit extends AppCompatActivity {
                                 AllEventsList.reloadActivity(EventEdit.this);
                                 return true;
                             case R.id.previousAct:
-                            onBackPressed();
+                            Intent i = new Intent(EventEdit.this,MainActivity.class);
+                            startActivity(i);
 
                         }
 
@@ -225,6 +218,22 @@ public class EventEdit extends AppCompatActivity {
 
 
 
+    public long localTimeToDate(LocalTime localTime) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        //assuming year/month/date information is not important
+        calendar.set(0, 0, 0, localTime.getHour(), localTime.getMinute(), localTime.getSecond());
+        return calendar.getTime().getTime();
+    }
+
+    public  Date localDateToDate(LocalDate localDate) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        //assuming start of day
+        calendar.set(localDate.getYear(), localDate.getMonthValue()-1, localDate.getDayOfMonth());
+        return calendar.getTime();
+    }
+
     public void saveEventAction(View view) {
         MyDatabaseHelper myDB = new MyDatabaseHelper(EventEdit.this);
 
@@ -232,10 +241,8 @@ public class EventEdit extends AppCompatActivity {
         String eventName = eventNameET.getText().toString();
         String eventComment = eventCommentET.getText().toString();
         myDB.addEvent(eventName, eventComment, date, time);
-//
-//        if (alarmme.isChecked()) {
-//
-//        }
+
+
 
 
         Intent i1 = new Intent(EventEdit.this,MainActivity.class);

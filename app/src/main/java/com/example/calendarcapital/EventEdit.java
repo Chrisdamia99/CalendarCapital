@@ -2,10 +2,15 @@ package com.example.calendarcapital;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 
+import android.content.Context;
 import android.content.Intent;
 
 import android.os.Build;
@@ -19,13 +24,17 @@ import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 
+import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class EventEdit extends AppCompatActivity {
 
@@ -49,6 +58,7 @@ public class EventEdit extends AppCompatActivity {
         date = CalendarUtils.selectedDate;
         eventDateTV.setText("Date: " + CalendarUtils.formattedDate(date));
         btnSave = findViewById(R.id.btnSave);
+        createNotificationChannel();
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,6 +152,10 @@ public class EventEdit extends AppCompatActivity {
         StartTime.setTitle("Select Date");
         StartTime.show();
 
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH,dayofmonth);
+
     }
 
 
@@ -190,22 +204,9 @@ public class EventEdit extends AppCompatActivity {
 
 
 
-                if (Build.VERSION.SDK_INT>=23)
-                {
-                    calendar.set(calendar.get(Calendar.YEAR),
-                            calendar.get(Calendar.MONTH),
-                            calendar.get(Calendar.DAY_OF_MONTH),
-                            timePicker.getHour(),
-                            timePicker.getMinute(),0);
-                }else
-                {
-                    calendar.set(calendar.get(date.getYear()),
-                            calendar.get(date.getMonthValue()),
-                            calendar.get(date.getDayOfMonth()),
-                            timePicker.getCurrentHour(),
-                            timePicker.getCurrentMinute(),0);
-                }
-
+               calendar.set(Calendar.HOUR_OF_DAY, hour);
+                calendar.set(Calendar.MINUTE,min);
+                calendar.set(Calendar.SECOND,0);
 
 
 
@@ -216,6 +217,36 @@ public class EventEdit extends AppCompatActivity {
         timePickerDialog.show();
     }
 
+    private void updateTimeText(Calendar c)
+    {
+        String timeTxt = "Alarm set for: ";
+        timeTxt += DateFormat.getTimeInstance(DateFormat.SHORT).format(c);
+        Toast.makeText(this, timeTxt, Toast.LENGTH_SHORT).show();
+    }
+
+    private void startAlarm(Calendar c)
+    {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this,AlarmReceiver.class);
+
+        intent.putExtra("title",eventNameET.getText().toString());
+        intent.putExtra("comment",eventCommentET.getText().toString());
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,0);
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),pendingIntent);
+        Toast.makeText(this, "Alarm set", Toast.LENGTH_SHORT).show();
+    }
+
+    private void cancelAlarm(Calendar c)
+    {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this,AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,0);
+
+        alarmManager.cancel(pendingIntent);
+        Toast.makeText(this, "Alarm Cancelled", Toast.LENGTH_SHORT).show();
+    }
 
 
     public long localTimeToDate(LocalTime localTime) {
@@ -234,6 +265,30 @@ public class EventEdit extends AppCompatActivity {
         return calendar.getTime();
     }
 
+    public Calendar myAlarmTime()
+    {
+      calendar.set(Calendar.HOUR_OF_DAY,time.getHour());
+      calendar.set(Calendar.MINUTE,time.getMinute());
+      calendar.set(Calendar.SECOND,0);
+      calendar.set(Calendar.MILLISECOND,0);
+      return calendar;
+    }
+
+    private void createNotificationChannel()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            CharSequence name = "myandroidReminderChannel";
+            String description = "Channel for Alarm Manager";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("myandroid",name,importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
     public void saveEventAction(View view) {
         MyDatabaseHelper myDB = new MyDatabaseHelper(EventEdit.this);
 
@@ -242,7 +297,10 @@ public class EventEdit extends AppCompatActivity {
         String eventComment = eventCommentET.getText().toString();
         myDB.addEvent(eventName, eventComment, date, time);
 
-
+    if (alarmme.isChecked())
+    {
+        startAlarm(calendar);
+    }
 
 
         Intent i1 = new Intent(EventEdit.this,MainActivity.class);

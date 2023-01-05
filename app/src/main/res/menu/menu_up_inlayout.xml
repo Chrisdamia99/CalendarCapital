@@ -4,28 +4,28 @@
 
 
 
-
+        <item
+            android:id="@+id/previousAct"
+            android:title="Πίσω"
+            android:icon="@drawable/back_toactivity"
+            android:iconTint="@color/white"
+            app:showAsAction="always"/>
 
 
         <item
             android:id="@+id/refreshItemOnLay"
             android:title="Ανανέωση"
             android:icon="@drawable/refresh"
-            android:iconTint="@color/blue"
+            android:iconTint="@color/white"
             app:showAsAction="ifRoom"/>
 
         <item android:id="@+id/addEventMenu"
                 android:title="Προσθήκη Συμβάντων"
                 android:icon="@drawable/add"
-                android:iconTint="@color/blue"
+                android:iconTint="@color/white"
                 app:showAsAction="never"/>
 
-        <item
-            android:id="@+id/previousAct"
-            android:title="Πίσω"
-            android:icon="@drawable/back_toactivity"
-            android:iconTint="@color/blue"
-            app:showAsAction="never"/>
+
 
 
 </menu>

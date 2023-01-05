@@ -44,9 +44,10 @@
 
             <TextView
                 android:id="@+id/textTitle"
-                android:layout_width="280dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="100dp"
+                android:gravity="center_horizontal"
                 android:text="@string/capital_calendar_title"
                 android:textAlignment="center"
                 android:textColor="@color/white"
@@ -54,11 +55,19 @@
                 android:textStyle="bold" />
 
             <ImageView
-                android:id="@+id/menu_new"
+                android:id="@+id/refreshMenuBtn"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginStart="20dp"
-                app:srcCompat="@drawable/bullets"
+                android:layout_marginStart="50dp"
+                app:srcCompat="@drawable/refresh"
+                app:tint="@color/white" />
+
+            <ImageView
+                android:id="@+id/BackMenuBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="10dp"
+                app:srcCompat="@drawable/back_toactivity"
                 app:tint="@color/white" />
 
 
@@ -231,7 +240,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/calendarRecyclerView"
                         android:layout_marginStart="320dp"
-                        android:layout_marginTop="40dp"
+                        android:layout_marginTop="20dp"
                         android:backgroundTint="@color/blue"
                         android:src="@drawable/add"
                         android:tint="@color/white" />
@@ -241,7 +250,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="500dp"
                         android:layout_below="@id/calendarRecyclerView"
-                        android:layout_marginTop="60dp"
+                        android:layout_marginTop="20dp"
                         android:nestedScrollingEnabled="true"
                         android:visibility="gone" />
 

@@ -217,12 +217,6 @@ public class EventEdit extends AppCompatActivity {
         timePickerDialog.show();
     }
 
-    private void updateTimeText(Calendar c)
-    {
-        String timeTxt = "Alarm set for: ";
-        timeTxt += DateFormat.getTimeInstance(DateFormat.SHORT).format(c);
-        Toast.makeText(this, timeTxt, Toast.LENGTH_SHORT).show();
-    }
 
     private void startAlarm(Calendar c)
     {

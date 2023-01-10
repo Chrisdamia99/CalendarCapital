@@ -19,15 +19,15 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 public class AlarmReceiver extends BroadcastReceiver {
-
+Vibrator v;
     @Override
     public void onReceive(Context context, Intent intent) {
+        v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        long[] pattern = {0,300,1000};
 
 
 
 
-        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(VibrationEffect.DEFAULT_AMPLITUDE);
 
 
 
@@ -66,6 +66,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Ringtone r = RingtoneManager.getRingtone(context, notification);
         r.play();
+        v.vibrate(VibrationEffect.createWaveform(pattern, -1));
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -74,7 +75,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 if (r.isPlaying())
                     r.stop();
             }
-        },1000*10 );
+        },500*10 );
 
     }
 

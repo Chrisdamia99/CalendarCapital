@@ -10,6 +10,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -20,25 +21,36 @@ import androidx.core.app.NotificationManagerCompat;
 
 public class AlarmReceiver extends BroadcastReceiver {
 Vibrator v;
+String event;
+String comment;
+String text;
     @Override
     public void onReceive(Context context, Intent intent) {
         v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         long[] pattern = {0,300,1000};
 
 
+        Bundle b = intent.getExtras();
+
+        if(b!=null)
+        {
+             event =(String) b.get("title");
+             comment =(String) b.get("comment");
+
+             text = "Reminder for the Event: " + "\n" + event + "\n" + "Comments: " + "\n" + comment;
+        }
 
 
 
 
 
-        String event = intent.getStringExtra("title");
-        String comment = intent.getStringExtra("comment");
+
+
         Intent activityIntent = new Intent(context, MainActivity.class);
 
         PendingIntent pendingIntent = PendingIntent.getActivity( context,0,activityIntent,0 );
 
 
-        String text = "Reminder for the Event: " + "\n" + event + "\n" + "Comments: " + "\n" + comment;
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "myandroid")
                 .setSmallIcon(R.drawable.alarm)
                 .setContentTitle(event)
@@ -67,6 +79,7 @@ Vibrator v;
         Ringtone r = RingtoneManager.getRingtone(context, notification);
         r.play();
         v.vibrate(VibrationEffect.createWaveform(pattern, -1));
+
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {

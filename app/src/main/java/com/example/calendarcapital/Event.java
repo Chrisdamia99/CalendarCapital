@@ -56,6 +56,7 @@ public class Event {
 
 
 
+
     }
 
     public Event(String name,String comment, LocalDate date, LocalTime time) {

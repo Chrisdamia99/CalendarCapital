@@ -112,11 +112,24 @@
 
 
 
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/alarmmeupd"
+        android:layout_marginTop="30dp"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:text="Alarm"
+        android:layout_gravity="center"
+        />
+
 
 
 
 
     <Button
+        android:id="@+id/btnUpdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/save"
@@ -124,7 +137,6 @@
         android:textColor="@color/blue"
         android:background="@null"
         android:textStyle="bold"
-        android:onClick="updEventAction"
         android:layout_gravity="center"
         android:textSize="20sp"/>
 

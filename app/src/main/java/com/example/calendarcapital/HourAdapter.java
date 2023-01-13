@@ -170,6 +170,11 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
             comment3.setText(commentsNotShown);
         }
 
+        if (comment1.getText().toString().isEmpty())
+        {
+            comment1.setVisibility(View.GONE);
+        }
+
 
 
     }

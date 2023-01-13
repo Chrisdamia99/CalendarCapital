@@ -45,6 +45,7 @@ public class EventEdit extends AppCompatActivity {
     private LocalDate date;
     private static LocalTime time;
     private CheckBox alarmme;
+    boolean alarmState;
     Calendar calendar = Calendar.getInstance();
 
 
@@ -218,13 +219,18 @@ public class EventEdit extends AppCompatActivity {
     }
 
 
-    private void startAlarm(Calendar c)
+    public void startAlarm(Calendar c)
     {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this,AlarmReceiver.class);
 
-        intent.putExtra("title",eventNameET.getText().toString());
-        intent.putExtra("comment",eventCommentET.getText().toString());
+        intent.removeExtra("title");
+        intent.removeExtra("comment");
+        String strTitle = eventNameET.getText().toString();
+        String strComment = eventCommentET.getText().toString();
+
+        intent.putExtra("title",strTitle);
+        intent.putExtra("comment",strComment);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,0);
 
@@ -232,7 +238,7 @@ public class EventEdit extends AppCompatActivity {
         Toast.makeText(this, "Alarm set", Toast.LENGTH_SHORT).show();
     }
 
-    private void cancelAlarm(Calendar c)
+    public void cancelAlarm(Calendar c)
     {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this,AlarmReceiver.class);
@@ -243,30 +249,7 @@ public class EventEdit extends AppCompatActivity {
     }
 
 
-    public long localTimeToDate(LocalTime localTime) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.clear();
-        //assuming year/month/date information is not important
-        calendar.set(0, 0, 0, localTime.getHour(), localTime.getMinute(), localTime.getSecond());
-        return calendar.getTime().getTime();
-    }
 
-    public  Date localDateToDate(LocalDate localDate) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.clear();
-        //assuming start of day
-        calendar.set(localDate.getYear(), localDate.getMonthValue()-1, localDate.getDayOfMonth());
-        return calendar.getTime();
-    }
-
-    public Calendar myAlarmTime()
-    {
-      calendar.set(Calendar.HOUR_OF_DAY,time.getHour());
-      calendar.set(Calendar.MINUTE,time.getMinute());
-      calendar.set(Calendar.SECOND,0);
-      calendar.set(Calendar.MILLISECOND,0);
-      return calendar;
-    }
 
     private void createNotificationChannel()
     {
@@ -286,18 +269,24 @@ public class EventEdit extends AppCompatActivity {
     public void saveEventAction(View view) {
         MyDatabaseHelper myDB = new MyDatabaseHelper(EventEdit.this);
 
+        if (alarmme.isChecked())
+        {
+            startAlarm(calendar);
+            alarmState = true;
+        }else {
+            alarmState = false;
+        }
 
         String eventName = eventNameET.getText().toString();
         String eventComment = eventCommentET.getText().toString();
+
         myDB.addEvent(eventName, eventComment, date, time);
 
-    if (alarmme.isChecked())
-    {
-        startAlarm(calendar);
-    }
+
 
 
         Intent i1 = new Intent(EventEdit.this,MainActivity.class);
+        i1.putExtra("alarm",String.valueOf(alarmState));
         finish();
         overridePendingTransition(0, 0);
         startActivity(i1);

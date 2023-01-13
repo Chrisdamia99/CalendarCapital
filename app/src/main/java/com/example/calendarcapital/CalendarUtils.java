@@ -16,32 +16,26 @@ public class CalendarUtils {
     public static LocalTime selectedTime;
 
 
-
-
-
-    public static String formattedDate(LocalDate date)
-
-    {
+    public static String formattedDate(LocalDate date) {
         Locale locale = new Locale("el", "GR");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", locale);
         return date.format(formatter);
     }
 
-    public static  String DailyViewFormattedDate(LocalDate date)
-    {Locale locale = new Locale("el", "GR");
+    public static String DailyViewFormattedDate(LocalDate date) {
+        Locale locale = new Locale("el", "GR");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM", locale);
         return date.format(formatter);
 
     }
 
-    public static String formattedTime(LocalTime time)
-    {
+    public static String formattedTime(LocalTime time) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm:ss a");
         return time.format(formatter);
     }
-    public static String formattedShortTime(LocalTime time)
-    {
+
+    public static String formattedShortTime(LocalTime time) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         return time.format(formatter);
@@ -54,13 +48,13 @@ public class CalendarUtils {
         return date.format(formatter);
     }
 
-    public static String monthDayFromDate(LocalDate date)
-    {
+    public static String monthDayFromDate(LocalDate date) {
         Locale locale = new Locale("el", "GR");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d", locale);
         return date.format(formatter);
     }
-    public static LocalDate stringToLocalDate(String date)   {
+
+    public static LocalDate stringToLocalDate(String date) {
         Locale locale = new Locale("el", "GR");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", locale);
 
@@ -70,7 +64,6 @@ public class CalendarUtils {
 
         return localDate;
     }
-
 
 
     public static ArrayList<LocalDate> daysInMonthArray() //The arraylist that month will be stored
@@ -89,46 +82,84 @@ public class CalendarUtils {
         LocalDate firstOfMonth = CalendarUtils.selectedDate.withDayOfMonth(1); //get first day of month
         int dayOfWeek = firstOfMonth.getDayOfWeek().getValue(); // return int between 0-7 which is the day of the week
 
-        for(int i = 1; i <= 42; i++)
-        {
-            if(i <= dayOfWeek) {
+        for (int i = 1; i <= 42; i++) {
+            if (i <= dayOfWeek) {
+
+                daysInMonthArray.add(LocalDate.of(prevMonth.getYear(), prevMonth.getMonth(), prevDaysInMonth + i - dayOfWeek));
+                if (dayOfWeek == 7 && daysInMonthArray.size() >= 7) {
+
+                    daysInMonthArray.clear();
+                }
 
 
-                    daysInMonthArray.add(LocalDate.of(prevMonth.getYear(), prevMonth.getMonth(), prevDaysInMonth + i - dayOfWeek));
 
-            }else if(i > daysInMonth + dayOfWeek)
-            {
+            } else if (i > daysInMonth + dayOfWeek) {
+
                 daysInMonthArray.add(LocalDate.of(nextMonth.getYear(), nextMonth.getMonth(), i - dayOfWeek - daysInMonth));
 
-            }
-            else {
+                if (dayOfWeek<6 && daysInMonthArray.size()==41)
+                {
+
+                    daysInMonthArray.remove(40);
+                    daysInMonthArray.remove(39);
+                    daysInMonthArray.remove(38);
+                    daysInMonthArray.remove(37);
+                    daysInMonthArray.remove(36);
+                    daysInMonthArray.remove(35);
+                    daysInMonthArray.remove(34);
+
+
+
+
+                }else if (dayOfWeek<6 && daysInMonthArray.size()==42)
+                {
+
+                    daysInMonthArray.remove(41);
+                    daysInMonthArray.remove(40);
+                    daysInMonthArray.remove(39);
+                    daysInMonthArray.remove(38);
+                    daysInMonthArray.remove(37);
+                    daysInMonthArray.remove(36);
+                    daysInMonthArray.remove(35);
+
+
+
+                }else if (daysInMonthArray.size()==35)
+                {
+                    daysInMonthArray.remove(34);
+                    daysInMonthArray.add(daysInMonthArray.get(33).plusDays(1));
+                }
+
+
+            } else {
                 daysInMonthArray.add(LocalDate.of(selectedDate.getYear(), selectedDate.getMonth(), i - dayOfWeek));
+
             }
-            }
-        return  daysInMonthArray;
+        }
+
+
+        return daysInMonthArray;
+
+
     }
 
-    public static ArrayList<LocalDate> daysInWeekArray(LocalDate selectedDate)
-    {
+    public static ArrayList<LocalDate> daysInWeekArray(LocalDate selectedDate) {
         ArrayList<LocalDate> days = new ArrayList<>();
         LocalDate current = sundayForDate(selectedDate);
         LocalDate endDate = current.plusWeeks(1);
 
-        while (current.isBefore(endDate))
-        {
+        while (current.isBefore(endDate)) {
             days.add(current);
             current = current.plusDays(1);
         }
         return days;
     }
 
-    private static LocalDate sundayForDate(LocalDate current)
-    {
+    private static LocalDate sundayForDate(LocalDate current) {
         LocalDate oneWeekAgo = current.minusWeeks(1);
 
-        while (current.isAfter(oneWeekAgo))
-        {
-            if(current.getDayOfWeek() == DayOfWeek.SUNDAY)
+        while (current.isAfter(oneWeekAgo)) {
+            if (current.getDayOfWeek() == DayOfWeek.SUNDAY)
                 return current;
 
             current = current.minusDays(1);
@@ -136,7 +167,6 @@ public class CalendarUtils {
 
         return null;
     }
-
 
 
 }

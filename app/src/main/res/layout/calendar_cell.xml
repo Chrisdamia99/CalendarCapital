@@ -2,6 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/parentView"
+    android:background="@drawable/back"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,9 +11,10 @@
 
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
                 android:orientation="vertical"
+            android:padding="3dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -24,20 +27,27 @@
             android:id="@+id/cellDayText"
             android:text="1"
             android:background="@drawable/back"
+
             android:padding="5dp"
             android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="@color/black"
 
             />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                        android:orientation="vertical">
 
         <TextView
             android:id="@+id/eventDayText"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/back"
             android:padding="5dp"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
             android:text="Event"
+            android:singleLine="true"
             android:textColor="@color/black"
             android:textStyle="bold"
             android:textSize="10sp"
@@ -51,11 +61,14 @@
 
         <TextView
             android:id="@+id/eventDayText2"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/back"
             android:padding="5dp"
             android:text="Event"
+            android:gravity="center"
+
+            android:layout_marginTop="10dp"
+                android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="10sp"
             android:textStyle="bold"
@@ -67,6 +80,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/eventDayText"
             app:layout_constraintVertical_bias="0.0" />
+                </LinearLayout>
 
         </LinearLayout>
 

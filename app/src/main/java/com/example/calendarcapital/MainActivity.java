@@ -15,6 +15,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.Slide;
 
 import android.app.NotificationManager;
 import android.content.DialogInterface;
@@ -26,6 +27,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,9 +64,11 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
     NestedScrollView nestedScrollView;
     HourAdapter hourAdapter;
     Button prevMonth,nextMonth;
+    ImageView imageMenu,backMenuBtn,refreshMenuBtn;
     private MyDatabaseHelper myDB = new MyDatabaseHelper(this);
      DrawerLayout drawerLayout;
     public static ArrayDeque<String> stack = new ArrayDeque<String>();
+    public static String getSaveStack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,52 +79,38 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
         initWidgets();
         CalendarUtils.selectedDate = LocalDate.now();
         monthListView.setVisibility(View.GONE);
-        setMonthView();
         setNavigationViewListener();
-        String previousViewType = stack.peekFirst();
 
-    if (previousViewType == null)
-    {
-    setMonthView();
-    stack.addFirst("month");
-    }
-        else if (previousViewType.equals("daily")) {
-            setDaily();
-        } else if (previousViewType.equals("week")) {
-            setWeek();
-        } else if (previousViewType.equals("all"))
-        {
-            setAllEvents();
-        }else if (previousViewType.equals("month"))
+        if (getIntent().hasExtra("bool")) {
+            Bundle b = getIntent().getExtras();
+
+            if (b.getBoolean("bool")) {
+                stack.addFirst(getSaveStack);
+                getStackFromSave();
+            } else {
+                setMonthView();
+            }
+        }else
         {
             setMonthView();
-        }else if (previousViewType.equals("double-click-month"))
-        {
-            setMonthView();
-        }else if (previousViewType.equals("double-click-week"))
-        {
-            setWeek();
         }
+
 
 
         drawerLayout = findViewById(R.id.drawerLayout);
 
-        findViewById(R.id.refreshMenuBtn).setOnClickListener(new View.OnClickListener() {
+        refreshMenuBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
                 overridePendingTransition(0, 0);
                 overridePendingTransition(0, 0);
-                    startActivity(getIntent());
-
-
-
-
-
+                startActivity(getIntent());
             }
         });
 
-        findViewById(R.id.BackMenuBtn).setOnClickListener(new View.OnClickListener() {
+
+        backMenuBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onMyBackPressed();
@@ -133,12 +123,12 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
             @Override
             public void onClick(View v) {
                 newEventAction();
+                getSaveStack = stack.peekFirst();
             }
         });
 
 
-
-        findViewById(R.id.imageMenu).setOnClickListener(new View.OnClickListener() {
+        imageMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 drawerLayout.openDrawer(GravityCompat.START);
@@ -157,7 +147,27 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
 
     }
 
+public void getStackFromSave()
+{
 
+        if (getSaveStack == null) {
+            setMonthView();
+            stack.addFirst("month");
+        } else if (getSaveStack.equals("daily")) {
+            setDaily();
+        } else if (getSaveStack.equals("week")) {
+            setWeek();
+        } else if (getSaveStack.equals("all")) {
+            setAllEvents();
+        } else if (getSaveStack.equals("month")) {
+            setMonthView();
+        } else if (getSaveStack.equals("double-click-month")) {
+            setMonthView();
+        } else if (getSaveStack.equals("double-click-week")) {
+            setWeek();
+        }
+
+}
 
 
     public void onMyBackPressed() {
@@ -165,6 +175,8 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
         stack.removeFirst();
         // Check the previous view type
         String previousViewType = stack.peekFirst();
+
+        stack.size();
         if (previousViewType == null ) {
             // Nothing to go back to, so finish this Activity
             super.onBackPressed();
@@ -193,11 +205,12 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
     protected void onResume() {
         super.onResume();
 
+
         setWeek();
         setMonthView();
         hourAdapter.notifyDataSetChanged();
         DialogClickedItemAndDelete();
-
+        getStackFromSave();
 
 
     }
@@ -277,8 +290,16 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
                                             else if (previousViewType.equals("double-click-month"))
                                             {
                                                 setDaily();
+                                            }else if(previousViewType.equals("week"))
+                                            {
+                                                setWeek();
+                                            }else if (previousViewType.equals("daily"))
+                                            {
+                                                setDaily();
+                                            }else
+                                            {
+                                                onMyBackPressed();
                                             }
-//                                        AllEventsList.reloadActivity(MainActivity.this);
 
                                     }
                                 }).setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -331,6 +352,9 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
         daysOfWeek = findViewById(R.id.daysOfWeek);
         prevMonth = findViewById(R.id.prevMonthButton);
         nextMonth = findViewById(R.id.nextMonthButton);
+        imageMenu = findViewById(R.id.imageMenu);
+        backMenuBtn = findViewById(R.id.BackMenuBtn);
+        refreshMenuBtn = findViewById(R.id.refreshMenuBtn);
 
     }
 
@@ -468,7 +492,7 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
         ViewGroup.LayoutParams params = calendarRecyclerView.getLayoutParams();
         params.height=1500;
         calendarRecyclerView.setLayoutParams(params);
-
+        imageMenu.setVisibility(View.VISIBLE);
         monthListView.setVisibility(View.GONE);
         monthYearText.setVisibility(View.VISIBLE);
         daysOfWeekDaily.setVisibility(View.GONE);
@@ -477,6 +501,8 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
         nextMonth.setVisibility(View.VISIBLE);
         calendarRecyclerView.setVisibility(View.VISIBLE);
         nestedScrollView.setVisibility(View.VISIBLE);
+        backMenuBtn.setVisibility(View.GONE);
+        refreshMenuBtn.setForegroundGravity(Gravity.RIGHT);
 
 
     }
@@ -484,6 +510,13 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
 
     private void setWeek()
     {
+        if (getIntent().hasExtra("date")) {
+            Bundle b = getIntent().getExtras();
+
+            selectedDate = (LocalDate) b.get("date");
+            getIntent().removeExtra("date");
+
+        }
         monthYearText.setText(monthYearFromDate(CalendarUtils.selectedDate));
         ArrayList<LocalDate> days = daysInWeekArray(CalendarUtils.selectedDate);
 
@@ -494,7 +527,9 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
         ViewGroup.LayoutParams params = calendarRecyclerView.getLayoutParams();
         params.height=300;
         calendarRecyclerView.setLayoutParams(params);
-
+        backMenuBtn.setVisibility(View.VISIBLE);
+        imageMenu.setVisibility(View.GONE);
+        backMenuBtn.setForegroundGravity(Gravity.START);
         setEventListView();
 
         daysOfWeekDaily.setVisibility(View.GONE);
@@ -505,10 +540,18 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
         nextMonth.setVisibility(View.VISIBLE);
         monthYearText.setVisibility(View.VISIBLE);
 
+
     }
 
     private void setDaily()
     {
+        if (getIntent().hasExtra("date")) {
+            Bundle b = getIntent().getExtras();
+
+            selectedDate = (LocalDate) b.get("date");
+            getIntent().removeExtra("date");
+
+        }
         Locale locale = new Locale("el", "GR");
         monthYearText.setText(CalendarUtils.monthDayFromDate(selectedDate));
         String dayOfWeekmain = selectedDate.getDayOfWeek().getDisplayName(TextStyle.FULL, locale);
@@ -516,6 +559,9 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
         setEventListView();
         daysOfWeekDaily.setText(dayOfWeekmain);
 
+        backMenuBtn.setVisibility(View.VISIBLE);
+        imageMenu.setVisibility(View.GONE);
+        backMenuBtn.setForegroundGravity(Gravity.LEFT);
         monthListView.setVisibility(View.VISIBLE);
         monthYearText.setVisibility(View.VISIBLE);
         daysOfWeekDaily.setVisibility(View.VISIBLE);
@@ -556,7 +602,10 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
 
 
     public void newEventAction() {
-        startActivity(new Intent(this, EventEdit.class));
+        Intent saveIntent = new Intent(this,EventEdit.class);
+        String stackNow = stack.peekFirst();
+        saveIntent.putExtra("stack", stackNow);
+        startActivity(saveIntent);
     }
 
 

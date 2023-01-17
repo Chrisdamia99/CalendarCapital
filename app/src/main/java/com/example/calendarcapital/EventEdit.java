@@ -1,18 +1,15 @@
 package com.example.calendarcapital;
 
-import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
-
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-
 import android.content.Context;
 import android.content.Intent;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -25,16 +22,17 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
-
-import java.text.DateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
+
+
 
 public class EventEdit extends AppCompatActivity {
 
@@ -46,10 +44,14 @@ public class EventEdit extends AppCompatActivity {
     private static LocalTime time;
     private CheckBox alarmme;
     boolean alarmState;
+    LocalDateTime myTimeNow = LocalDateTime.now();
     Calendar calendar = Calendar.getInstance();
 
 
-        @Override
+
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_edit);
@@ -60,6 +62,7 @@ public class EventEdit extends AppCompatActivity {
         eventDateTV.setText("Date: " + CalendarUtils.formattedDate(date));
         btnSave = findViewById(R.id.btnSave);
         createNotificationChannel();
+
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -221,21 +224,36 @@ public class EventEdit extends AppCompatActivity {
 
     public void startAlarm(Calendar c)
     {
+        TimeZone tz = calendar.getTimeZone();
+        ZoneId zoneId = tz.toZoneId();
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(calendar.toInstant(), zoneId);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this,AlarmReceiver.class);
+
+        Intent intent = new Intent(EventEdit.this,AlarmReceiver.class);
 
         intent.removeExtra("title");
         intent.removeExtra("comment");
-        String strTitle = eventNameET.getText().toString();
-        String strComment = eventCommentET.getText().toString();
+        intent.removeExtra("calendar");
 
-        intent.putExtra("title",strTitle);
-        intent.putExtra("comment",strComment);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,0);
+            String strTitle = eventNameET.getText().toString();
+            String strComment = eventCommentET.getText().toString();
 
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),pendingIntent);
-        Toast.makeText(this, "Alarm set", Toast.LENGTH_SHORT).show();
+            intent.putExtra("title",strTitle);
+            intent.putExtra("comment",strComment);
+            intent.putExtra("calendar",localDateTime);
+
+
+
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(EventEdit.this, 0,intent,PendingIntent.FLAG_CANCEL_CURRENT);
+
+
+
+
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),pendingIntent);
+                Toast.makeText(EventEdit.this, "Alarm set", Toast.LENGTH_SHORT).show();
+
+
     }
 
     public void cancelAlarm(Calendar c)
@@ -277,17 +295,22 @@ public class EventEdit extends AppCompatActivity {
             alarmState = false;
         }
 
+
         String eventName = eventNameET.getText().toString();
         String eventComment = eventCommentET.getText().toString();
 
         myDB.addEvent(eventName, eventComment, date, time);
-
-
-
-
         Intent i1 = new Intent(EventEdit.this,MainActivity.class);
+
+
+        Boolean myBool = true;
+        i1.putExtra("date",date);
+
+
+        i1.putExtra("bool",myBool);
         i1.putExtra("alarm",String.valueOf(alarmState));
-        finish();
+
+//        finish();
         overridePendingTransition(0, 0);
         startActivity(i1);
         overridePendingTransition(0, 0);

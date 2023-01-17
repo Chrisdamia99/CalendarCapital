@@ -274,6 +274,7 @@ public void getStackFromSave()
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         String id_row = hourAdapter.getItem(position).getEvents().get(0).getId();
+
                                         myDB.deleteOneRow(id_row);
 
                                         String previousViewType = stack.peekFirst();

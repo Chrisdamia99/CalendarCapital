@@ -18,10 +18,13 @@ import java.time.LocalDate;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -69,9 +72,12 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
     @Override
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position) {
 
+
+
         Cursor cursor = myDB.readAllData();
         holder.eventDayText.setVisibility(View.GONE);
         holder.eventDayText2.setVisibility(View.GONE);
+        holder.eventDayText3.setVisibility(View.GONE);
 
 
         final LocalDate date = days.get(position);
@@ -89,12 +95,20 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
             Event eventDB = new Event(cursor.getString(0), cursor.getString(1), cursor.getString(2),
                     CalendarUtils.stringToLocalDate(cursor.getString(3)), LocalTime.parse(cursor.getString(4)));
             myEvents.add(eventDB);
+
+
         }
+
+        myEvents.sort((o1,o2) -> o2.getDate().compareTo(o1.getDate()));
+
+        myEvents.sort((o1,o2) -> o2.getTime().compareTo(o1.getTime()));
+
+
+
 
 
         cursor.moveToPosition(-1);
         while (cursor.moveToNext()) {
-
 
 
 
@@ -133,19 +147,19 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                 }
             }
 
-
             for (int i = 0; i < myEvents.size(); i++) {
-                if (myEvents.get(i).getDate().equals(date) && LocalTime.parse(cursor.getString(4)).equals(myEvents.get(i).getTime())) {
+                if (myEvents.get(i).getDate().equals(date) ) {
 
                     holder.eventDayText.setVisibility(View.VISIBLE);
                     holder.eventDayText.setText(myEvents.get(i).getName());
                     holder.eventDayText.setTextColor(Color.BLUE);
                     holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner);
 
+                        for (int j=0; j<myEvents.size(); j++ ) {
 
+                            if (myEvents.get(j).getDate().equals(date) && i < myEvents.size()
+                                    && myEvents.get(i).getId() != myEvents.get(j).getId() ) {
 
-                    for (int j = myEvents.size()-1; j >= 0; j--) {
-                        if (myEvents.get(i).getDate().equals(myEvents.get(j).getDate()) && i < myEvents.size() ) {
                             if (myEvents.get(j).getName().equals(myEvents.get(i).getName())) {
                                 holder.eventDayText2.setVisibility(View.GONE);
 
@@ -155,12 +169,31 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                                 holder.eventDayText2.setTextColor(Color.BLUE);
                                 holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner);
 
+
+
+                                for (int k=0; k< myEvents.size(); k++) {
+                                    if (myEvents.get(i).getDate().equals(myEvents.get(k).getDate()) && i < myEvents.size()
+
+                                            && !Objects.equals(myEvents.get(i).getId(), myEvents.get(k).getId())
+                                            && !Objects.equals(myEvents.get(j).getId(), myEvents.get(k).getId()))
+                                    {
+                                        holder.eventDayText3.setVisibility(View.VISIBLE);
+                                    holder.eventDayText3.setText(myEvents.get(k).getName());
+                                        holder.eventDayText3.setText(myEvents.get(k).getName());
+                                    holder.eventDayText3.setTextColor(Color.BLUE);
+                                    holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner);
+
+
+                                }
+
+                                }
                             }
                         }
 
                     }
 
                 }
+
 
 
             }
@@ -178,6 +211,8 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
 
 
     private void compareAndGetValuesFromDB(View convertView, LocalTime time) {
+
+
         Cursor cursor = myDB.readAllData();
 
 

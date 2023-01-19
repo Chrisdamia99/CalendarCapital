@@ -27,6 +27,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class AlarmReceiver extends BroadcastReceiver {
 Vibrator v;
@@ -93,12 +96,17 @@ LocalDateTime now ;
                 long[] pattern = {0, 300, 1000};
 
 
-//                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-//
-//                Ringtone r = RingtoneManager.getRingtone(context, notification);
-//                r.play();
+                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+
+                Ringtone r = RingtoneManager.getRingtone(context, notification);
+                r.play();
                 v.vibrate(VibrationEffect.createWaveform(pattern, -1));
 
+if (r.isPlaying())
+{
+    ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+    executorService.schedule(() -> r.stop(), 5, TimeUnit.SECONDS);
+}
 
 
 

@@ -19,13 +19,5 @@
             android:iconTint="@color/white"
             app:showAsAction="ifRoom"/>
 
-        <item android:id="@+id/addEventMenu"
-                android:title="Προσθήκη Συμβάντων"
-                android:icon="@drawable/add"
-                android:iconTint="@color/white"
-                app:showAsAction="never"/>
-
-
-
 
 </menu>

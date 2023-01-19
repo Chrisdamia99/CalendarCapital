@@ -35,6 +35,7 @@
 
             />
                 <LinearLayout
+                    android:id="@+id/eventsForBlock"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                         android:orientation="vertical">
@@ -45,7 +46,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:gravity="center"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="3dp"
             android:text="Event"
             android:singleLine="true"
             android:textColor="@color/black"
@@ -67,7 +68,7 @@
             android:text="Event"
             android:gravity="center"
 
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="3dp"
                 android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="10sp"
@@ -80,6 +81,30 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/eventDayText"
             app:layout_constraintVertical_bias="0.0" />
+
+                        <TextView
+                            android:id="@+id/eventDayText3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="Event"
+                            android:gravity="center"
+
+                            android:layout_marginTop="3dp"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/eventDayText"
+                            app:layout_constraintVertical_bias="0.0" />
+
+
                 </LinearLayout>
 
         </LinearLayout>

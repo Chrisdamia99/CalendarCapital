@@ -51,6 +51,7 @@ public class EventEdit extends AppCompatActivity {
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,8 +99,12 @@ public class EventEdit extends AppCompatActivity {
                                 AllEventsList.reloadActivity(EventEdit.this);
                                 return true;
                             case R.id.previousAct:
+
                             Intent i = new Intent(EventEdit.this,MainActivity.class);
-                            startActivity(i);
+                                Boolean myBool = true;
+                                i.putExtra("bool",myBool);
+
+                                startActivity(i);
 
                         }
 
@@ -313,6 +318,7 @@ public class EventEdit extends AppCompatActivity {
 //        finish();
         overridePendingTransition(0, 0);
         startActivity(i1);
+
         overridePendingTransition(0, 0);
 
 

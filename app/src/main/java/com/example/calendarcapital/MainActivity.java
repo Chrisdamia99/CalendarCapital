@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 
+import android.util.LayoutDirection;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -41,9 +42,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
@@ -75,6 +78,7 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
     boolean changeEventEdit = true;
     Bundle b ;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +90,7 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
         monthListView.setVisibility(View.GONE);
         setNavigationViewListener();
         getIntentFromEventEdit();
-
+        dublicatesInStack();
 
 
         drawerLayout = findViewById(R.id.drawerLayout);
@@ -101,7 +105,10 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
                 overridePendingTransition(0, 0);
                 overridePendingTransition(0, 0);
                 getIntent().removeExtra("bool");
+
                 startActivity(getIntent());
+
+
             }
         });
 
@@ -109,6 +116,7 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
         backMenuBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dublicatesInStack();
                 onMyBackPressed();
 
             }
@@ -199,20 +207,39 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
 
 }
 
+public void dublicatesInStack()
+{
+    if (stack.size()>1){
+        stack.removeFirst();}
+    // Check the previous view type
+    Object[] arr = stack.toArray();
+    for (int i=0; i< stack.size()-1; i++)
+    {
+        if (arr[i] == arr[i+1])
+        {
+            stack.remove(arr[i]);
+        }
+        if (arr[i]=="week" && arr[i+1]=="double-click-week")
+        {
+            stack.remove(arr[i+1]);
+        }
+    }
+}
+
 
     public void onMyBackPressed() {
         // Pop current view type off the stack
-        if (stack.size()>1){
-        stack.removeFirst();}
-        // Check the previous view type
-        Object[] arr = stack.toArray();
-        for (int i=0; i< stack.size()-1; i++)
-        {
-            if (arr[i] == arr[i+1])
-            {
-                stack.remove(arr[i]);
-            }
-        }
+//        if (stack.size()>1){
+//        stack.removeFirst();}
+//        // Check the previous view type
+//        Object[] arr = stack.toArray();
+//        for (int i=0; i< stack.size()-1; i++)
+//        {
+//            if (arr[i] == arr[i+1])
+//            {
+//                stack.remove(arr[i]);
+//            }
+//        }
         String previousViewType = stack.peekFirst();
 
 
@@ -277,7 +304,6 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 View view1 = getLayoutInflater().inflate(R.layout.show_event_from_listview, null);
-//                private ArrayList<MlaData> MlaDats = new ArrayList<MlaData>();
                 HourEvent myEvent = (HourEvent) monthListView.getAdapter().getItem(position);
 
                 String myEventId= myEvent.getEvents().get(0).getId();
@@ -285,8 +311,8 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
                 String myComment = myEvent.getEvents().get(0).getComment();
                 String myDate = String.valueOf(myEvent.getEvents().get(0).getDate());
                 String myTime = String.valueOf(myEvent.getEvents().get(0).getTime());
+                String alarm = myEvent.getEvents().get(0).getAlarm();
 
-            Intent intent = getIntent();
 
                 View viewFinal;
                 String id_row = hourAdapter.getItem(position).getEvents().get(0).getId();
@@ -295,15 +321,10 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
                 String date_upd = String.valueOf(hourAdapter.getItem(position).getEvents().get(0).getDate());
                 String time_upd = String.valueOf(hourAdapter.getItem(position).getEvents().get(0).getTime());
 
-               String alarm = intent.getStringExtra("alarm");
-                if (alarm == null)
-                {
-                    alarm = "false";
-                }
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
-                viewFinal = CA.setAllFields(view1,myEventId,myTitle,myComment,myDate,myTime,alarm);
-//                    viewFinal = SD.getView(position, view1, parent);
+                viewFinal = CA.setAllFields(view1,myEventId,myTitle,myComment,myDate,myTime, alarm);
 
 
                 builder.setView(viewFinal).
@@ -346,11 +367,36 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
                                                 onMyBackPressed();
                                             }
 
+
                                     }
                                 }).setNegativeButton("No", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        AllEventsList.reloadActivity(MainActivity.this);
+                                        String previousViewType = stack.peekFirst();
+                                        if (previousViewType.equals("all"))
+                                        {
+                                            setAllEvents();
+                                        }else if (previousViewType.equals("double-click-week"))
+                                        {
+                                            setDaily();
+                                        }else if (previousViewType.equals("month"))
+                                        {
+                                            setDaily();
+                                        }
+                                        else if (previousViewType.equals("double-click-month"))
+                                        {
+                                            setDaily();
+                                        }else if(previousViewType.equals("week"))
+                                        {
+                                            setWeek();
+                                        }else if (previousViewType.equals("daily"))
+                                        {
+                                            setDaily();
+                                        }else
+                                        {
+                                            onMyBackPressed();
+                                        }
+
                                     }
                                 }).setTitle("Are you sure you want to delete event " + title_upd + " ?");
                                 builderDel.show();
@@ -360,9 +406,9 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
                         }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                AllEventsList.reloadActivity(MainActivity.this);
 
 
+                            dialog.cancel();
                             }
                         }).setNeutralButton("Edit", new DialogInterface.OnClickListener() {
                             @Override
@@ -375,13 +421,71 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
                                 i.putExtra("time",time_upd);
                                 startActivity(i);
                             }
+                        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                hourAdapter.notifyDataSetChanged();
+                                String previousViewType = stack.peekFirst();
+
+                                if (previousViewType.equals("week")){
+                                    stack.addFirst("week");
+                                }else if (previousViewType.equals("double-click-month"))
+                                {
+                                    stack.addFirst("double-click-month");
+                                }else if (previousViewType.equals("double-click-week"))
+                                {
+                                    stack.addFirst("double-click-week");
+                                }
+                                else
+                                {
+                                    stack.addFirst("daily");
+                                }
+
+
+                            }
+                        }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                hourAdapter.notifyDataSetChanged();
+                                String previousViewType = stack.peekFirst();
+
+                                if (previousViewType.equals("week")){
+                                    setWeek();
+                                }else if (previousViewType.equals("double-click-month"))
+                                {
+                                    setDaily();
+                                }else if (previousViewType.equals("double-click-week"))
+                                {
+                                    setDaily();
+                                }
+                                else
+                                {
+                                    setDaily();
+                                }
+
+                            }
                         });
 
 
                 builder.show();
+
+
             }
 
+
+
+
+
+
+
         });
+
+
+
+
+
+
+
     }
 
 
@@ -595,6 +699,7 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
 
 
 
+
     }
 
 
@@ -625,7 +730,7 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
 
 
         ViewGroup.LayoutParams paramsListView = monthListView.getLayoutParams();
-        paramsListView.height=1000;
+        paramsListView.height=1200;
 
         monthListView.setLayoutParams(paramsListView);
 
@@ -659,9 +764,11 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
         daysOfWeekDaily.setText(dayOfWeekmain);
 
         ViewGroup.LayoutParams paramsListView = monthListView.getLayoutParams();
-        paramsListView.height=1000;
+        paramsListView.height=1500;
+
 
         monthListView.setLayoutParams(paramsListView);
+
 
 
         backMenuBtn.setVisibility(View.VISIBLE);
@@ -674,7 +781,7 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
         prevMonth.setVisibility(View.VISIBLE);
         nextMonth.setVisibility(View.VISIBLE);
         calendarRecyclerView.setVisibility(View.GONE);
-
+        hourAdapter.notifyDataSetChanged();
 
 
 

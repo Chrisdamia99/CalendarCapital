@@ -23,6 +23,7 @@ public  class MyDatabaseHelper  extends SQLiteOpenHelper {
     private static final String COLUMN_COMMENT = "event_comment";
     private static final String COLUMN_DATE = "event_date";
     private static final String COLUMN_TIME = "event_time";
+    private static final String COLUMN_ALARM = "event_alarm";
 
 
 MyDatabaseHelper(@Nullable Context context)
@@ -39,7 +40,9 @@ MyDatabaseHelper(@Nullable Context context)
             COLUMN_TITLE + " TEXT, " +
             COLUMN_COMMENT + " TEXT, " +
             COLUMN_DATE + " TEXT, " +
-            COLUMN_TIME + " TEXT);";
+            COLUMN_TIME + " TEXT, " +
+            COLUMN_ALARM + " TEXT);";
+
     
     db.execSQL(query);
 }
@@ -51,7 +54,7 @@ MyDatabaseHelper(@Nullable Context context)
 
     }
 
-    void addEvent(String title, String comment, LocalDate date, LocalTime time)
+    void addEvent(String title, String comment, LocalDate date, LocalTime time, String alarm)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -60,6 +63,7 @@ MyDatabaseHelper(@Nullable Context context)
         cv.put(COLUMN_COMMENT, comment);
         cv.put(COLUMN_DATE, String.valueOf(date));
         cv.put(COLUMN_TIME,  String.valueOf(time));
+        cv.put(COLUMN_ALARM, alarm);
         
         long result = db.insert(TABLE_NAME, null, cv);
         if (result== -1)
@@ -86,7 +90,7 @@ MyDatabaseHelper(@Nullable Context context)
         return cursor;
     }
 
-    void updateData(String row_id, String title, String comments, LocalDate date, LocalTime time)
+    void updateData(String row_id, String title, String comments, LocalDate date, LocalTime time,String alarm)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -95,6 +99,7 @@ MyDatabaseHelper(@Nullable Context context)
         cv.put(COLUMN_COMMENT,comments);
         cv.put(COLUMN_DATE, String.valueOf(date));
         cv.put(COLUMN_TIME, String.valueOf(time));
+        cv.put(COLUMN_ALARM, alarm);
 
         long result = db.update(TABLE_NAME,cv,"_id=?",new String[]{row_id});
 

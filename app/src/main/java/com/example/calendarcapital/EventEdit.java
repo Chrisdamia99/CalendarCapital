@@ -10,6 +10,7 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -27,7 +28,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -44,8 +47,12 @@ public class EventEdit extends AppCompatActivity {
     private static LocalTime time;
     private CheckBox alarmme;
     boolean alarmState;
-    LocalDateTime myTimeNow = LocalDateTime.now();
+
+
     Calendar calendar = Calendar.getInstance();
+
+
+
 
 
 
@@ -63,6 +70,7 @@ public class EventEdit extends AppCompatActivity {
         eventDateTV.setText("Date: " + CalendarUtils.formattedDate(date));
         btnSave = findViewById(R.id.btnSave);
         createNotificationChannel();
+
 
 
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -132,6 +140,7 @@ public class EventEdit extends AppCompatActivity {
 
     }
 
+
     public void showChangeDate(int year, int month, int dayofmonth) {
         final DatePickerDialog StartTime = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -155,18 +164,22 @@ public class EventEdit extends AppCompatActivity {
                 }
                 date = LocalDate.of(year, trueMonth, dayOfMonth);
 
+
+
+
             }
 
+
+
         }, year, month, dayofmonth);
+
+
+
         StartTime.setTitle("Select Date");
         StartTime.show();
 
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.DAY_OF_MONTH,dayofmonth);
 
     }
-
 
     public void showChangeTime(int hours, int minute) {
         TimePickerDialog timePickerDialog;
@@ -213,25 +226,38 @@ public class EventEdit extends AppCompatActivity {
 
 
 
-               calendar.set(Calendar.HOUR_OF_DAY, hour);
-                calendar.set(Calendar.MINUTE,min);
-                calendar.set(Calendar.SECOND,0);
 
 
 
 
             }
         }, hours, minute, true);//Yes 24 hour time
+
+
         timePickerDialog.setTitle("Select Time");
         timePickerDialog.show();
+
+
+
+
+
     }
 
 
-    public void startAlarm(Calendar c)
+    public void startAlarm(int alarmId)
     {
-        TimeZone tz = calendar.getTimeZone();
-        ZoneId zoneId = tz.toZoneId();
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(calendar.toInstant(), zoneId);
+
+
+        calendar.set(Calendar.YEAR, date.getYear());
+        calendar.set(Calendar.MONTH, date.getMonth().getValue()-1);
+        calendar.set(Calendar.DAY_OF_MONTH,date.getDayOfMonth());
+
+
+        calendar.set(Calendar.HOUR_OF_DAY, time.getHour());
+        calendar.set(Calendar.MINUTE,time.getMinute());
+        calendar.set(Calendar.SECOND,time.getSecond());
+
+        Date myTime = calendar.getTime();
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         Intent intent = new Intent(EventEdit.this,AlarmReceiver.class);
@@ -246,29 +272,32 @@ public class EventEdit extends AppCompatActivity {
 
             intent.putExtra("title",strTitle);
             intent.putExtra("comment",strComment);
-            intent.putExtra("calendar",localDateTime);
+            intent.putExtra("calendar",myTime);
 
 
 
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(EventEdit.this, 0,intent,PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(EventEdit.this,alarmId,intent,PendingIntent.FLAG_CANCEL_CURRENT);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
 
 
 
-
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),pendingIntent);
-                Toast.makeText(EventEdit.this, "Alarm set", Toast.LENGTH_SHORT).show();
+        Toast.makeText(EventEdit.this, "Alarm set at: " + calendar.getTime().toString(), Toast.LENGTH_SHORT).show();
 
 
     }
 
-    public void cancelAlarm(Calendar c)
+    public void cancelAlarm(int alarmId)
     {
+
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this,AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,0);
 
-        alarmManager.cancel(pendingIntent);
-        Toast.makeText(this, "Alarm Cancelled", Toast.LENGTH_SHORT).show();
+          PendingIntent pendingIntent = PendingIntent.getBroadcast(this, alarmId,intent,0);
+
+            alarmManager.cancel(pendingIntent);
+            Toast.makeText(this, "Alarm Cancelled", Toast.LENGTH_SHORT).show();
+
+
     }
 
 
@@ -292,19 +321,39 @@ public class EventEdit extends AppCompatActivity {
     public void saveEventAction(View view) {
         MyDatabaseHelper myDB = new MyDatabaseHelper(EventEdit.this);
 
-        if (alarmme.isChecked())
-        {
-            startAlarm(calendar);
+        String eventName = eventNameET.getText().toString();
+        String eventComment = eventCommentET.getText().toString();
+        if (alarmme.isChecked()) {
+
+
             alarmState = true;
-        }else {
+        } else {
             alarmState = false;
         }
 
+        myDB.addEvent(eventName, eventComment, date, time, String.valueOf(alarmState));
 
-        String eventName = eventNameET.getText().toString();
-        String eventComment = eventCommentET.getText().toString();
 
-        myDB.addEvent(eventName, eventComment, date, time);
+        Cursor cursor = myDB.readAllData();
+        int alarmId;
+        while(cursor.moveToNext()) {
+            if (eventName.equals(cursor.getString(1))) {
+
+                alarmId = Integer.parseInt(cursor.getString(0));
+
+                if (alarmme.isChecked()) {
+                    startAlarm(alarmId);
+
+                    alarmState = true;
+                } else {
+                    alarmState = false;
+                }
+
+            }
+        }
+
+
+
         Intent i1 = new Intent(EventEdit.this,MainActivity.class);
 
 
@@ -313,9 +362,7 @@ public class EventEdit extends AppCompatActivity {
 
 
         i1.putExtra("bool",myBool);
-        i1.putExtra("alarm",String.valueOf(alarmState));
 
-//        finish();
         overridePendingTransition(0, 0);
         startActivity(i1);
 

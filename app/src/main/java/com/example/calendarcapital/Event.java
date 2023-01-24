@@ -46,13 +46,15 @@ public class Event {
     private String name,comment;
     private LocalDate date;
     private LocalTime time;
+    private String alarm;
 
-    public Event(String id,String name,String comment, LocalDate date, LocalTime time) {
+    public Event(String id,String name,String comment, LocalDate date, LocalTime time, String alarm) {
         this.id=id;
         this.comment = comment;
         this.name = name;
         this.date = date;
         this.time = time;
+        this.alarm = alarm;
 
 
 
@@ -115,5 +117,13 @@ public class Event {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getAlarm() {
+        return alarm;
+    }
+
+    public void setAlarm(String alarm) {
+        this.alarm = alarm;
     }
 }

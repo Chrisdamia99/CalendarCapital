@@ -20,9 +20,11 @@ import android.widget.Toast;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
@@ -36,7 +38,9 @@ Vibrator v;
 String event;
 String comment;
 String text;
-LocalDateTime now ;
+
+Date timeForAlarm;
+
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -46,16 +50,16 @@ LocalDateTime now ;
         event ="";
         comment="";
 
-        now = (LocalDateTime) b.get("calendar");
-        Instant instant2 = Instant.from(now.atZone(ZoneId.of("Europe/Athens")));
-        Date date = Date.from(instant2);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
+
+
+
+
 
         if (b != null) {
 
             event = (String) b.get("title");
             comment = (String) b.get("comment");
+            timeForAlarm = (Date) b.get("calendar");
 
             text = "Reminder for the Event: " + "\n" + event + "\n" + "Comments: " + "\n" + comment;
         }
@@ -110,19 +114,11 @@ if (r.isPlaying())
 
 
 
-//                final Handler handler = new Handler();
-//                handler.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        if (r.isPlaying())
-//                            r.stop();
-//                    }
-//                }, 500 * 10);
 
 
             }
         };
-        t.schedule(tm, calendar.getTime());
+        t.schedule(tm, timeForAlarm);
 
 
 

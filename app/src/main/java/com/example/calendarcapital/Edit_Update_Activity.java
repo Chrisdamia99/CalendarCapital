@@ -12,6 +12,7 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -26,9 +27,13 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class Edit_Update_Activity extends AppCompatActivity {
 
@@ -48,13 +53,14 @@ public class Edit_Update_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_update);
         initWidgets();
         getSetIntentData();
-        createNotificationChannel();
+
 
         time = LocalTime.parse(CalendarUtils.formattedShortTime(LocalTime.now()));
         eventTimeTV.setText("Time: " + CalendarUtils.formattedShortTime(time));
         date = CalendarUtils.selectedDate;
         eventDateTV.setText("Date: " + CalendarUtils.formattedDate(date));
         btnUpdate = findViewById(R.id.btnUpdate);
+        createNotificationChannel();
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +94,12 @@ public class Edit_Update_Activity extends AppCompatActivity {
                                 AllEventsList.reloadActivity(Edit_Update_Activity.this);
                                 return true;
                             case R.id.previousAct:
-                                onBackPressed();
+                                Intent i = new Intent(Edit_Update_Activity.this,MainActivity.class);
+                                Boolean myBool = true;
+                                i.putExtra("bool",myBool);
+
+                                startActivity(i);
+
 
 
                         }
@@ -141,9 +152,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
         }, year, month, dayofmonth);
         StartTime.setTitle("Select Date");
         StartTime.show();
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.DAY_OF_MONTH,dayofmonth);
+
     }
 
 
@@ -190,9 +199,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
                 }
 
-                calendar.set(Calendar.HOUR_OF_DAY, hour);
-                calendar.set(Calendar.MINUTE,min);
-                calendar.set(Calendar.SECOND,0);
 
 
             }
@@ -219,26 +225,50 @@ public class Edit_Update_Activity extends AppCompatActivity {
     }
 
 
-        private void startAlarm(Calendar c)
+        private void startAlarm(int alarmId)
         {
+
+            calendar.set(Calendar.YEAR, date.getYear());
+            calendar.set(Calendar.MONTH, date.getMonth().getValue()-1);
+            calendar.set(Calendar.DAY_OF_MONTH,date.getDayOfMonth());
+
+
+            calendar.set(Calendar.HOUR_OF_DAY, time.getHour());
+            calendar.set(Calendar.MINUTE,time.getMinute());
+            calendar.set(Calendar.SECOND,time.getSecond());
+
+            Date myTime = calendar.getTime();
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
             Intent intent = new Intent(this,AlarmReceiver.class);
 
-            intent.putExtra("title",eventNameET.getText().toString());
-            intent.putExtra("comment",eventCommentET.getText().toString());
+            intent.removeExtra("title");
+            intent.removeExtra("comment");
+            intent.removeExtra("calendar");
 
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,0);
 
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),pendingIntent);
+            String strTitle = eventNameET.getText().toString();
+            String strComment = eventCommentET.getText().toString();
+
+            intent.putExtra("title",strTitle);
+            intent.putExtra("comment",strComment);
+            intent.putExtra("calendar",myTime);
+
+
+
+
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(Edit_Update_Activity.this,alarmId,intent,PendingIntent.FLAG_CANCEL_CURRENT);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
             Toast.makeText(this, "Alarm set", Toast.LENGTH_SHORT).show();
         }
 
 
-        private void cancelAlarm(Calendar c)
+        private void cancelAlarm(int alarmId)
         {
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             Intent intent = new Intent(this,AlarmReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,0);
+
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, alarmId,intent,0);
 
             alarmManager.cancel(pendingIntent);
             Toast.makeText(this, "Alarm Cancelled", Toast.LENGTH_SHORT).show();
@@ -274,27 +304,47 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
     public void updEventAction() {
         MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
-
+        String eventName = eventNameET.getText().toString();
+        String eventComment = eventCommentET.getText().toString();
         if (alarmme.isChecked())
         {
-            startAlarm(calendar);
+
             alarmState = true;
         }else {
             alarmState = false;
         }
 
-        if (getIntent().hasExtra("id"))
-        {
-            id_row = getIntent().getStringExtra("id");
+        myDB.updateData(id_row,eventName, eventComment, date, time, String.valueOf(alarmState));
+
+        Cursor cursor = myDB.readAllData();
+        int alarmId;
+        while(cursor.moveToNext()) {
+            if (eventName.equals(cursor.getString(1))) {
+
+                alarmId = Integer.parseInt(cursor.getString(0));
+
+                if (alarmme.isChecked()) {
+                    startAlarm(alarmId);
+
+                    alarmState = true;
+                } else {
+                    alarmState = false;
+                }
+
+            }
         }
-        String eventName = eventNameET.getText().toString();
-        String eventComment = eventCommentET.getText().toString();
-        myDB.updateData(id_row,eventName, eventComment, date, time);
+
+
+
 
         Intent i1 = new Intent(Edit_Update_Activity.this,MainActivity.class);
-        i1.putExtra("alarm",String.valueOf(alarmState));
+        Boolean myBool = true;
+        i1.putExtra("date",date);
 
-        finish();
+
+        i1.putExtra("bool",myBool);
+
+
         overridePendingTransition(0, 0);
         startActivity(i1);
         overridePendingTransition(0, 0);

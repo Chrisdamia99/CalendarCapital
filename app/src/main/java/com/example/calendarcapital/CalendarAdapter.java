@@ -93,7 +93,8 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
         ArrayList<Event> myEvents = new ArrayList<>();
         while (cursor.moveToNext()) {
             Event eventDB = new Event(cursor.getString(0), cursor.getString(1), cursor.getString(2),
-                    CalendarUtils.stringToLocalDate(cursor.getString(3)), LocalTime.parse(cursor.getString(4)));
+                    CalendarUtils.stringToLocalDate(cursor.getString(3)), LocalTime.parse(cursor.getString(4)),
+                    cursor.getString(5));
             myEvents.add(eventDB);
 
 
@@ -124,8 +125,12 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                         holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner);
                     }
                 }else {
-                for (int i = myEvents.size()-1; i >= 0; i--) {
-                    if (myEvents.get(i).getDate().equals(date) && LocalTime.parse(cursor.getString(4)).equals(myEvents.get(i).getTime())) {
+//                for (int i = myEvents.size()-1; i >= 0; i--) {
+                    for (int i = 0; i <myEvents.size()-1; i++) {
+
+//                        if (myEvents.get(i).getDate().equals(date) && LocalTime.parse(cursor.getString(4)).equals(myEvents.get(i).getTime())) {
+                            if (myEvents.get(i).getDate().equals(date) && !myEvents.get(i).getId().equals(myEvents.get(i+1).getId())
+                            && myEvents.get(i+1).getDate().equals(date)) {
 
 
                         holder.eventDayText.setVisibility(View.VISIBLE);
@@ -210,40 +215,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
 }
 
 
-    private void compareAndGetValuesFromDB(View convertView, LocalTime time) {
 
-
-        Cursor cursor = myDB.readAllData();
-
-
-        if (cursor.getCount() == 0) {
-            try {
-
-
-                Toast.makeText(context, "No data to present.", Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            while (cursor.moveToNext()) {
-                if (LocalTime.parse(cursor.getString(4)).equals(time)) {
-                    Event eventDB = new Event(cursor.getString(0), cursor.getString(1), cursor.getString(2),
-                            CalendarUtils.stringToLocalDate(cursor.getString(3)), LocalTime.parse(cursor.getString(4)));
-                    ArrayList<Event> eventArrayDB = new ArrayList<>();
-                    eventArrayDB.add(eventDB);
-                    HourEvent event = new HourEvent(LocalTime.parse(cursor.getString(4)), eventArrayDB);
-                    event.setEvents(eventArrayDB);
-                    event.setTime(LocalTime.parse(cursor.getString(4)));
-                    //Καλείτε η setHour και δίνω στην λίστα τις τιμές της ώρες από την βάση δεδομένων και το αντίστοιχο event
-
-
-                }
-
-            }
-        }
-
-
-    }
 
 
     @Override

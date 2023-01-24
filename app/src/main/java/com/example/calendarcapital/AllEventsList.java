@@ -39,7 +39,8 @@ public class AllEventsList {
                 String titleDB = cursor.getString(1);
                 String commentDB = cursor.getString(2);
                 String id_event = cursor.getString(0);
-                Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB);
+                String alarm = cursor.getString(5);
+                Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB,alarm);
 
                 if (CalendarUtils.formattedDate(selectedDate).equals(CalendarUtils.formattedDate(dateDB))) {
                     ArrayList<Event> eventarrayDB = Event.eventsForDateAndTime(selectedDate, timeDB);
@@ -82,7 +83,8 @@ public class AllEventsList {
                 String titleDB = cursor.getString(1);
                 String commentDB = cursor.getString(2);
                 String id_event = cursor.getString(0);
-                Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB);
+                String alarm = cursor.getString(5);
+                Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB,alarm);
 
 
                 ArrayList<Event> eventarrayDB = Event.eventsForDateAndTime(selectedDate, timeDB);

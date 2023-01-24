@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -74,29 +75,35 @@ public class EventCursorAdapter extends CursorAdapter{
     }
 
 
-        public View setAllFields(View view,String id, String title, String comment, String date, String time, String alarm)
+        public View setAllFields(View view,String id, String title, String comment, String date, String time, String alarmDate)
     {
+
 
         TextView id_lv_tv = view.findViewById(R.id.id_lv_tv);
         TextView title_lv_tv =  view.findViewById(R.id.title_lv_tv);
         TextView comment_lv_tv = view.findViewById(R.id.comment_lv_tv);
         TextView date_lv_tv =  view.findViewById(R.id.date_lv_tv);
         TextView time_lv_tv =  view.findViewById(R.id.time_lv_tv);
-        ImageView alarmState = view.findViewById(R.id.alarmState);
+        Button alarmState = view.findViewById(R.id.alarmState);
 
         id_lv_tv.setText(id);
         title_lv_tv.setText(title);
         comment_lv_tv.setText(comment);
         date_lv_tv.setText(date);
         time_lv_tv.setText(time);
+
+
         Calendar c = GregorianCalendar.from(LocalDate.parse(date).atTime(LocalTime.parse(time)).atZone(ZoneId.systemDefault()));
 
-        if (Objects.equals(alarm, "false"))
+
+
+
+        if (Objects.equals(alarmDate, "false"))
         {
-            alarmState.setImageResource(R.drawable.alarm_off);
-        }else if (alarm.equals("true"))
+            alarmState.setText("Start Alarm");
+        }else if (Objects.equals(alarmDate, "true"))
         {
-            alarmState.setImageResource(R.drawable.alarm_on);
+            alarmState.setText("Cancel Alarm");
         }else
         {
             Toast.makeText(mContext, "Alarm set problem.", Toast.LENGTH_SHORT).show();
@@ -105,48 +112,90 @@ public class EventCursorAdapter extends CursorAdapter{
         alarmState.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (alarm.equals("false"))
-                {
-                    startAlarm(c);
-                    Toast.makeText(mContext, "Alarm is set to: " + c.toString().trim(), Toast.LENGTH_SHORT).show();
-                    alarmState.setImageResource(R.drawable.alarm_on);
 
-                }else if (alarm.equals("true"))
-                {
-                    cancelAlarm(c);
-                    Toast.makeText(mContext, "Alarm cancelled from : " + c.toString().trim(), Toast.LENGTH_SHORT).show();
-                    alarmState.setImageResource(R.drawable.alarm_off);
+                if (Objects.equals(alarmDate, "false"))
+                {Toast.makeText(mContext, "Alarm is set to: " + c.getTime().toString().trim(), Toast.LENGTH_SHORT).show();
+                    alarmState.setText("Cancel Alarm");
+                    startAlarm(Integer.parseInt(id),c,title,comment);
+
+
+
+
+
+
+                }else if (Objects.equals(alarmDate, "true"))
+                {Toast.makeText(mContext, "Alarm cancelled from : " + c.getTime().toString().trim(), Toast.LENGTH_SHORT).show();
+                    alarmState.setText("Start Alarm");
+                    notifyDataSetChanged();
+                    cancelAlarmCursorAdapter(Integer.parseInt(id));
+
+
+
 
 
                 }
+
+                notifyDataSetChanged();
             }
         });
 
+        EventCursorAdapter.this.notifyDataSetChanged();
 
         return view;
     }
 
-    private void startAlarm(Calendar c)
+    private void startAlarm(int alarmId, Calendar c,String title, String comment)
     {
+        MyDatabaseHelper myDB = new MyDatabaseHelper(mContext);
+        Cursor cursor = myDB.readAllData();
+        while(cursor.moveToNext())
+        {
+            if (cursor.getString(0).equals(String.valueOf(alarmId)))
+            {
+                myDB.updateData(cursor.getString(0),cursor.getString(1),cursor.getString(2),LocalDate.parse(cursor.getString(3)),
+                        LocalTime.parse(cursor.getString(4)),"true");
+
+
+            }
+        }
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(mContext,AlarmReceiver.class);
 
+        intent.putExtra("calendar",c.getTime());
+        intent.putExtra("title",title);
+        intent.putExtra("comment",comment);
 
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext,1,intent,0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext,alarmId,intent,PendingIntent.FLAG_CANCEL_CURRENT);
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),pendingIntent);
-        Toast.makeText(mContext, "Alarm set", Toast.LENGTH_SHORT).show();
+        notifyDataSetChanged();
+
     }
 
-    private void cancelAlarm(Calendar c)
+
+
+    private void cancelAlarmCursorAdapter(int alarmId)
     {
+        MyDatabaseHelper myDB = new MyDatabaseHelper(mContext);
+        Cursor cursor = myDB.readAllData();
+        while(cursor.moveToNext())
+        {
+            if (cursor.getString(0).equals(String.valueOf(alarmId)))
+            {
+                myDB.updateData(cursor.getString(0),cursor.getString(1),cursor.getString(2),LocalDate.parse(cursor.getString(3)),
+                        LocalTime.parse(cursor.getString(4)),"false");
+
+            }
+        }
+
+
         AlarmManager alarmManager = (AlarmManager)  mContext.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(mContext,AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext,1,intent,0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext,alarmId,intent,0);
 
         alarmManager.cancel(pendingIntent);
-        Toast.makeText(mContext, "Alarm Cancelled", Toast.LENGTH_SHORT).show();
+        notifyDataSetChanged();
     }
 
 

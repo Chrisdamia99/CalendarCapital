@@ -217,7 +217,7 @@
 
             <androidx.core.widget.NestedScrollView
                 android:id="@+id/scrollView1"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fillViewport="true"
                 android:scrollbars="vertical"
@@ -225,9 +225,10 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/daysOfWeek">
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/calendarRecyclerView"
@@ -240,8 +241,7 @@
                         android:id="@+id/floatAddBtnMonthView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/calendarRecyclerView"
-                        android:layout_marginStart="320dp"
+                        android:layout_gravity="center"
                         android:layout_marginTop="20dp"
                         android:backgroundTint="@color/blue"
                         android:src="@drawable/add"
@@ -250,13 +250,13 @@
                     <ListView
                         android:id="@+id/monthListView"
                         android:layout_width="match_parent"
-                        android:layout_height="500dp"
-                        android:layout_below="@id/calendarRecyclerView"
-                        android:layout_marginTop="20dp"
+                        android:layout_gravity="bottom"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp"
                         android:nestedScrollingEnabled="true"
                         android:visibility="gone" />
 
-                </RelativeLayout>
+                </LinearLayout>
 
 
             </androidx.core.widget.NestedScrollView>

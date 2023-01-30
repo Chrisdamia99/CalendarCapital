@@ -18,9 +18,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.Slide;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -324,7 +327,11 @@ public void dublicatesInStack()
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
-                viewFinal = CA.setAllFields(view1,myEventId,myTitle,myComment,myDate,myTime, alarm);
+
+
+
+                viewFinal = CA.setAllFields(view1,myEventId,myTitle,myComment,myDate,myTime);
+
 
 
                 builder.setView(viewFinal).
@@ -468,6 +475,7 @@ public void dublicatesInStack()
 
 
                 builder.show();
+
 
 
             }

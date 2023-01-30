@@ -3,6 +3,7 @@
 
     android:layout_width="match_parent"
     android:orientation="vertical"
+android:background="@drawable/rounded_alertdialog"
 
     android:id="@+id/lin_lv_dialog_layout"
     android:layout_height="match_parent">
@@ -11,7 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/blue"
+        android:background="@drawable/rounded_corners_ad_title"
         android:gravity="center"
         >
 
@@ -229,18 +230,50 @@
 
     </LinearLayout>
 
-<Button
-    android:id="@+id/alarmState"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Start Alarm"
-    android:backgroundTint="@color/blue"
-    android:textColor="@color/white"
-    android:textStyle="bold"
-    android:textAllCaps="false"
-    android:layout_gravity="center"
-    android:layout_marginTop="20dp"
-    />
+<!--<Button-->
+<!--    android:id="@+id/alarmState"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:text="Start Alarm"-->
+<!--    android:backgroundTint="@color/blue"-->
+<!--    android:textColor="@color/white"-->
+<!--    android:textStyle="bold"-->
+<!--    android:textAllCaps="false"-->
+<!--    android:layout_gravity="center"-->
+<!--    android:layout_marginTop="20dp"-->
+<!--    />-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            >
+
+
+        <TextView
+            android:id="@+id/alarmInfo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/rounded_corners_ad_title"
+            android:textColor="@color/white"
+            android:text="Καμία υπενθύμιση"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:gravity="center"
+
+
+            />
+            <ImageButton
+                android:id="@+id/cancelReminderFromList"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/cancel_reminder"/>
+
+
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -7,15 +7,40 @@
     android:layout_height="match_parent"
     tools:context=".EventEdit">
 
-    <ImageView
-        android:id="@+id/menu_new_add_edit"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="20dp"
-        android:layout_gravity="end"
-        app:srcCompat="@drawable/bullets"
-        app:tint="@color/blue"
-        tools:ignore="ContentDescription" />
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="right">
+    <ImageButton
+        android:id="@+id/eventEditBackButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/back_to_activity_blue"/>
+
+    <ImageButton
+        android:id="@+id/eventEditRefreshButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:backgroundTint="@color/white"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/refresh"/>
+</LinearLayout>
+<!--    <ImageView-->
+<!--        android:id="@+id/menu_new_add_edit"-->
+<!--        android:layout_width="30dp"-->
+<!--        android:layout_height="30dp"-->
+<!--        android:layout_marginStart="20dp"-->
+<!--        android:layout_gravity="end"-->
+<!--        app:srcCompat="@drawable/bullets"-->
+<!--        app:tint="@color/blue"-->
+<!--        tools:ignore="ContentDescription" />-->
 
 
     <TextView
@@ -60,72 +85,135 @@
         android:ems="10"
         android:importantForAutofill="no" />
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+
     <TextView
         android:id="@+id/eventDateET"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:text="@string/date"
         android:textSize="20sp"
         android:textAlignment="center"
         android:textColor="@color/black"/>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
     <TextView
         android:id="@+id/eventTimeET"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:text="@string/time"
         android:textSize="20sp"
         android:textAlignment="center"
         android:textColor="@color/black"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/addAlarmButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Προσθήκη υπενθύμισης"
+            android:drawablePadding="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:drawableLeft="@drawable/notification_bell"/>
+
+
+
+    </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:scrollbars="vertical"
+
+            >
+
+    <LinearLayout
+        android:id="@+id/reminderLayout"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+     <ListView
+         android:id="@+id/remindersListView"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"/>
+
+
+
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
 
     <TextView
         android:id="@+id/changeTimeTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="40dp"
-        android:text="@string/change_time"
+        android:text="Αλλαγή ώρας"
+        android:layout_marginTop="10dp"
+
         android:drawablePadding="10dp"
         android:textSize="20sp"
         android:textAlignment="center"
         android:textColor="@color/black"
-        app:drawableRightCompat="@drawable/clock" />
+        android:drawableTint="@color/blue"
+        android:drawableLeft="@drawable/clock" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
 
     <TextView
         android:id="@+id/changeDateTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:text="@string/change_date"
+        android:layout_marginTop="10dp"
+        android:text="Αλλαγή ημερομηνίας"
         android:drawablePadding="10dp"
         android:textSize="20sp"
         android:textAlignment="center"
         android:textColor="@color/black"
-        app:drawableRightCompat="@drawable/date" />
-
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/alarmme"
-        android:layout_marginTop="30dp"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:text="Alarm"
-        android:layout_gravity="center"
-        />
-
-
-
-
-
-
+        android:drawableTint="@color/blue"
+        android:drawableLeft="@drawable/date" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
 
 
 
@@ -141,4 +229,10 @@
         android:layout_gravity="center"
         android:textSize="20sp"/>
 
+    </LinearLayout>
+</ScrollView>
+
+
+</LinearLayout>
+</LinearLayout>
 </LinearLayout>

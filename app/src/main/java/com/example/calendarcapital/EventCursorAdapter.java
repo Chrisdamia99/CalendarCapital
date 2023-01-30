@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,69 +76,74 @@ public class EventCursorAdapter extends CursorAdapter{
     }
 
 
-        public View setAllFields(View view,String id, String title, String comment, String date, String time, String alarmDate)
+        public View setAllFields(View view,String id, String title, String comment, String date, String time)
     {
-
+            String alarmDate;
 
         TextView id_lv_tv = view.findViewById(R.id.id_lv_tv);
         TextView title_lv_tv =  view.findViewById(R.id.title_lv_tv);
         TextView comment_lv_tv = view.findViewById(R.id.comment_lv_tv);
         TextView date_lv_tv =  view.findViewById(R.id.date_lv_tv);
         TextView time_lv_tv =  view.findViewById(R.id.time_lv_tv);
-        Button alarmState = view.findViewById(R.id.alarmState);
+        TextView alarmInfo = view.findViewById(R.id.alarmInfo);
+        ImageButton cancelReminderFromList = view.findViewById(R.id.cancelReminderFromList);
+
 
         id_lv_tv.setText(id);
         title_lv_tv.setText(title);
         comment_lv_tv.setText(comment);
         date_lv_tv.setText(date);
         time_lv_tv.setText(time);
+        MyDatabaseHelper myDb = new MyDatabaseHelper(mContext);
+        Cursor cursor = myDb.readAllData();
 
+        while (cursor.moveToNext()){
 
-        Calendar c = GregorianCalendar.from(LocalDate.parse(date).atTime(LocalTime.parse(time)).atZone(ZoneId.systemDefault()));
+            if (cursor.getString(0).equals(id))
+            {
+                alarmDate = cursor.getString(6);
 
-
-
-
-        if (Objects.equals(alarmDate, "false"))
-        {
-            alarmState.setText("Start Alarm");
-        }else if (Objects.equals(alarmDate, "true"))
-        {
-            alarmState.setText("Cancel Alarm");
-        }else
-        {
-            Toast.makeText(mContext, "Alarm set problem.", Toast.LENGTH_SHORT).show();
+                if (!alarmDate.equals("null"))
+                {
+                    alarmInfo.setText(alarmDate.trim() );
+                    cancelReminderFromList.setVisibility(View.VISIBLE);
+                break;
+                }
+                else
+                {
+                    alarmInfo.setText("Καμία υπενθύμιση.");
+                    cancelReminderFromList.setVisibility(View.GONE);
+                    break;
+                }
+            }else
+            {
+                alarmInfo.setText("Καμία υπενθύμιση.");
+                cancelReminderFromList.setVisibility(View.GONE);
+            }
         }
-
-        alarmState.setOnClickListener(new View.OnClickListener() {
+        cursor.moveToPosition(-1);
+        cancelReminderFromList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                while (cursor.moveToNext()){
+                    if (cursor.getString(0).equals(id))
+                    {
 
-                if (Objects.equals(alarmDate, "false"))
-                {Toast.makeText(mContext, "Alarm is set to: " + c.getTime().toString().trim(), Toast.LENGTH_SHORT).show();
-                    alarmState.setText("Cancel Alarm");
-                    startAlarm(Integer.parseInt(id),c,title,comment);
+                         myDb.updateReminder(id,null);
+                         alarmInfo.setText("Καμία υπενθύμιση.");
+                         cancelAlarmCursorAdapter(Integer.parseInt(id));
+                        notifyDataSetChanged();
+                            break;
 
-
-
-
-
-
-                }else if (Objects.equals(alarmDate, "true"))
-                {Toast.makeText(mContext, "Alarm cancelled from : " + c.getTime().toString().trim(), Toast.LENGTH_SHORT).show();
-                    alarmState.setText("Start Alarm");
-                    notifyDataSetChanged();
-                    cancelAlarmCursorAdapter(Integer.parseInt(id));
-
-
-
-
-
+                    }else
+                    {
+                        alarmInfo.setText("Καμία υπενθύμιση.");
+                    }
                 }
-
-                notifyDataSetChanged();
             }
         });
+
+        notifyDataSetChanged();
 
         EventCursorAdapter.this.notifyDataSetChanged();
 
@@ -179,6 +185,8 @@ public class EventCursorAdapter extends CursorAdapter{
     {
         MyDatabaseHelper myDB = new MyDatabaseHelper(mContext);
         Cursor cursor = myDB.readAllData();
+        cursor.moveToPosition(-1);
+        Calendar DBdate;
         while(cursor.moveToNext())
         {
             if (cursor.getString(0).equals(String.valueOf(alarmId)))
@@ -193,6 +201,8 @@ public class EventCursorAdapter extends CursorAdapter{
         AlarmManager alarmManager = (AlarmManager)  mContext.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(mContext,AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext,alarmId,intent,0);
+        Toast.makeText(mContext, "Alarm Cancelled", Toast.LENGTH_SHORT).show();
+
 
         alarmManager.cancel(pendingIntent);
         notifyDataSetChanged();

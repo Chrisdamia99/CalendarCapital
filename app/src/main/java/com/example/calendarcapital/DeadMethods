@@ -60,3 +60,33 @@
 //        LocalDateTime localDateTime = LocalDateTime.ofInstant(calendar.toInstant(), zoneId);
 //        LocalDateTime ld = calendar.;
 
+
+
+//        findViewById(R.id.menu_new_add_edit).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
+//                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//                    public boolean onMenuItemClick(MenuItem item) {
+//
+//                        switch (item.getItemId()) {
+//                            case R.id.refreshItemOnLay:
+//                                AllEventsList.reloadActivity(EventEdit.this);
+//                                return true;
+//                            case R.id.previousAct:
+//
+//                                Intent i = new Intent(EventEdit.this, MainActivity.class);
+//                                Boolean myBool = true;
+//                                i.putExtra("bool", myBool);
+//
+//                                startActivity(i);
+//
+//                        }
+//
+//                        return false;
+//                    }
+//                });
+//                popupMenu.inflate(R.menu.menu_up_inlayout);
+//                popupMenu.show();
+//            }
+//        });

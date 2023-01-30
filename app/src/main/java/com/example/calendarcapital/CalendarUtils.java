@@ -1,12 +1,15 @@
 package com.example.calendarcapital;
 
 
+import android.icu.text.DateFormat;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 public class CalendarUtils {
@@ -65,6 +68,10 @@ public class CalendarUtils {
         return localDate;
     }
 
+    public static String dateForReminder(Date date)
+    {
+        return (String) android.text.format.DateFormat.format("yyyy-MM-dd kk:mm:ss a", date);
+    }
 
     public static ArrayList<LocalDate> daysInMonthArray() //The arraylist that month will be stored
     {

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="vertical"
+>
+
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+    <TextView
+        android:id="@+id/tenMinBefore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="10 λεπτα νωρίτερα"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+
+        android:layout_margin="10dp"
+       />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+    <TextView
+        android:id="@+id/fiveMinBefore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="5 λεπτα νωρίτερα"
+        android:textStyle="bold"
+        android:layout_margin="10dp"
+        android:textColor="@color/black"
+
+        android:textSize="20sp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+    <TextView
+        android:id="@+id/eventsTimeReminder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Την ώρα του συμβάντος"
+        android:textStyle="bold"
+        android:layout_margin="10dp"
+        android:textColor="@color/black"
+
+        android:textSize="20sp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+    <TextView
+        android:id="@+id/fiveMinLater"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="5 λεπτα αργότερα"
+        android:layout_margin="10dp"
+        android:textColor="@color/black"
+
+        android:textStyle="bold"
+        android:textSize="20sp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+    <TextView
+        android:id="@+id/tenMinLater"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="10 λεπτα αργότερα"
+        android:layout_margin="10dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="20sp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+    <TextView
+        android:id="@+id/customChoice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Επεξεργασία.."
+        android:layout_margin="10dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="20sp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+
+</LinearLayout>

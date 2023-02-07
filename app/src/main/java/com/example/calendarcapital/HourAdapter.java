@@ -28,7 +28,6 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
     }
 
 
-
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -38,7 +37,7 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.hour_cell, parent, false);
 
 
-        compareAndGetValuesFromDB(convertView,event.time);
+        compareAndGetValuesFromDB(convertView, event.time);
 
 
         setEvents(convertView, event.events);
@@ -48,53 +47,43 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
     }
 
 
+    private void compareAndGetValuesFromDB(View convertView, LocalTime time) {
+        Cursor cursor = myDB.readAllData();
 
 
-            private void compareAndGetValuesFromDB(View convertView, LocalTime time)
-             { Cursor cursor = myDB.readAllData();
+        if (cursor.getCount() == 0) {
+            try {
 
 
-                 if (cursor.getCount() == 0)
-                 {
-                     try{
-
-
-
-                         Toast.makeText(context, "No data to present.", Toast.LENGTH_SHORT).show();
-                     } catch (Exception e) {
-                         e.printStackTrace();
-                     }
-                 }else
-                 {
-                     while (cursor.moveToNext())
-                     {
-                         if (LocalTime.parse(cursor.getString(4)).equals(time))
-                         {
-                             Event eventDB = new Event(cursor.getString(0),cursor.getString(1),cursor.getString(2),
-                                     CalendarUtils.stringToLocalDate(cursor.getString(3)),LocalTime.parse(cursor.getString(4)),
-                                    cursor.getString(5));
-                             ArrayList<Event> eventArrayDB = new ArrayList<>();
-                             eventArrayDB.add(eventDB);
-                             HourEvent event = new HourEvent(LocalTime.parse(cursor.getString(4)),eventArrayDB);
-                             event.setEvents(eventArrayDB);
-                             event.setTime(LocalTime.parse(cursor.getString(4)));
-                             //Καλείτε η setHour και δίνω στην λίστα τις τιμές της ώρες από την βάση δεδομένων και το αντίστοιχο event
-                             setHour(convertView,time, LocalDate.parse(cursor.getString(3)));
-
-
-
-                         }
-
-                     }
-                 }
-
+                Toast.makeText(context, "No data to present.", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            while (cursor.moveToNext()) {
+                if (LocalTime.parse(cursor.getString(4)).equals(time)) {
+                    Event eventDB = new Event(cursor.getString(0), cursor.getString(1), cursor.getString(2),
+                            CalendarUtils.stringToLocalDate(cursor.getString(3)), LocalTime.parse(cursor.getString(4)),
+                            cursor.getString(5));
+                    ArrayList<Event> eventArrayDB = new ArrayList<>();
+                    eventArrayDB.add(eventDB);
+                    HourEvent event = new HourEvent(LocalTime.parse(cursor.getString(4)), eventArrayDB);
+                    event.setEvents(eventArrayDB);
+                    event.setTime(LocalTime.parse(cursor.getString(4)));
+                    //Καλείτε η setHour και δίνω στην λίστα τις τιμές της ώρες από την βάση δεδομένων και το αντίστοιχο event
+                    setHour(convertView, time, LocalDate.parse(cursor.getString(3)));
 
 
                 }
 
+            }
+        }
 
 
-    private void setHour(View convertView, LocalTime time,LocalDate date) {
+    }
+
+
+    private void setHour(View convertView, LocalTime time, LocalDate date) {
 
 
         TextView timeTv = convertView.findViewById(R.id.timeTV);
@@ -115,16 +104,14 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
         TextView comment2 = convertView.findViewById(R.id.comment2);
         TextView comment3 = convertView.findViewById(R.id.coment3);
 
-        if (events.size() == 0)
-        {
+        if (events.size() == 0) {
             hideEvent(event1);
             hideEvent(event2);
             hideEvent(event3);
             hideEvent(comment1);
             hideEvent(comment2);
             hideEvent(comment3);
-        }else if (events.size() == 1)
-        {
+        } else if (events.size() == 1) {
             setEvent(event1, events.get(0));
             setComment(comment1, events.get(0));
             hideEvent(comment2);
@@ -133,9 +120,7 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
             hideEvent(event2);
             hideEvent(event3);
 
-        }
-        else if (events.size() == 2)
-        {
+        } else if (events.size() == 2) {
             setEvent(event1, events.get(0));
             setEvent(event2, events.get(1));
             setComment(comment1, events.get(0));
@@ -144,18 +129,14 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
             hideEvent(event3);
 
 
-        }
-        else if (events.size() == 3)
-        {
+        } else if (events.size() == 3) {
             setEvent(event1, events.get(0));
             setEvent(event2, events.get(1));
             setEvent(event3, events.get(2));
             setComment(comment1, events.get(0));
             setComment(comment2, events.get(1));
             setComment(comment3, events.get(2));
-        }
-        else
-        {
+        } else {
             setEvent(event1, events.get(0));
             setEvent(event2, events.get(1));
             event3.setVisibility(View.VISIBLE);
@@ -166,16 +147,14 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
             setComment(comment1, events.get(0));
             setComment(comment2, events.get(1));
             comment3.setVisibility(View.VISIBLE);
-            String commentsNotShown = String.valueOf(events.size() -2);
+            String commentsNotShown = String.valueOf(events.size() - 2);
             commentsNotShown += " More Comments";
             comment3.setText(commentsNotShown);
         }
 
-        if (comment1.getText().toString().isEmpty())
-        {
+        if (comment1.getText().toString().isEmpty()) {
             comment1.setVisibility(View.GONE);
         }
-
 
 
     }
@@ -187,7 +166,7 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
 
     }
 
-    private void setComment(TextView textView, Event event){
+    private void setComment(TextView textView, Event event) {
 
         textView.setText(event.getComment());
         textView.setVisibility(View.VISIBLE);
@@ -195,9 +174,7 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
     }
 
 
-
-    private void hideEvent(TextView tv)
-    {
+    private void hideEvent(TextView tv) {
         tv.setVisibility(View.INVISIBLE);
     }
 }

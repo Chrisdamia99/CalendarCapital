@@ -3,6 +3,8 @@ package com.example.calendarcapital;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlarmManager;
@@ -17,10 +19,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.service.autofill.OnClickAction;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -53,23 +57,20 @@ import java.util.TimerTask;
 public class EventEdit extends AppCompatActivity {
 
     private EditText eventNameET, eventCommentET;
-    private TextView eventDateTV, eventTimeTV, changeTimeTV, changeDateTV, addAlarmButton, reminderInfoTV;
+    private TextView eventDateTV, eventTimeTV, changeTimeTV, changeDateTV, addAlarmButton;
     Button btnSave;
-    ImageButton cancelReminderImageView,eventEditBackButton,eventEditRefreshButton;
+    RemindersAdapter remindersAdapter;
+    ImageButton cancelReminderImageView, eventEditBackButton, eventEditRefreshButton;
     LinearLayout reminderLayout;
     ListView remindersListView;
     int hour, min;
     private static LocalDate date;
     private static LocalTime time;
 
-      int alarmState;
-     Calendar cReminder = Calendar.getInstance();
+    int alarmState;
+    Calendar cReminder = Calendar.getInstance();
 
     ArrayList<Date> ok = new ArrayList<>();
-
-
-
-
 
 
     @Override
@@ -78,14 +79,14 @@ public class EventEdit extends AppCompatActivity {
         setContentView(R.layout.activity_event_edit);
         initWidgets();
         time = LocalTime.parse(CalendarUtils.formattedShortTime(LocalTime.now()));
-        eventTimeTV.setText("Time: " + CalendarUtils.formattedShortTime(time));
+        eventTimeTV.setText(CalendarUtils.formattedShortTime(time));
         date = CalendarUtils.selectedDate;
-        eventDateTV.setText("Date: " + CalendarUtils.formattedDate(date));
+        eventDateTV.setText(CalendarUtils.formattedDateEventEdit(date));
         btnSave = findViewById(R.id.btnSave);
-        alarmState=0;
+        alarmState = 0;
         createNotificationChannel();
+        updateIfEmptyListView();
 
-        ListViewUtility.setListViewHeightBasedOnChildren(remindersListView);
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,13 +138,6 @@ public class EventEdit extends AppCompatActivity {
             }
         });
 
-//        cancelReminderImageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                reminderLayout.setVisibility(View.GONE);
-//                alarmState = 0;
-//            }
-//        });
 
     }
 
@@ -157,7 +151,6 @@ public class EventEdit extends AppCompatActivity {
         changeDateTV = findViewById(R.id.changeDateTV);
         addAlarmButton = findViewById(R.id.addAlarmButton);
         eventEditBackButton = findViewById(R.id.eventEditBackButton);
-        reminderInfoTV = findViewById(R.id.reminderInfoTV);
         reminderLayout = findViewById(R.id.reminderLayout);
         cancelReminderImageView = findViewById(R.id.cancelReminderImageView);
         eventEditRefreshButton = findViewById(R.id.eventEditRefreshButton);
@@ -167,26 +160,81 @@ public class EventEdit extends AppCompatActivity {
     }
 
 
+    public void updateIfEmptyListView() {
+        Timer t = new Timer();
+        t.scheduleAtFixedRate(
+                new TimerTask() {
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                // update ui here
+                                if (ok.isEmpty()) {
+//                            remindersAdapter = new RemindersAdapter(EventEdit.this, ok);
+//                            remindersAdapter.notifyDataSetChanged();
+                                    remindersListView.setVisibility(View.GONE);
+
+                                } else if (ok.size() == 1) {
+                                    ok.sort((o1, o2) -> o1.compareTo(o2));
+                                    ViewGroup.LayoutParams paramsListView = remindersListView.getLayoutParams();
+                                    paramsListView.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+
+                                    remindersListView.setLayoutParams(paramsListView);
+                                } else {
+                                    ok.sort((o1, o2) -> o1.compareTo(o2));
+                                    ViewGroup.LayoutParams paramsListView = remindersListView.getLayoutParams();
+                                    paramsListView.height = 500;
+
+                                    remindersListView.setLayoutParams(paramsListView);
+                                }
+                            }
+                        });
+
+                    }
+                }, 0, 100); //runs every three seconds
+
+
+    }
+
 
     public void showChangeDate(int year, int month, int dayofmonth) {
-        final DatePickerDialog StartTime = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        final DatePickerDialog StartTime = new DatePickerDialog(this, R.style.TimePickerTheme, new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 int trueMonth = monthOfYear + 1;
 
                 if (trueMonth < 10 && dayOfMonth >= 10) {
                     String str = String.format("%02d", trueMonth);
-                    eventDateTV.setText("Date: " + dayOfMonth + " " + str + " " + year);
+
+                    LocalDate myDD = LocalDate.of(year, trueMonth, dayOfMonth);
+
+                    eventDateTV.setText(CalendarUtils.formattedDateEventEdit(myDD));
+
+//                    eventDateTV.setText("Date: " + dayOfMonth + " " + str + " " + year);
 
                 } else if (dayOfMonth < 10 && trueMonth < 10) {
                     String strMonth = String.format("%02d", trueMonth);
                     String strDay = String.format("%02d", dayOfMonth);
-                    eventDateTV.setText("Date: " + strDay + " " + strMonth + " " + year);
+
+                    LocalDate myDD = LocalDate.of(year, trueMonth, dayOfMonth);
+                    eventDateTV.setText(CalendarUtils.formattedDateEventEdit(myDD));
+//                    eventDateTV.setText("Date: " + strDay + " " + strMonth + " " + year);
                 } else if (dayOfMonth < 10 && trueMonth >= 10) {
                     String strDay = String.format("%02d", dayOfMonth);
-                    eventDateTV.setText("Date: " + strDay + " " + trueMonth + " " + year);
+
+                    LocalDate myDD = LocalDate.of(year, trueMonth, dayOfMonth);
+
+                    eventDateTV.setText(CalendarUtils.formattedDateEventEdit(myDD));
+
+
+//                    eventDateTV.setText("Date: " + strDay + " " + trueMonth + " " + year);
 
                 } else {
-                    eventDateTV.setText("Date: " + dayOfMonth + " " + trueMonth + " " + year);
+
+                    LocalDate myDD = LocalDate.of(year, trueMonth, dayOfMonth);
+                    eventDateTV.setText(CalendarUtils.formattedDateEventEdit(myDD));
+
+//                    eventDateTV.setText("Date: " + dayOfMonth + " " + trueMonth + " " + year);
                 }
                 date = LocalDate.of(year, trueMonth, dayOfMonth);
 
@@ -205,7 +253,7 @@ public class EventEdit extends AppCompatActivity {
 
     public void showChangeTime(int hours, int minute) {
         TimePickerDialog timePickerDialog;
-        timePickerDialog = new TimePickerDialog(EventEdit.this, new TimePickerDialog.OnTimeSetListener() {
+        timePickerDialog = new TimePickerDialog(EventEdit.this, R.style.TimePickerTheme, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                 hour = selectedHour;
@@ -216,7 +264,7 @@ public class EventEdit extends AppCompatActivity {
                     String minStr = String.format("%02d", min);
                     String allTime = hourStr + ":" + minStr;
 
-                    eventTimeTV.setText("Time: " + hourStr + ":" + minStr);
+                    eventTimeTV.setText(hourStr + ":" + minStr);
                     time = LocalTime.parse(allTime, DateTimeFormatter.ISO_TIME);
 
 
@@ -224,21 +272,21 @@ public class EventEdit extends AppCompatActivity {
                     String hourStr = String.format("%02d", hour);
                     String allTime = hourStr + ":" + min;
 
-                    eventTimeTV.setText("Time: " + hourStr + ":" + min);
+                    eventTimeTV.setText(hourStr + ":" + min);
                     time = LocalTime.parse(allTime, DateTimeFormatter.ISO_TIME);
                 } else if (hour >= 10 && min < 10) {
                     String minStr = String.format("%02d", min);
 
                     String allTime = hour + ":" + minStr;
 
-                    eventTimeTV.setText("Time: " + hour + ":" + minStr);
+                    eventTimeTV.setText(hour + ":" + minStr);
                     time = LocalTime.parse(allTime, DateTimeFormatter.ISO_TIME);
 
 
                 } else {
                     String allTime = hour + ":" + min;
 
-                    eventTimeTV.setText("Time: " + hour + ":" + min);
+                    eventTimeTV.setText(hour + ":" + min);
                     time = LocalTime.parse(allTime, DateTimeFormatter.ISO_TIME);
 
                 }
@@ -257,7 +305,7 @@ public class EventEdit extends AppCompatActivity {
     public void showChangeTimeForReminder(int hours, int minute) {
 
         TimePickerDialog timePickerDialog;
-        timePickerDialog = new TimePickerDialog(EventEdit.this, new TimePickerDialog.OnTimeSetListener() {
+        timePickerDialog = new TimePickerDialog(EventEdit.this, R.style.TimePickerTheme, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                 hour = selectedHour;
@@ -335,19 +383,23 @@ public class EventEdit extends AppCompatActivity {
             @Override
             public void onDismiss(DialogInterface dialog) {
 
-                for (int i=0; i<ok.size(); i++)
-                {   for(int j=i+1; j<ok.size(); j++) {
-                    if (ok.get(i).equals(ok.get(j))) {
-                        ok.remove(i);
+                for (int i = 0; i < ok.size(); i++) {
+                    for (int j = i + 1; j < ok.size(); j++) {
+                        if (ok.get(i).getMonth() == ok.get(j).getMonth() &&
+                                ok.get(i).getYear() == ok.get(j).getYear() &&
+                                ok.get(i).getDay() == ok.get(j).getDay() &&
+                                ok.get(i).getHours() == ok.get(j).getHours() &&
+                                ok.get(i).getMinutes() == ok.get(j).getMinutes()) {
+                            ok.remove(i);
 
-                        Toast.makeText(EventEdit.this, "Σφάλμα, η υπενθύμιση υπάρχει.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EventEdit.this, "Σφάλμα, η υπενθύμιση υπάρχει.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
-                }
-                RemindersAdapter RA = new RemindersAdapter(getApplicationContext(),ok);
+                remindersAdapter = new RemindersAdapter(getApplicationContext(), ok);
 
-
-                remindersListView.setAdapter(RA);
+                remindersListView.setVisibility(View.VISIBLE);
+                remindersListView.setAdapter(remindersAdapter);
             }
         });
         timePickerDialog.show();
@@ -412,8 +464,6 @@ public class EventEdit extends AppCompatActivity {
         TextView customChoice = rowView.findViewById(R.id.customChoice);
 
 
-
-
         cReminder.set(Calendar.YEAR, date.getYear());
         cReminder.set(Calendar.MONTH, date.getMonth().getValue() - 1);
         cReminder.set(Calendar.DAY_OF_MONTH, date.getDayOfMonth());
@@ -422,11 +472,6 @@ public class EventEdit extends AppCompatActivity {
         cReminder.set(Calendar.HOUR_OF_DAY, time.getHour());
         cReminder.set(Calendar.MINUTE, time.getMinute());
         cReminder.set(Calendar.SECOND, time.getSecond());
-
-
-
-
-
 
 
         final AlertDialog dialog = new AlertDialog.Builder(this).setView(rowView)
@@ -537,20 +582,24 @@ public class EventEdit extends AppCompatActivity {
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                for (int i=0; i<ok.size(); i++)
-                {   for(int j=i+1; j<ok.size(); j++) {
-                    if (ok.get(i).equals(ok.get(j))) {
-                        ok.remove(i);
+                for (int i = 0; i < ok.size(); i++) {
+                    for (int j = i + 1; j < ok.size(); j++) {
+                        if (ok.get(i).getMonth() == ok.get(j).getMonth() &&
+                                ok.get(i).getYear() == ok.get(j).getYear() &&
+                                ok.get(i).getDay() == ok.get(j).getDay() &&
+                                ok.get(i).getHours() == ok.get(j).getHours() &&
+                                ok.get(i).getMinutes() == ok.get(j).getMinutes()) {
+                            ok.remove(i);
 
-                        Toast.makeText(EventEdit.this, "Σφάλμα, η υπενθύμιση υπάρχει.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EventEdit.this, "Σφάλμα, η υπενθύμιση υπάρχει.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
-                }
 
-                RemindersAdapter RA = new RemindersAdapter(getApplicationContext(),ok);
+                remindersAdapter = new RemindersAdapter(getApplicationContext(), ok);
 
-
-                remindersListView.setAdapter(RA);
+                remindersListView.setVisibility(View.VISIBLE);
+                remindersListView.setAdapter(remindersAdapter);
 
 
             }
@@ -559,7 +608,6 @@ public class EventEdit extends AppCompatActivity {
 
 
     }
-
 
 
     private void createNotificationChannel() {
@@ -577,44 +625,23 @@ public class EventEdit extends AppCompatActivity {
 
     public void saveEventAction(View view) {
         MyDatabaseHelper myDB = new MyDatabaseHelper(EventEdit.this);
-        Date reminderFinal = cReminder.getTime();
-
+        String idForReminder = "";
         Cursor cursor = myDB.readAllData();
         String eventName = eventNameET.getText().toString();
         String eventComment = eventCommentET.getText().toString();
-
-    ok.size();
-
-            myDB.addEvent(eventName, eventComment, date, time, String.valueOf(alarmState));
-    if (ok.size()>0)
-    {   while (cursor.moveToNext()) {
-        cursor.moveToLast();
-        for (int i=0; i<ok.size(); i++)
-        myDB.addReminder(cursor.getString(0),ok.get(i));
-    }
-    }
+        ok.sort((o1, o2) -> o1.compareTo(o2));
 
 
-
-
-
-//        int alarmId;
-//        while (cursor.moveToNext()) {
-//            if (eventName.equals(cursor.getString(1))) {
-//
-//                alarmId = Integer.parseInt(cursor.getString(0));
-//
-//                if (alarmme.isChecked()) {
-//                    startAlarm(alarmId, cReminder);
-//
-//                    alarmState = true;
-//                } else {
-//                    alarmState = false;
-//                }
-//
-//            }
-//        }
-
+        myDB.addEvent(eventName, eventComment, date, time, String.valueOf(alarmState));
+        if (ok.size() > 0) {
+            while (cursor.moveToNext()) {
+                cursor.moveToLast();
+                for (int i = 0; i < ok.size(); i++) {
+                    idForReminder = cursor.getString(0);
+                    myDB.addReminder(idForReminder, ok.get(i));
+                }
+            }
+        }
 
 
         Intent i1 = new Intent(EventEdit.this, MainActivity.class);

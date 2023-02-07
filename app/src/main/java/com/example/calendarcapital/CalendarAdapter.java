@@ -73,7 +73,6 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position) {
 
 
-
         Cursor cursor = myDB.readAllData();
         holder.eventDayText.setVisibility(View.GONE);
         holder.eventDayText2.setVisibility(View.GONE);
@@ -100,50 +99,43 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
 
         }
 
-        myEvents.sort((o1,o2) -> o2.getDate().compareTo(o1.getDate()));
+        myEvents.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
 
-        myEvents.sort((o1,o2) -> o2.getTime().compareTo(o1.getTime()));
-
-
-
+        myEvents.sort((o1, o2) -> o2.getTime().compareTo(o1.getTime()));
 
 
         cursor.moveToPosition(-1);
         while (cursor.moveToNext()) {
 
 
-
-
-
-            if (myEvents.size()<=2)
-            {
-                if (myEvents.size()<2) {
+            if (myEvents.size() <= 2) {
+                if (myEvents.size() < 2) {
                     if (myEvents.get(0).getDate().equals(date) && LocalTime.parse(cursor.getString(4)).equals(myEvents.get(0).getTime())) {
                         holder.eventDayText.setVisibility(View.VISIBLE);
                         holder.eventDayText.setText(myEvents.get(0).getName());
                         holder.eventDayText.setTextColor(Color.BLUE);
                         holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner);
                     }
-                }else {
+                } else {
 //                for (int i = myEvents.size()-1; i >= 0; i--) {
-                    for (int i = 0; i <myEvents.size()-1; i++) {
+                    for (int i = 0; i < myEvents.size() - 1; i++) {
 
 //                        if (myEvents.get(i).getDate().equals(date) && LocalTime.parse(cursor.getString(4)).equals(myEvents.get(i).getTime())) {
-                            if (myEvents.get(i).getDate().equals(date) && !myEvents.get(i).getId().equals(myEvents.get(i+1).getId())
-                            && myEvents.get(i+1).getDate().equals(date)) {
+                        if (myEvents.get(i).getDate().equals(date) && !myEvents.get(i).getId().equals(myEvents.get(i + 1).getId())
+                                && myEvents.get(i + 1).getDate().equals(date)) {
 
 
-                        holder.eventDayText.setVisibility(View.VISIBLE);
-                        holder.eventDayText.setText(myEvents.get(0).getName());
-                        holder.eventDayText.setTextColor(Color.BLUE);
-                        holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner);
+                            holder.eventDayText.setVisibility(View.VISIBLE);
+                            holder.eventDayText.setText(myEvents.get(0).getName());
+                            holder.eventDayText.setTextColor(Color.BLUE);
+                            holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner);
 
-                        holder.eventDayText2.setVisibility(View.VISIBLE);
-                        holder.eventDayText2.setText(myEvents.get(1).getName());
-                        holder.eventDayText2.setTextColor(Color.BLUE);
-                        holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner);
+                            holder.eventDayText2.setVisibility(View.VISIBLE);
+                            holder.eventDayText2.setText(myEvents.get(1).getName());
+                            holder.eventDayText2.setTextColor(Color.BLUE);
+                            holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner);
 
-                    }
+                        }
 
 
                     }
@@ -153,17 +145,17 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
             }
 
             for (int i = 0; i < myEvents.size(); i++) {
-                if (myEvents.get(i).getDate().equals(date) ) {
+                if (myEvents.get(i).getDate().equals(date)) {
 
                     holder.eventDayText.setVisibility(View.VISIBLE);
                     holder.eventDayText.setText(myEvents.get(i).getName());
                     holder.eventDayText.setTextColor(Color.BLUE);
                     holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner);
 
-                        for (int j=0; j<myEvents.size(); j++ ) {
+                    for (int j = 0; j < myEvents.size(); j++) {
 
-                            if (myEvents.get(j).getDate().equals(date) && i < myEvents.size()
-                                    && myEvents.get(i).getId() != myEvents.get(j).getId() ) {
+                        if (myEvents.get(j).getDate().equals(date) && i < myEvents.size()
+                                && myEvents.get(i).getId() != myEvents.get(j).getId()) {
 
                             if (myEvents.get(j).getName().equals(myEvents.get(i).getName())) {
                                 holder.eventDayText2.setVisibility(View.GONE);
@@ -175,21 +167,19 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                                 holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner);
 
 
-
-                                for (int k=0; k< myEvents.size(); k++) {
+                                for (int k = 0; k < myEvents.size(); k++) {
                                     if (myEvents.get(i).getDate().equals(myEvents.get(k).getDate()) && i < myEvents.size()
 
                                             && !Objects.equals(myEvents.get(i).getId(), myEvents.get(k).getId())
-                                            && !Objects.equals(myEvents.get(j).getId(), myEvents.get(k).getId()))
-                                    {
+                                            && !Objects.equals(myEvents.get(j).getId(), myEvents.get(k).getId())) {
                                         holder.eventDayText3.setVisibility(View.VISIBLE);
-                                    holder.eventDayText3.setText(myEvents.get(k).getName());
                                         holder.eventDayText3.setText(myEvents.get(k).getName());
-                                    holder.eventDayText3.setTextColor(Color.BLUE);
-                                    holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner);
+                                        holder.eventDayText3.setText(myEvents.get(k).getName());
+                                        holder.eventDayText3.setTextColor(Color.BLUE);
+                                        holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner);
 
 
-                                }
+                                    }
 
                                 }
                             }
@@ -200,22 +190,11 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                 }
 
 
-
             }
         }
 
 
-
-
-
-
-
-
-
-}
-
-
-
+    }
 
 
     @Override
@@ -223,7 +202,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
         return days.size();
     }
 
-public interface OnItemListener {
-    void onItemClick(int position, LocalDate date);
-}
+    public interface OnItemListener {
+        void onItemClick(int position, LocalDate date);
+    }
 }

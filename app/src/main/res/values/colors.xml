@@ -9,5 +9,6 @@
     <color name="colorGreen">#32CD32</color>
     <color name="o">#0F9D58</color>
     <color name="lightGray">#ECECEC</color>
+    <color name="lightdarkgrey">#DEDEDE</color>
 
 </resources>

@@ -15,20 +15,21 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="10dp"
-            android:background="@drawable/cancel_reminder"/>
+            android:background="@drawable/cancel_reminder" />
+
         <TextView
             android:id="@+id/reminderInfoTV"
             android:layout_width="wrap_content"
-            android:layout_gravity="center"
             android:layout_height="wrap_content"
-            android:text="Υπενθύμιση : "/>
+            android:layout_gravity="center"
+            android:text="Υπενθύμιση : " />
 
         <TextView
             android:id="@+id/reminderSetTV"
             android:layout_width="wrap_content"
-            android:layout_gravity="center"
             android:layout_height="wrap_content"
-            android:text="ΥΠΕΝΘΥΜΙΣΗ"/>
+            android:layout_gravity="center"
+            android:text="ΥΠΕΝΘΥΜΙΣΗ" />
 
 
     </LinearLayout>

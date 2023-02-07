@@ -22,6 +22,7 @@ import android.app.Dialog;
 import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.Ringtone;
@@ -62,24 +63,24 @@ import java.util.Objects;
 
 
 //Implements calendaradapter onitemlistener
-public class MainActivity extends AppCompatActivity  implements CalendarAdapter.OnItemListener, NavigationView.OnNavigationItemSelectedListener  {
+public class MainActivity extends AppCompatActivity implements CalendarAdapter.OnItemListener, NavigationView.OnNavigationItemSelectedListener {
     //Declare 3 variables textview(monthyeartext), the RecyclerView(calendarrecycleview)
     //and a LocalDate which is selectedDate
     FloatingActionButton floatAddBtnMonthAdd;
-    private TextView monthYearText,daysOfWeekDaily;
+    private TextView monthYearText, daysOfWeekDaily;
     LinearLayout daysOfWeek;
     private RecyclerView calendarRecyclerView;
     private ListView monthListView;
     NestedScrollView nestedScrollView;
     HourAdapter hourAdapter;
-    ImageButton prevMonth,nextMonth;
-    ImageView imageMenu,backMenuBtn,refreshMenuBtn;
+    ImageButton prevMonth, nextMonth;
+    ImageView imageMenu, backMenuBtn, refreshMenuBtn;
     private MyDatabaseHelper myDB = new MyDatabaseHelper(this);
-     DrawerLayout drawerLayout;
+    DrawerLayout drawerLayout;
     public static ArrayDeque<String> stack = new ArrayDeque<String>();
     public static String getSaveStack;
     boolean changeEventEdit = true;
-    Bundle b ;
+    Bundle b;
 
 
     @Override
@@ -101,10 +102,11 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
         refreshMenuBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (stack.size()>1){
-                getSaveStack = stack.removeFirst();}
+                if (stack.size() > 1) {
+                    getSaveStack = stack.removeFirst();
+                }
                 finish();
-                changeEventEdit=true;
+                changeEventEdit = true;
                 overridePendingTransition(0, 0);
                 overridePendingTransition(0, 0);
                 getIntent().removeExtra("bool");
@@ -145,9 +147,6 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
         });
 
 
-
-
-
         NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setItemIconTintList(null);
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -156,40 +155,37 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
     }
 
 
-    public void getIntentFromEventEdit()
-    {
+    public void getIntentFromEventEdit() {
 
         b = getIntent().getExtras();
-        if (stack.size()>1) {
-           stack.add("month");
+        if (stack.size() > 1) {
+            stack.add("month");
         }
 
         if (getIntent().hasExtra("bool") && changeEventEdit == false) {
 
 
-            if (b.getBoolean("bool") ) {
+            if (b.getBoolean("bool")) {
                 stack.addFirst(getSaveStack);
                 getStackFromSave();
 
-            } else  {
+            } else {
                 setMonthView();
-                if (stack.size()>1)
-                stack.removeFirst();
+                if (stack.size() > 1)
+                    stack.removeFirst();
             }
 
 
-        }else
-        {
+        } else {
             setMonthView();
-            if (stack.size()>1)
-            stack.removeFirst();
+            if (stack.size() > 1)
+                stack.removeFirst();
         }
 
     }
 
 
-    public void getStackFromSave()
-{
+    public void getStackFromSave() {
 
         if (getSaveStack == null) {
             setMonthView();
@@ -203,31 +199,28 @@ public class MainActivity extends AppCompatActivity  implements CalendarAdapter.
         } else if (getSaveStack.equals("month")) {
             setMonthView();
         } else if (getSaveStack.equals("double-click-month")) {
-           setDaily();
+            setDaily();
         } else if (getSaveStack.equals("double-click-week")) {
             setDaily();
         }
 
-}
+    }
 
-public void dublicatesInStack()
-{
-    if (stack.size()>1){
-        stack.removeFirst();}
-    // Check the previous view type
-    Object[] arr = stack.toArray();
-    for (int i=0; i< stack.size()-1; i++)
-    {
-        if (arr[i] == arr[i+1])
-        {
-            stack.remove(arr[i]);
+    public void dublicatesInStack() {
+        if (stack.size() > 1) {
+            stack.removeFirst();
         }
-        if (arr[i]=="week" && arr[i+1]=="double-click-week")
-        {
-            stack.remove(arr[i+1]);
+        // Check the previous view type
+        Object[] arr = stack.toArray();
+        for (int i = 0; i < stack.size() - 1; i++) {
+            if (arr[i] == arr[i + 1]) {
+                stack.remove(arr[i]);
+            }
+            if (arr[i] == "week" && arr[i + 1] == "double-click-week") {
+                stack.remove(arr[i + 1]);
+            }
         }
     }
-}
 
 
     public void onMyBackPressed() {
@@ -246,9 +239,7 @@ public void dublicatesInStack()
         String previousViewType = stack.peekFirst();
 
 
-
-
-        if (previousViewType == null ) {
+        if (previousViewType == null) {
             // Nothing to go back to, so finish this Activity
             super.onBackPressed();
             return;
@@ -257,17 +248,13 @@ public void dublicatesInStack()
             setDaily();
         } else if (previousViewType.equals("week")) {
             setWeek();
-        } else if (previousViewType.equals("all"))
-        {
+        } else if (previousViewType.equals("all")) {
             setAllEvents();
-        }else if (previousViewType.equals("month"))
-        {
+        } else if (previousViewType.equals("month")) {
             setMonthView();
-        }else if (previousViewType.equals("double-click-month"))
-        {
+        } else if (previousViewType.equals("double-click-month")) {
             setMonthView();
-        }else if (previousViewType.equals("double-click-week"))
-        {
+        } else if (previousViewType.equals("double-click-week")) {
             setWeek();
         }
     }
@@ -276,14 +263,13 @@ public void dublicatesInStack()
     protected void onResume() {
         super.onResume();
 
-        changeEventEdit=true;
+        changeEventEdit = true;
         getIntentFromEventEdit();
         setWeek();
         setMonthView();
         hourAdapter.notifyDataSetChanged();
         DialogClickedItemAndDelete();
         getStackFromSave();
-
 
 
     }
@@ -299,9 +285,8 @@ public void dublicatesInStack()
 
     }
 
-    private void DialogClickedItemAndDelete()
-    {
-        EventCursorAdapter CA = new EventCursorAdapter(getApplicationContext(),myDB.readAllData());
+    private void DialogClickedItemAndDelete() {
+        EventCursorAdapter CA = new EventCursorAdapter(getApplicationContext(), myDB.readAllData());
 
         monthListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -309,7 +294,7 @@ public void dublicatesInStack()
                 View view1 = getLayoutInflater().inflate(R.layout.show_event_from_listview, null);
                 HourEvent myEvent = (HourEvent) monthListView.getAdapter().getItem(position);
 
-                String myEventId= myEvent.getEvents().get(0).getId();
+                String myEventId = myEvent.getEvents().get(0).getId();
                 String myTitle = myEvent.getEvents().get(0).getName();
                 String myComment = myEvent.getEvents().get(0).getComment();
                 String myDate = String.valueOf(myEvent.getEvents().get(0).getDate());
@@ -323,15 +308,12 @@ public void dublicatesInStack()
                 String comment_upd = hourAdapter.getItem(position).getEvents().get(0).getComment();
                 String date_upd = String.valueOf(hourAdapter.getItem(position).getEvents().get(0).getDate());
                 String time_upd = String.valueOf(hourAdapter.getItem(position).getEvents().get(0).getTime());
-
+                String alarmState = hourAdapter.getItem(position).getEvents().get(0).getAlarm();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
 
-
-
-                viewFinal = CA.setAllFields(view1,myEventId,myTitle,myComment,myDate,myTime);
-
+                viewFinal = CA.setAllFields(view1, myEventId, myTitle, myComment, myDate, myTime);
 
 
                 builder.setView(viewFinal).
@@ -345,34 +327,34 @@ public void dublicatesInStack()
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         String id_row = hourAdapter.getItem(position).getEvents().get(0).getId();
-
+                                        Cursor myDb = myDB.readAllData();
+                                        Cursor remCursor = myDB.readAllReminder();
                                         myDB.deleteOneRow(id_row);
+                                        remCursor.moveToPosition(-1);
+                                        while (remCursor.moveToNext()) {
+                                            if (remCursor.getString(1).equals(id_row))
+                                                myDB.deleteOneRowReminder(remCursor.getString(0));
+                                            CA.notifyDataSetChanged();
+                                            hourAdapter.notifyDataSetChanged();
+                                        }
 
 
                                         String previousViewType = stack.peekFirst();
-                                            if (previousViewType.equals("all"))
-                                            {
-                                                setAllEvents();
-                                            }else if (previousViewType.equals("double-click-week"))
-                                            {
-                                                setDaily();
-                                            }else if (previousViewType.equals("month"))
-                                            {
-                                                setDaily();
-                                            }
-                                            else if (previousViewType.equals("double-click-month"))
-                                            {
-                                                setDaily();
-                                            }else if(previousViewType.equals("week"))
-                                            {
-                                                setWeek();
-                                            }else if (previousViewType.equals("daily"))
-                                            {
-                                                setDaily();
-                                            }else
-                                            {
-                                                onMyBackPressed();
-                                            }
+                                        if (previousViewType.equals("all")) {
+                                            setAllEvents();
+                                        } else if (previousViewType.equals("double-click-week")) {
+                                            setDaily();
+                                        } else if (previousViewType.equals("month")) {
+                                            setDaily();
+                                        } else if (previousViewType.equals("double-click-month")) {
+                                            setDaily();
+                                        } else if (previousViewType.equals("week")) {
+                                            setWeek();
+                                        } else if (previousViewType.equals("daily")) {
+                                            setDaily();
+                                        } else {
+                                            onMyBackPressed();
+                                        }
 
 
                                     }
@@ -380,27 +362,19 @@ public void dublicatesInStack()
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         String previousViewType = stack.peekFirst();
-                                        if (previousViewType.equals("all"))
-                                        {
+                                        if (previousViewType.equals("all")) {
                                             setAllEvents();
-                                        }else if (previousViewType.equals("double-click-week"))
-                                        {
+                                        } else if (previousViewType.equals("double-click-week")) {
                                             setDaily();
-                                        }else if (previousViewType.equals("month"))
-                                        {
+                                        } else if (previousViewType.equals("month")) {
                                             setDaily();
-                                        }
-                                        else if (previousViewType.equals("double-click-month"))
-                                        {
+                                        } else if (previousViewType.equals("double-click-month")) {
                                             setDaily();
-                                        }else if(previousViewType.equals("week"))
-                                        {
+                                        } else if (previousViewType.equals("week")) {
                                             setWeek();
-                                        }else if (previousViewType.equals("daily"))
-                                        {
+                                        } else if (previousViewType.equals("daily")) {
                                             setDaily();
-                                        }else
-                                        {
+                                        } else {
                                             onMyBackPressed();
                                         }
 
@@ -415,17 +389,18 @@ public void dublicatesInStack()
                             public void onClick(DialogInterface dialog, int which) {
 
 
-                            dialog.cancel();
+                                dialog.cancel();
                             }
                         }).setNeutralButton("Edit", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent i = new Intent(MainActivity.this,Edit_Update_Activity.class);
-                                i.putExtra("id",id_row);
-                                i.putExtra("title",title_upd);
-                                i.putExtra("comment",comment_upd);
-                                i.putExtra("date",date_upd);
-                                i.putExtra("time",time_upd);
+                                Intent i = new Intent(MainActivity.this, Edit_Update_Activity.class);
+                                i.putExtra("id", id_row);
+                                i.putExtra("title", title_upd);
+                                i.putExtra("comment", comment_upd);
+                                i.putExtra("date", date_upd);
+                                i.putExtra("time", time_upd);
+                                i.putExtra("alarm", alarmState);
                                 startActivity(i);
                             }
                         }).setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -434,17 +409,13 @@ public void dublicatesInStack()
                                 hourAdapter.notifyDataSetChanged();
                                 String previousViewType = stack.peekFirst();
 
-                                if (previousViewType.equals("week")){
+                                if (previousViewType.equals("week")) {
                                     stack.addFirst("week");
-                                }else if (previousViewType.equals("double-click-month"))
-                                {
+                                } else if (previousViewType.equals("double-click-month")) {
                                     stack.addFirst("double-click-month");
-                                }else if (previousViewType.equals("double-click-week"))
-                                {
+                                } else if (previousViewType.equals("double-click-week")) {
                                     stack.addFirst("double-click-week");
-                                }
-                                else
-                                {
+                                } else {
                                     stack.addFirst("daily");
                                 }
 
@@ -453,20 +424,17 @@ public void dublicatesInStack()
                         }).setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
+
                                 hourAdapter.notifyDataSetChanged();
                                 String previousViewType = stack.peekFirst();
 
-                                if (previousViewType.equals("week")){
+                                if (previousViewType.equals("week")) {
                                     setWeek();
-                                }else if (previousViewType.equals("double-click-month"))
-                                {
+                                } else if (previousViewType.equals("double-click-month")) {
                                     setDaily();
-                                }else if (previousViewType.equals("double-click-week"))
-                                {
+                                } else if (previousViewType.equals("double-click-week")) {
                                     setDaily();
-                                }
-                                else
-                                {
+                                } else {
                                     setDaily();
                                 }
 
@@ -477,26 +445,13 @@ public void dublicatesInStack()
                 builder.show();
 
 
-
             }
-
-
-
-
-
 
 
         });
 
 
-
-
-
-
-
     }
-
-
 
 
     private void initWidgets() {
@@ -504,8 +459,8 @@ public void dublicatesInStack()
         monthYearText = findViewById(R.id.monthYearTV);
         floatAddBtnMonthAdd = findViewById(R.id.floatAddBtnMonthView);
         monthListView = findViewById(R.id.monthListView);
-         nestedScrollView = findViewById(R.id.scrollView1);
-        daysOfWeekDaily= findViewById(R.id.daysOfWeekMain);
+        nestedScrollView = findViewById(R.id.scrollView1);
+        daysOfWeekDaily = findViewById(R.id.daysOfWeekMain);
         daysOfWeek = findViewById(R.id.daysOfWeek);
         prevMonth = findViewById(R.id.prevMonthButton);
         nextMonth = findViewById(R.id.nextMonthButton);
@@ -516,47 +471,39 @@ public void dublicatesInStack()
     }
 
 
-
-
-
-
     public void previousMonthAction(View view) {
-        if (calendarRecyclerView.getVisibility() == View.GONE){
+        if (calendarRecyclerView.getVisibility() == View.GONE) {
 
             CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusDays(1);
             setDaily();
-        }else if (calendarRecyclerView.getMeasuredHeight() < 301) {
+        } else if (calendarRecyclerView.getMeasuredHeight() < 301) {
             CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusWeeks(1);
 
             setWeek();
+        } else {
+            CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusMonths(1);
+            setMonthView();
         }
-            else {
-                CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusMonths(1);
-                setMonthView();
-            }
-
 
 
     }
 
     public void nextMonthAction(View view) {
 
-        if (calendarRecyclerView.getVisibility() == View.GONE){
+        if (calendarRecyclerView.getVisibility() == View.GONE) {
             CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusDays(1);
             setDaily();
-        }else  if (calendarRecyclerView.getMeasuredHeight() < 301) {
+        } else if (calendarRecyclerView.getMeasuredHeight() < 301) {
             CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusWeeks(1);
 
             setWeek();
-        }else{
+        } else {
             CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusMonths(1);
             setMonthView();
         }
 
 
-
     }
-
 
 
     boolean isDoubleClicked = false;
@@ -573,14 +520,14 @@ public void dublicatesInStack()
             if (calendarRecyclerView.getMeasuredHeight() < 401) {
                 setWeek();
 
-            } else if (calendarRecyclerView.getVisibility() == View.GONE){
+            } else if (calendarRecyclerView.getVisibility() == View.GONE) {
                 setDaily();
 
-            }else {
+            } else {
                 setMonthView();
 
 //                    calendarRecyclerView.getLayoutManager().scrollToPosition(position);
-                calendarRecyclerView.getLayoutManager().smoothScrollToPosition(calendarRecyclerView,new RecyclerView.State(),position);
+                calendarRecyclerView.getLayoutManager().smoothScrollToPosition(calendarRecyclerView, new RecyclerView.State(), position);
 
 
                 if (position > 12) {
@@ -598,77 +545,57 @@ public void dublicatesInStack()
             }
         };
 
-    if (isDoubleClicked) {
+        if (isDoubleClicked) {
 
-        Object[] arr = stack.toArray();
-        for (int i=0; i< stack.size()-1; i++)
-        {
-            if (arr[i] == arr[i+1])
-            {
-                stack.remove(arr[i]);
+            Object[] arr = stack.toArray();
+            for (int i = 0; i < stack.size() - 1; i++) {
+                if (arr[i] == arr[i + 1]) {
+                    stack.remove(arr[i]);
+                }
             }
-        }
-        String previousViewType = stack.peekFirst();
-        if (previousViewType.equals("month"))
-        {
-            stack.addFirst("double-click-month");
-        }else if (previousViewType.equals("week")){
-            stack.addFirst("double-click-week");
-        }else if (previousViewType.equals("double-click-month"))
-        {
-            stack.addFirst("double-click-month");
-        }else if (previousViewType.equals("double-click-week"))
-        {
-            stack.addFirst("double-click-week");
-        }
-        else
-        {
-            stack.addFirst("month");
-        }
-        setDaily();
-        drawerLayout.closeDrawer(GravityCompat.START);
-        daysOfWeekDaily.setVisibility(View.VISIBLE);
-        handler.removeCallbacks(r);
-    } else {
-        isDoubleClicked = true;
-
-        Object[] arr = stack.toArray();
-        for (int i=0; i< stack.size()-1; i++)
-        {
-            if (arr[i] == arr[i+1])
-            {
-                stack.remove(arr[i]);
+            String previousViewType = stack.peekFirst();
+            if (previousViewType.equals("month")) {
+                stack.addFirst("double-click-month");
+            } else if (previousViewType.equals("week")) {
+                stack.addFirst("double-click-week");
+            } else if (previousViewType.equals("double-click-month")) {
+                stack.addFirst("double-click-month");
+            } else if (previousViewType.equals("double-click-week")) {
+                stack.addFirst("double-click-week");
+            } else {
+                stack.addFirst("month");
             }
-        }
-        String previousViewType = stack.peekFirst();
-        if (previousViewType.equals("month"))
-        {
-            stack.addFirst("month");
+            setDaily();
+            drawerLayout.closeDrawer(GravityCompat.START);
+            daysOfWeekDaily.setVisibility(View.VISIBLE);
+            handler.removeCallbacks(r);
+        } else {
+            isDoubleClicked = true;
 
-        }else if (previousViewType.equals("week")){
-            stack.addFirst("week");
-        }else if (previousViewType.equals("double-click-month"))
-        {
-            stack.addFirst("double-click-month");
-        }else if (previousViewType.equals("double-click-week"))
-        {
-            stack.addFirst("double-click-week");
+            Object[] arr = stack.toArray();
+            for (int i = 0; i < stack.size() - 1; i++) {
+                if (arr[i] == arr[i + 1]) {
+                    stack.remove(arr[i]);
+                }
+            }
+            String previousViewType = stack.peekFirst();
+            if (previousViewType.equals("month")) {
+                stack.addFirst("month");
+
+            } else if (previousViewType.equals("week")) {
+                stack.addFirst("week");
+            } else if (previousViewType.equals("double-click-month")) {
+                stack.addFirst("double-click-month");
+            } else if (previousViewType.equals("double-click-week")) {
+                stack.addFirst("double-click-week");
+            } else {
+                stack.addFirst("month");
+            }
+            handler.postDelayed(r, 500);
         }
-        else
-        {
-            stack.addFirst("month");
-        }
-        handler.postDelayed(r, 500);
+
+
     }
-
-
-
-
-
-        }
-
-
-
 
 
     private void setMonthView() {
@@ -692,7 +619,7 @@ public void dublicatesInStack()
 
         calendarRecyclerView.setAdapter(calendarAdapter);
         ViewGroup.LayoutParams params = calendarRecyclerView.getLayoutParams();
-        params.height=1500;
+        params.height = 1500;
         calendarRecyclerView.setLayoutParams(params);
         imageMenu.setVisibility(View.VISIBLE);
         monthListView.setVisibility(View.GONE);
@@ -706,13 +633,10 @@ public void dublicatesInStack()
         backMenuBtn.setVisibility(View.GONE);
 
 
-
-
     }
 
 
-    private void setWeek()
-    {
+    private void setWeek() {
 
 
         if (getIntent().hasExtra("date")) {
@@ -731,14 +655,14 @@ public void dublicatesInStack()
         calendarRecyclerView.setAdapter(calendarAdapter);
 
         ViewGroup.LayoutParams params = calendarRecyclerView.getLayoutParams();
-        params.height=300;
+        params.height = 300;
         calendarRecyclerView.setLayoutParams(params);
         backMenuBtn.setVisibility(View.VISIBLE);
         imageMenu.setVisibility(View.GONE);
 
 
         ViewGroup.LayoutParams paramsListView = monthListView.getLayoutParams();
-        paramsListView.height=1200;
+        paramsListView.height = 1200;
 
         monthListView.setLayoutParams(paramsListView);
 
@@ -754,16 +678,15 @@ public void dublicatesInStack()
 
     }
 
-    private void setDaily()
-    {
+    private void setDaily() {
 
         if (getIntent().hasExtra("date")) {
-        Bundle b = getIntent().getExtras();
+            Bundle b = getIntent().getExtras();
 
-        selectedDate = (LocalDate) b.get("date");
-        getIntent().removeExtra("date");
+            selectedDate = (LocalDate) b.get("date");
+            getIntent().removeExtra("date");
 
-    }
+        }
 
         Locale locale = new Locale("el", "GR");
         monthYearText.setText(CalendarUtils.monthDayFromDate(selectedDate));
@@ -772,11 +695,10 @@ public void dublicatesInStack()
         daysOfWeekDaily.setText(dayOfWeekmain);
 
         ViewGroup.LayoutParams paramsListView = monthListView.getLayoutParams();
-        paramsListView.height=1500;
+        paramsListView.height = 1500;
 
 
         monthListView.setLayoutParams(paramsListView);
-
 
 
         backMenuBtn.setVisibility(View.VISIBLE);
@@ -792,12 +714,9 @@ public void dublicatesInStack()
         hourAdapter.notifyDataSetChanged();
 
 
-
-
     }
 
-    private void setAllEvents()
-    {
+    private void setAllEvents() {
 
 
         hourAdapter = new HourAdapter(getApplicationContext(), AllEventsList.hourEventListFromDatabaseToShowAllEvents(getApplicationContext(), myDB));
@@ -807,7 +726,7 @@ public void dublicatesInStack()
         hourAdapter.notifyDataSetChanged();
 
         ViewGroup.LayoutParams params = monthListView.getLayoutParams();
-        params.height=1800;
+        params.height = 1800;
 
         monthListView.setLayoutParams(params);
 
@@ -827,18 +746,13 @@ public void dublicatesInStack()
     }
 
 
-
-
-
     public void newEventAction() {
-        Intent saveIntent = new Intent(this,EventEdit.class);
+        Intent saveIntent = new Intent(this, EventEdit.class);
         String stackNow = stack.peekFirst();
-        changeEventEdit=false;
+        changeEventEdit = false;
         saveIntent.putExtra("stack", stackNow);
         startActivity(saveIntent);
     }
-
-
 
 
     @Override

@@ -34,12 +34,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class AlarmReceiver extends BroadcastReceiver {
-Vibrator v;
-String event;
-String comment;
-String text;
+    Vibrator v;
+    String event;
+    String comment;
+    String text;
 
-Date timeForAlarm;
+    Date timeForAlarm;
 
 
     @Override
@@ -47,12 +47,8 @@ Date timeForAlarm;
 
         Bundle b = intent.getExtras();
 
-        event ="";
-        comment="";
-
-
-
-
+        event = "";
+        comment = "";
 
 
         if (b != null) {
@@ -95,7 +91,6 @@ Date timeForAlarm;
                 notification1.flags |= Notification.FLAG_AUTO_CANCEL;
 
 
-
                 v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
                 long[] pattern = {0, 300, 1000};
 
@@ -106,20 +101,15 @@ Date timeForAlarm;
                 r.play();
                 v.vibrate(VibrationEffect.createWaveform(pattern, -1));
 
-if (r.isPlaying())
-{
-    ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-    executorService.schedule(() -> r.stop(), 5, TimeUnit.SECONDS);
-}
-
-
-
+                if (r.isPlaying()) {
+                    ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+                    executorService.schedule(() -> r.stop(), 5, TimeUnit.SECONDS);
+                }
 
 
             }
         };
         t.schedule(tm, timeForAlarm);
-
 
 
     }

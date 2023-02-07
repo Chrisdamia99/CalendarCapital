@@ -2,12 +2,18 @@ package com.example.calendarcapital;
 
 
 import android.icu.text.DateFormat;
+import android.util.Log;
 
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
@@ -25,11 +31,47 @@ public class CalendarUtils {
         return date.format(formatter);
     }
 
+    public static String formattedDateEventEdit(LocalDate date) {
+        Locale locale = new Locale("el", "GR");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yyyy", locale);
+        return date.format(formatter);
+    }
+
     public static String DailyViewFormattedDate(LocalDate date) {
         Locale locale = new Locale("el", "GR");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM", locale);
         return date.format(formatter);
 
+    }
+
+    public static Date stringToDateFormat(String myDate) {
+
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        Locale locale = new Locale("el", "GR");
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss a", locale);
+
+
+//        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy",locale);
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzzz yyyy", locale);
+
+
+        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy", locale);
+        Date convertedDate = null;
+        long testLong;
+        testLong = Date.parse(myDate);
+        convertedDate = new Date(testLong);
+
+        return convertedDate;
+
+    }
+
+    public static String dateToStringFormat(Date myDate) {
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        Locale locale = new Locale("el", "GR");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yyyy", locale);
+
+        String dateTime = formatter.format((TemporalAccessor) myDate);
+        return dateTime;
     }
 
     public static String formattedTime(LocalTime time) {
@@ -68,8 +110,7 @@ public class CalendarUtils {
         return localDate;
     }
 
-    public static String dateForReminder(Date date)
-    {
+    public static String dateForReminder(Date date) {
         return (String) android.text.format.DateFormat.format("yyyy-MM-dd kk:mm:ss a", date);
     }
 
@@ -99,13 +140,11 @@ public class CalendarUtils {
                 }
 
 
-
             } else if (i > daysInMonth + dayOfWeek) {
 
                 daysInMonthArray.add(LocalDate.of(nextMonth.getYear(), nextMonth.getMonth(), i - dayOfWeek - daysInMonth));
 
-                if (dayOfWeek<6 && daysInMonthArray.size()==41)
-                {
+                if (dayOfWeek < 6 && daysInMonthArray.size() == 41) {
 
                     daysInMonthArray.remove(40);
                     daysInMonthArray.remove(39);
@@ -116,10 +155,7 @@ public class CalendarUtils {
                     daysInMonthArray.remove(34);
 
 
-
-
-                }else if (dayOfWeek<6 && daysInMonthArray.size()==42)
-                {
+                } else if (dayOfWeek < 6 && daysInMonthArray.size() == 42) {
 
                     daysInMonthArray.remove(41);
                     daysInMonthArray.remove(40);
@@ -130,9 +166,7 @@ public class CalendarUtils {
                     daysInMonthArray.remove(35);
 
 
-
-                }else if (daysInMonthArray.size()==35)
-                {
+                } else if (daysInMonthArray.size() == 35) {
                     daysInMonthArray.remove(34);
                     daysInMonthArray.add(daysInMonthArray.get(33).plusDays(1));
                 }

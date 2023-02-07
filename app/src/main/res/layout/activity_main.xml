@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.drawerlayout.widget.DrawerLayout
-    android:id="@+id/drawerLayout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -12,10 +11,9 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:id="@+id/ConstrainMain"
- >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
 
         <!--Layout ToolBar-->
@@ -70,16 +68,15 @@
                 app:tint="@color/white" />
 
 
-
         </LinearLayout>
 
 
         <!--        Layout monthshownextprev-->
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/testConst"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/testConst"
             app:layout_constraintTop_toBottomOf="@id/layoutToolBar">
 
 
@@ -96,8 +93,8 @@
 
 
                 <ImageButton
-                    android:layout_width="0dp"
                     android:id="@+id/prevMonthButton"
+                    android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@null"
@@ -112,41 +109,41 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="2"
+                    android:gravity="center"
                     android:text="Nov 2021"
                     android:textAlignment="center"
-                    android:gravity="center"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
                 <ImageButton
-                    android:layout_width="0dp"
                     android:id="@+id/nextMonthButton"
+                    android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@null"
-                    android:src="@drawable/next_date"
                     android:onClick="nextMonthAction"
+                    android:src="@drawable/next_date"
                     android:textColor="@color/blue"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
+
             <TextView
+                android:id="@+id/daysOfWeekMain"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/daysOfWeekMain"
-                app:layout_constraintTop_toBottomOf="@id/dateBtn"
-                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                />
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dateBtn" />
 
             <!--Layout DaysOfWeek-->
             <LinearLayout
                 android:id="@+id/daysOfWeek"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginTop="10dp"
+                android:orientation="horizontal"
                 app:layout_constraintTop_toBottomOf="@id/dateBtn">
 
                 <TextView
@@ -250,8 +247,8 @@
                     <ListView
                         android:id="@+id/monthListView"
                         android:layout_width="match_parent"
-                        android:layout_gravity="bottom"
                         android:layout_height="match_parent"
+                        android:layout_gravity="bottom"
                         android:layout_marginTop="10dp"
                         android:nestedScrollingEnabled="true"
                         android:visibility="gone" />
@@ -264,14 +261,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
-
-
-
-
-
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -279,9 +268,9 @@
         android:id="@+id/navigationView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        app:menu="@menu/navigation_menu"
+        android:layout_gravity="start"
         app:headerLayout="@layout/layout_navigation_header"
-        android:layout_gravity="start"/>
+        app:menu="@menu/navigation_menu" />
 </androidx.drawerlayout.widget.DrawerLayout>
 
 

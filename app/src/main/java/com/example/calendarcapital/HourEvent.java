@@ -18,7 +18,6 @@ public class HourEvent {
     }
 
 
-
     public LocalTime getTime() {
         return time;
     }
@@ -38,6 +37,6 @@ public class HourEvent {
     @NonNull
     @Override
     public String toString() {
-        return  events.toString();
+        return events.toString();
     }
 }

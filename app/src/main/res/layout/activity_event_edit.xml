@@ -25,7 +25,7 @@
                 android:id="@+id/eventEditBackButton"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/lightgray"
                 android:src="@drawable/back_to_activity_blue" />
 
             <ImageButton
@@ -33,7 +33,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginLeft="10dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/lightgray"
                 android:src="@drawable/refresh" />
         </LinearLayout>
 
@@ -119,7 +119,7 @@
                         android:background="@drawable/rounded_corners_textview_eventedit"
                         android:drawableLeft="@drawable/clock"
                         android:drawablePadding="10dp"
-                        android:drawableTint="@color/blue"
+                        android:drawableTint="@color/primaryLightTirquiso"
                         android:text="Αλλαγή ώρας"
                         android:textAlignment="center"
                         android:textColor="@color/black"
@@ -159,7 +159,7 @@
                         android:background="@drawable/rounded_corners_textview_eventedit"
                         android:drawableLeft="@drawable/date"
                         android:drawablePadding="10dp"
-                        android:drawableTint="@color/blue"
+                        android:drawableTint="@color/primaryLightTirquiso"
                         android:text="Αλλαγή ημ/νίας"
                         android:textAlignment="center"
                         android:textColor="@color/black"
@@ -198,6 +198,10 @@
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/darker_gray" />
 
                 <ListView
                     android:id="@+id/remindersListView"
@@ -233,7 +237,7 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:text="@string/save"
-            android:textColor="@color/blue"
+            android:textColor="@color/primaryLightTirquiso"
             android:textSize="20sp"
             android:textStyle="bold" />
 

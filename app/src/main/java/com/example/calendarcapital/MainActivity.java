@@ -18,8 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.Slide;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -334,6 +337,8 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                                         while (remCursor.moveToNext()) {
                                             if (remCursor.getString(1).equals(id_row))
                                                 myDB.deleteOneRowReminder(remCursor.getString(0));
+                                            String alarmId = remCursor.getString(0);
+                                            cancelAlarm(Integer.parseInt(alarmId));
                                             CA.notifyDataSetChanged();
                                             hourAdapter.notifyDataSetChanged();
                                         }
@@ -407,17 +412,18 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                             @Override
                             public void onCancel(DialogInterface dialog) {
                                 hourAdapter.notifyDataSetChanged();
-                                String previousViewType = stack.peekFirst();
-
-                                if (previousViewType.equals("week")) {
-                                    stack.addFirst("week");
-                                } else if (previousViewType.equals("double-click-month")) {
-                                    stack.addFirst("double-click-month");
-                                } else if (previousViewType.equals("double-click-week")) {
-                                    stack.addFirst("double-click-week");
-                                } else {
-                                    stack.addFirst("daily");
-                                }
+                                //---------------ERROR WHILE DELETE-----------//
+//                                String previousViewType = stack.peekFirst();
+//
+//                                if (previousViewType.equals("week")) {
+//                                    stack.addFirst("week");
+//                                } else if (previousViewType.equals("double-click-month")) {
+//                                    stack.addFirst("double-click-month");
+//                                } else if (previousViewType.equals("double-click-week")) {
+//                                    stack.addFirst("double-click-week");
+//                                } else {
+//                                    stack.addFirst("daily");
+//                                }
 
 
                             }
@@ -426,17 +432,18 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                             public void onDismiss(DialogInterface dialog) {
 
                                 hourAdapter.notifyDataSetChanged();
-                                String previousViewType = stack.peekFirst();
-
-                                if (previousViewType.equals("week")) {
-                                    setWeek();
-                                } else if (previousViewType.equals("double-click-month")) {
-                                    setDaily();
-                                } else if (previousViewType.equals("double-click-week")) {
-                                    setDaily();
-                                } else {
-                                    setDaily();
-                                }
+                                //---------------ERROR WHILE DELETE-----------//
+//                                String previousViewType = stack.peekFirst();
+//
+//                                if (previousViewType.equals("week")) {
+//                                    setWeek();
+//                                } else if (previousViewType.equals("double-click-month")) {
+//                                    setDaily();
+//                                } else if (previousViewType.equals("double-click-week")) {
+//                                    setDaily();
+//                                } else {
+//                                    setDaily();
+//                                }
 
                             }
                         });
@@ -467,6 +474,19 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         imageMenu = findViewById(R.id.imageMenu);
         backMenuBtn = findViewById(R.id.BackMenuBtn);
         refreshMenuBtn = findViewById(R.id.refreshMenuBtn);
+
+    }
+
+    public void cancelAlarm(int alarmId) {
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlarmReceiver.class);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, alarmId, intent, 0);
+
+        alarmManager.cancel(pendingIntent);
+        Toast.makeText(this, "Alarm Cancelled", Toast.LENGTH_SHORT).show();
+
 
     }
 
@@ -732,6 +752,10 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
         monthListView.setAdapter(hourAdapter);
 
+
+        backMenuBtn.setVisibility(View.VISIBLE);
+        imageMenu.setVisibility(View.GONE);
+        backMenuBtn.setForegroundGravity(Gravity.LEFT);
         monthListView.setVisibility(View.VISIBLE);
         monthYearText.setVisibility(View.GONE);
         daysOfWeekDaily.setVisibility(View.GONE);

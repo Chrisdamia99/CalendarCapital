@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.LocalDate;
@@ -113,7 +114,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                     if (myEvents.get(0).getDate().equals(date) && LocalTime.parse(cursor.getString(4)).equals(myEvents.get(0).getTime())) {
                         holder.eventDayText.setVisibility(View.VISIBLE);
                         holder.eventDayText.setText(myEvents.get(0).getName());
-                        holder.eventDayText.setTextColor(Color.BLUE);
+                        holder.eventDayText.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
                         holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner);
                     }
                 } else {
@@ -127,12 +128,12 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
 
                             holder.eventDayText.setVisibility(View.VISIBLE);
                             holder.eventDayText.setText(myEvents.get(0).getName());
-                            holder.eventDayText.setTextColor(Color.BLUE);
+                            holder.eventDayText.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
                             holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner);
 
                             holder.eventDayText2.setVisibility(View.VISIBLE);
                             holder.eventDayText2.setText(myEvents.get(1).getName());
-                            holder.eventDayText2.setTextColor(Color.BLUE);
+                            holder.eventDayText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
                             holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner);
 
                         }
@@ -149,7 +150,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
 
                     holder.eventDayText.setVisibility(View.VISIBLE);
                     holder.eventDayText.setText(myEvents.get(i).getName());
-                    holder.eventDayText.setTextColor(Color.BLUE);
+                    holder.eventDayText.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
                     holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner);
 
                     for (int j = 0; j < myEvents.size(); j++) {
@@ -163,7 +164,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                             } else {
                                 holder.eventDayText2.setVisibility(View.VISIBLE);
                                 holder.eventDayText2.setText(myEvents.get(j).getName());
-                                holder.eventDayText2.setTextColor(Color.BLUE);
+                                holder.eventDayText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
                                 holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner);
 
 
@@ -175,7 +176,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                                         holder.eventDayText3.setVisibility(View.VISIBLE);
                                         holder.eventDayText3.setText(myEvents.get(k).getName());
                                         holder.eventDayText3.setText(myEvents.get(k).getName());
-                                        holder.eventDayText3.setTextColor(Color.BLUE);
+                                        holder.eventDayText3.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
                                         holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner);
 
 

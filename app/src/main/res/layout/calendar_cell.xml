@@ -31,7 +31,7 @@
             android:padding="5dp"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@color/blakcgray"
 
             />
                 <LinearLayout

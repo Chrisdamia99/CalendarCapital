@@ -71,6 +71,7 @@ public class EventEdit extends AppCompatActivity {
     Calendar cReminder = Calendar.getInstance();
 
     ArrayList<Date> ok = new ArrayList<>();
+    ArrayList<String> testRem = new ArrayList<>();
 
 
     @Override
@@ -320,6 +321,8 @@ public class EventEdit extends AppCompatActivity {
 
                     cReminder.set(Calendar.HOUR_OF_DAY, hour);
                     cReminder.set(Calendar.MINUTE, min);
+                    cReminder.set(Calendar.SECOND, 0);
+                    cReminder.set(Calendar.MILLISECOND, 0);
 //                    reminderLayout.setVisibility(View.VISIBLE);
                     fixedFromChangeTime = cReminder;
 
@@ -333,6 +336,8 @@ public class EventEdit extends AppCompatActivity {
 
                     cReminder.set(Calendar.HOUR_OF_DAY, hour);
                     cReminder.set(Calendar.MINUTE, min);
+                    cReminder.set(Calendar.SECOND, 0);
+                    cReminder.set(Calendar.MILLISECOND, 0);
                     fixedFromChangeTime = cReminder;
 
                     ok.add(fixedFromChangeTime.getTime());
@@ -348,6 +353,8 @@ public class EventEdit extends AppCompatActivity {
 
                     cReminder.set(Calendar.HOUR_OF_DAY, hour);
                     cReminder.set(Calendar.MINUTE, min);
+                    cReminder.set(Calendar.SECOND, 0);
+                    cReminder.set(Calendar.MILLISECOND, 0);
                     fixedFromChangeTime = cReminder;
                     ok.add(fixedFromChangeTime.getTime());
 
@@ -362,6 +369,8 @@ public class EventEdit extends AppCompatActivity {
 
                     cReminder.set(Calendar.HOUR_OF_DAY, hour);
                     cReminder.set(Calendar.MINUTE, min);
+                    cReminder.set(Calendar.SECOND, 0);
+                    cReminder.set(Calendar.MILLISECOND, 0);
                     fixedFromChangeTime = cReminder;
 
                     ok.add(fixedFromChangeTime.getTime());
@@ -488,7 +497,7 @@ public class EventEdit extends AppCompatActivity {
                         Calendar tenminutesBeforeFixed;
                         alarmState = 1;
                         cReminder.set(Calendar.MINUTE, time.getMinute() - 10);
-
+                        cReminder.set(Calendar.MILLISECOND,0);
                         ok.add(cReminder.getTime());
                         tenminutesBeforeFixed = cReminder;
 
@@ -507,7 +516,7 @@ public class EventEdit extends AppCompatActivity {
 
                         alarmState = 1;
                         cReminder.set(Calendar.MINUTE, time.getMinute() - 5);
-
+                        cReminder.set(Calendar.MILLISECOND,0);
                         fiveminutesBeforeFixed = cReminder;
                         ok.add(cReminder.getTime());
 
@@ -523,7 +532,7 @@ public class EventEdit extends AppCompatActivity {
                         alarmState = 1;
 //                        reminderLayout.setVisibility(View.VISIBLE);
 //                        reminderInfoTV.setText("Η υπενθύμιση ορίστηκε στις: " + cReminder.getTime().toString().trim());
-
+                        cReminder.set(Calendar.MILLISECOND,0);
                         ok.add(cReminder.getTime());
 
                         dialog.dismiss();
@@ -536,7 +545,7 @@ public class EventEdit extends AppCompatActivity {
                         Calendar fiveminutesLaterFixed;
                         alarmState = 1;
                         cReminder.set(Calendar.MINUTE, time.getMinute() + 5);
-
+                        cReminder.set(Calendar.MILLISECOND,0);
                         fiveminutesLaterFixed = cReminder;
 
                         ok.add(cReminder.getTime());
@@ -554,7 +563,7 @@ public class EventEdit extends AppCompatActivity {
                         Calendar tenminutesLaterFixed;
                         alarmState = 1;
                         cReminder.set(Calendar.MINUTE, time.getMinute() + 10);
-
+                        cReminder.set(Calendar.MILLISECOND,0);
                         tenminutesLaterFixed = cReminder;
 
                         ok.add(cReminder.getTime());
@@ -627,6 +636,7 @@ public class EventEdit extends AppCompatActivity {
         MyDatabaseHelper myDB = new MyDatabaseHelper(EventEdit.this);
         String idForReminder = "";
         Cursor cursor = myDB.readAllData();
+        Cursor cursorRem = myDB.readAllReminder();
         String eventName = eventNameET.getText().toString();
         String eventComment = eventCommentET.getText().toString();
         ok.sort((o1, o2) -> o1.compareTo(o2));
@@ -634,16 +644,37 @@ public class EventEdit extends AppCompatActivity {
 
         myDB.addEvent(eventName, eventComment, date, time, String.valueOf(alarmState));
         if (ok.size() > 0) {
+
             while (cursor.moveToNext()) {
                 cursor.moveToLast();
+
                 for (int i = 0; i < ok.size(); i++) {
                     idForReminder = cursor.getString(0);
                     myDB.addReminder(idForReminder, ok.get(i));
+
                 }
             }
         }
 
+        cursorRem.moveToPosition(-1);
+        cursor.moveToPosition(-1);
+        while(cursor.moveToNext()) {
+            while (cursorRem.moveToNext()) {
+                if (cursorRem.getString(1).equals(idForReminder)) {
+                    testRem.add(cursorRem.getString(0));
 
+                }
+
+
+
+
+            }
+
+        }
+
+                                for (int i=0; i<testRem.size(); i++) {
+                            startAlarm(Integer.parseInt(testRem.get(i)),CalendarUtils.dateToCalendar(ok.get(i)));
+                        }
         Intent i1 = new Intent(EventEdit.this, MainActivity.class);
 
 

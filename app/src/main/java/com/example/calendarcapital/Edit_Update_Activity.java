@@ -54,6 +54,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
     String id_row, title, comment;
 
     ArrayList<Date> ok = new ArrayList<>();
+    ArrayList<String> testRemUpd = new ArrayList<>();
+
 
 
     @Override
@@ -167,7 +169,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
                             long mytestLong = Date.parse(cursorRem.getString(2));
                             Date lastDate = new Date(mytestLong);
-
+                            lastDate.setSeconds(0);
                             ok.add(lastDate);
 
 
@@ -370,6 +372,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
                     cReminder.set(Calendar.HOUR_OF_DAY, hour);
                     cReminder.set(Calendar.MINUTE, min);
+                    cReminder.set(Calendar.SECOND, 0);
+                    cReminder.set(Calendar.MILLISECOND, 0);
                     fixedFromChangeTime = cReminder;
 
                     ok.add(fixedFromChangeTime.getTime());
@@ -380,6 +384,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
                     cReminder.set(Calendar.HOUR_OF_DAY, hour);
                     cReminder.set(Calendar.MINUTE, min);
+                    cReminder.set(Calendar.SECOND, 0);
+                    cReminder.set(Calendar.MILLISECOND, 0);
                     fixedFromChangeTime = cReminder;
 
                     ok.add(fixedFromChangeTime.getTime());
@@ -389,6 +395,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
                     cReminder.set(Calendar.HOUR_OF_DAY, hour);
                     cReminder.set(Calendar.MINUTE, min);
+                    cReminder.set(Calendar.SECOND, 0);
+                    cReminder.set(Calendar.MILLISECOND, 0);
                     fixedFromChangeTime = cReminder;
                     ok.add(fixedFromChangeTime.getTime());
 
@@ -397,6 +405,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
                     cReminder.set(Calendar.HOUR_OF_DAY, hour);
                     cReminder.set(Calendar.MINUTE, min);
+                    cReminder.set(Calendar.SECOND, 0);
+                    cReminder.set(Calendar.MILLISECOND, 0);
                     fixedFromChangeTime = cReminder;
 
                     ok.add(fixedFromChangeTime.getTime());
@@ -536,7 +546,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
                         alarmState = 1;
                         cReminder.set(Calendar.MINUTE, time.getMinute() - 10);
-
+                        cReminder.set(Calendar.MILLISECOND,0);
                         ok.add(cReminder.getTime());
 
                         dialog.dismiss();
@@ -550,7 +560,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
                         alarmState = 1;
                         cReminder.set(Calendar.MINUTE, time.getMinute() - 5);
-
+                        cReminder.set(Calendar.MILLISECOND,0);
                         ok.add(cReminder.getTime());
 
 
@@ -561,7 +571,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         alarmState = 1;
-
+                        cReminder.set(Calendar.MILLISECOND,0);
                         ok.add(cReminder.getTime());
 
                         dialog.dismiss();
@@ -574,7 +584,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                         alarmState = 1;
                         cReminder.set(Calendar.MINUTE, time.getMinute() + 5);
 
-
+                        cReminder.set(Calendar.MILLISECOND,0);
                         ok.add(cReminder.getTime());
 
 
@@ -590,7 +600,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                         cReminder.set(Calendar.MINUTE, time.getMinute() + 10);
 
 
-
+                        cReminder.set(Calendar.MILLISECOND,0);
                         ok.add(cReminder.getTime());
 
 
@@ -661,15 +671,16 @@ public class Edit_Update_Activity extends AppCompatActivity {
         String eventName = eventNameETUPD.getText().toString();
         String eventComment = eventCommentETUPD.getText().toString();
 
-        Cursor cursor = myDB.readAllData();
+
         Cursor cursorRem = myDB.readAllReminder();
         ok.sort((o1, o2) -> o1.compareTo(o2));
+
+
         if (ok.size() > 0) {
             alarmState = 1;
             myDB.updateData(id_row, eventName, eventComment, date, time, String.valueOf(alarmState));
-            cursor.moveToPosition(-1);
+
             cursorRem.moveToPosition(-1);
-            while (cursor.moveToNext()) {
 
 
                 for (int i = 0; i < ok.size(); i++) {
@@ -681,24 +692,63 @@ public class Edit_Update_Activity extends AppCompatActivity {
                         if (ok.get(j).equals(lastDate)) {
                             ok.remove(j);
                         }
-                        if (ok.size() > 0)
-                        {
-                            myDB.addReminder(id_row, ok.get(i));
-                        }
+
 
                     }
 
                     }
 
+                    if (ok.size() > 0) {
+                        myDB.addReminder(id_row, ok.get(i));
 
+
+                    }
                 }
-            }
+
+
 
         } else {
             alarmState = 0;
             myDB.updateData(id_row, eventName, eventComment, date, time, String.valueOf(alarmState));
+            ok.size();
         }
 
+
+        cursorRem.close();
+
+
+
+
+        Cursor secondRem = myDB.readAllReminder();
+
+        secondRem.moveToPosition(-1);
+
+                while (secondRem.moveToNext()) {
+
+                    for (int i=0; i<ok.size(); i++) {
+
+                        long mytestLongUpd = Date.parse(secondRem.getString(2));
+                    Date lastDateUpd = new Date(mytestLongUpd);
+                    if (secondRem.getString(1).equals(id_row) ) {
+                      if (lastDateUpd.equals(ok.get(i))) {
+                          testRemUpd.add(secondRem.getString(0));
+                      }
+                    }
+
+
+                }
+
+            }
+
+
+            secondRem.close();
+
+
+
+
+        for (int i=0; i<testRemUpd.size(); i++) {
+            startAlarm(Integer.parseInt(testRemUpd.get(i)),CalendarUtils.dateToCalendar(ok.get(i)));
+        }
 
 
 

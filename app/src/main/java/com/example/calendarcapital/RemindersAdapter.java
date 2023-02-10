@@ -1,6 +1,9 @@
 package com.example.calendarcapital;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -73,11 +77,13 @@ public class RemindersAdapter extends ArrayAdapter<Date> {
                     if (lastDate.equals(myTest.get(position))) {
 
                         myDB.deleteOneRowReminder(remCursor.getString(0));
-
+                        String alarmId = remCursor.getString(0);
+                        cancelAlarm(Integer.parseInt(alarmId));
                         RemindersAdapter.this.notifyDataSetChanged();
                     }
                 }
                 myTest.remove(position);
+
                 myDbCursor.moveToPosition(-1);
                 remCursor.moveToPosition(-1);
                 while (myDbCursor.moveToNext()) {
@@ -95,6 +101,19 @@ public class RemindersAdapter extends ArrayAdapter<Date> {
 
             }
         });
+
+    }
+
+    public void cancelAlarm(int alarmId) {
+
+        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getContext(), AlarmReceiver.class);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), alarmId, intent, 0);
+
+        alarmManager.cancel(pendingIntent);
+        Toast.makeText(getContext(), "Alarm Cancelled", Toast.LENGTH_SHORT).show();
+
 
     }
 

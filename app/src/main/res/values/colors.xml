@@ -8,7 +8,10 @@
     <color name="colorPrimaryText">#212121</color>
     <color name="colorGreen">#32CD32</color>
     <color name="o">#0F9D58</color>
+    <color name="primaryLightTirquiso">#1D7874</color>
+    <color name="secondPrimaryLightTirquiso">#679289</color>
     <color name="lightGray">#ECECEC</color>
     <color name="lightdarkgrey">#DEDEDE</color>
+    <color name="blakcgray">#33363d</color>
 
 </resources>

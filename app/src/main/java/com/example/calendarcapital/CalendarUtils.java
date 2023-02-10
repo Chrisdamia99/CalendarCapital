@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -42,6 +43,13 @@ public class CalendarUtils {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM", locale);
         return date.format(formatter);
 
+    }
+
+    public static Calendar dateToCalendar(Date date)
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar;
     }
 
     public static Date stringToDateFormat(String myDate) {

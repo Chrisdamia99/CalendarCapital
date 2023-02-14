@@ -5,27 +5,15 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.provider.Settings;
-import android.widget.Toast;
-
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -50,20 +38,28 @@ public class AlarmReceiver extends BroadcastReceiver {
         event = "";
         comment = "";
 
+        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        if (vibrator != null && vibrator.hasVibrator()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                vibrator.vibrate(1000);
+            }
+        }
 
         if (b != null) {
 
             event = (String) b.get("title");
             comment = (String) b.get("comment");
-            timeForAlarm = (Date) b.get("calendar");
+//            timeForAlarm = (Date) b.get("calendar");
 
             text = "Reminder for the Event: " + "\n" + event + "\n" + "Comments: " + "\n" + comment;
         }
 
-        Timer t = new Timer();
-        TimerTask tm = new TimerTask() {
-            @Override
-            public void run() {
+//        Timer t = new Timer();
+//        TimerTask tm = new TimerTask() {
+//            @Override
+//            public void run() {
 
 
                 Intent activityIntent = new Intent(context, MainActivity.class);
@@ -73,6 +69,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "myandroid")
                         .setSmallIcon(R.drawable.alarm)
+                        .setPriority(2)
                         .setContentTitle(event)
                         .setContentText(text)
                         .setAutoCancel(true)
@@ -80,9 +77,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                                 .bigText(text))
                         .setContentIntent(pendingIntent)
                         .setDeleteIntent(pendingIntent)
-
-                        .setDefaults(NotificationCompat.DEFAULT_ALL)
-                        .setPriority(NotificationCompat.PRIORITY_HIGH);
+                        .setDefaults(NotificationCompat.DEFAULT_ALL);
 
                 NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
                 notificationManagerCompat.notify(123, builder.build());
@@ -91,15 +86,14 @@ public class AlarmReceiver extends BroadcastReceiver {
                 notification1.flags |= Notification.FLAG_AUTO_CANCEL;
 
 
-                v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-                long[] pattern = {0, 300, 1000};
+//                v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+//                long[] pattern = {0, 300, 1000};
 
 
                 Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 
                 Ringtone r = RingtoneManager.getRingtone(context, notification);
                 r.play();
-                v.vibrate(VibrationEffect.createWaveform(pattern, -1));
 
                 if (r.isPlaying()) {
                     ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
@@ -108,10 +102,10 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 
             }
-        };
-        t.schedule(tm, timeForAlarm);
+//        };
+//        t.schedule(tm, timeForAlarm);
 
 
     }
 
-}
+//}

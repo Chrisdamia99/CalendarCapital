@@ -27,8 +27,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -40,6 +43,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
     private EditText eventNameETUPD, eventCommentETUPD;
     private TextView eventDateTV, eventTimeTV, changeTimeTV, changeDateTV, addAlarmButtonUPD;
+    private TextView oneDayBefore ,oneHourMinBefore , halfHourMinBefore,     fifteenMinBefore, tenMinBefore, fiveMinBefore, customChoice;
+
     Button btnUpdate;
     RemindersAdapter remindersAdapter;
     ImageButton cancelReminderImageViewUPD, eventEditBackButtonUPD, eventEditRefreshButtonUPD;
@@ -49,6 +54,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
     private static LocalDate date;
     private static LocalTime time;
     int alarmState;
+    public Date oneDayBeforeDate, oneHourBeforeDate,halfHourBeforeDate,fifteenMinBeforeDate,tenMinBeforeDate,fiveMinBeforeDate;
+
     Calendar cReminder = Calendar.getInstance();
 
     String id_row, title, comment;
@@ -65,15 +72,17 @@ public class Edit_Update_Activity extends AppCompatActivity {
         initWidgets();
         getSetIntentData();
         showExistedRemindersFromDB();
+        hideAdReminderDynamically();
 
 
-        time = LocalTime.parse(CalendarUtils.formattedShortTime(LocalTime.now()));
-        eventTimeTV.setText(CalendarUtils.formattedShortTime(time));
-        date = CalendarUtils.selectedDate;
-        eventDateTV.setText(CalendarUtils.formattedDateEventEdit(date));
+//        time = LocalTime.parse(CalendarUtils.formattedShortTime(LocalTime.now()));
+//        eventTimeTV.setText(CalendarUtils.formattedShortTime(time));
+//        date = CalendarUtils.selectedDate;
+//        eventDateTV.setText(CalendarUtils.formattedDateEventEdit(date));
         btnUpdate = findViewById(R.id.btnUpdate);
         createNotificationChannel();
         updateIfEmptyListView();
+
 
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
@@ -144,6 +153,64 @@ public class Edit_Update_Activity extends AppCompatActivity {
         remindersListViewUPD = findViewById(R.id.remindersListViewUPD);
 
 
+    }
+
+    private void setRemindersForListViaDate()
+    {
+//        oneDayBeforeDate = Date.from(Instant.from(date.minusDays(1)));
+//        oneHourBeforeDate = Date.from(Instant.from(date.atTime(time.getHour()-1,time.getMinute(),0,0)));
+////        halfHourBeforeDate = Date.from(Instant.from(date.atTime(time.getHour(),time.getMinute()-30,0,0)));
+////        fifteenMinBeforeDate = Date.from(Instant.from(date.atTime(time.getHour(),time.getMinute()-15,0,0)));
+////        tenMinBeforeDate = Date.from(Instant.from(date.atTime(time.getHour(),time.getMinute()-10,0,0)));
+////        fiveMinBeforeDate = Date.from(Instant.from(date.atTime(time.getHour(),time.getMinute()-5,0,0)));
+    }
+    private void hideAdReminderDynamically()
+    {
+    setRemindersForListViaDate();
+
+        Timer t = new Timer();
+        t.scheduleAtFixedRate(
+                new TimerTask() {
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                // update ui here
+                                for (int i=0; i<ok.size(); i++) {
+                                    if (ok.get(i) == oneDayBeforeDate  ) {
+                                        oneDayBefore.setVisibility(View.GONE);
+
+                                    }
+
+                                    if (ok.get(i) == oneHourBeforeDate  ) {
+                                        oneHourMinBefore.setVisibility(View.GONE);
+                                    }
+
+                                    if (ok.get(i) == halfHourBeforeDate  ) {
+                                        halfHourMinBefore.setVisibility(View.GONE);
+                                    }
+
+                                    if (ok.get(i) == fifteenMinBeforeDate  ) {
+                                        fifteenMinBefore.setVisibility(View.GONE);
+                                    }
+
+                                    if (ok.get(i) == tenMinBeforeDate ) {
+                                        tenMinBefore.setVisibility(View.GONE);
+                                    }
+
+                                    if (ok.get(i) == fiveMinBeforeDate  ) {
+                                        fiveMinBefore.setVisibility(View.GONE);
+                                    }
+
+                                }
+
+
+                            }
+                        });
+
+                    }
+                }, 0, 100); //runs every three seconds
     }
 
     public void showExistedRemindersFromDB() {
@@ -220,6 +287,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
 
         }
+        hideAdReminderDynamically();
 
 
     }
@@ -234,6 +302,16 @@ public class Edit_Update_Activity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 // update ui here
+
+
+                                if (ok.size()==5)
+                                {
+                                    addAlarmButtonUPD.setVisibility(View.GONE);
+                                }else
+                                {
+                                    addAlarmButtonUPD.setVisibility(View.VISIBLE);
+                                }
+
                                 if (ok.isEmpty()) {
 //                            remindersAdapter = new RemindersAdapter(EventEdit.this, ok);
 //                            remindersAdapter.notifyDataSetChanged();
@@ -456,7 +534,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
         intent.removeExtra("title");
         intent.removeExtra("comment");
-        intent.removeExtra("calendar");
+//        intent.removeExtra("calendar");
 
 
         String strTitle = eventNameETUPD.getText().toString();
@@ -464,7 +542,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
         intent.putExtra("title", strTitle);
         intent.putExtra("comment", strComment);
-        intent.putExtra("calendar", myTime);
+//        intent.putExtra("calendar", myTime);
 
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(Edit_Update_Activity.this, alarmId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -476,19 +554,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
     }
 
-
-    public void cancelAlarm(int alarmId) {
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, AlarmReceiver.class);
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, alarmId, intent, 0);
-
-        alarmManager.cancel(pendingIntent);
-        Toast.makeText(this, "Alarm Cancelled", Toast.LENGTH_SHORT).show();
-
-
-    }
 
 
     void getSetIntentData() {
@@ -514,12 +579,14 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
         LayoutInflater lf = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View rowView = lf.inflate(R.layout.activity_radio_button_for_reminder, null);
-        TextView tenMinBefore = rowView.findViewById(R.id.tenMinBefore);
-        TextView fiveMinBefore = rowView.findViewById(R.id.fiveMinBefore);
-        TextView eventsTimeReminder = rowView.findViewById(R.id.eventsTimeReminder);
-        TextView fiveMinLater = rowView.findViewById(R.id.fiveMinLater);
-        TextView tenMinLater = rowView.findViewById(R.id.tenMinLater);
-        TextView customChoice = rowView.findViewById(R.id.customChoice);
+        oneDayBefore = rowView.findViewById(R.id.oneDayBefore);
+        oneHourMinBefore = rowView.findViewById(R.id.oneHourMinBefore);
+        halfHourMinBefore = rowView.findViewById(R.id.halfHourMinBefore);
+        fifteenMinBefore = rowView.findViewById(R.id.fifteenMinBefore);
+        tenMinBefore = rowView.findViewById(R.id.tenMinBefore);
+        fiveMinBefore = rowView.findViewById(R.id.fiveMinBefore);
+        customChoice = rowView.findViewById(R.id.customChoice);
+
 
 
         cReminder.set(Calendar.YEAR, date.getYear());
@@ -539,6 +606,63 @@ public class Edit_Update_Activity extends AppCompatActivity {
             @Override
             public void onShow(DialogInterface dialog) {
 
+                oneDayBefore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alarmState=1;
+                        date.minusDays(1);
+                        cReminder.setTime(Date.from(date.minusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                        cReminder.set(Calendar.HOUR_OF_DAY,time.getHour());
+                        cReminder.set(Calendar.MINUTE,time.getMinute());
+                        cReminder.set(Calendar.MILLISECOND,0);
+                        oneDayBeforeDate = cReminder.getTime();
+                        ok.add(oneDayBeforeDate);
+                        dialog.dismiss();
+
+                    }
+                });
+
+                oneHourMinBefore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alarmState = 1;
+                        cReminder.set(Calendar.HOUR_OF_DAY, time.getHour() - 1);
+                        cReminder.set(Calendar.MILLISECOND,0);
+                        oneHourBeforeDate = cReminder.getTime();
+                        ok.add(oneHourBeforeDate);
+
+                        dialog.dismiss();
+                    }
+                });
+
+                halfHourMinBefore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alarmState = 1;
+                        cReminder.set(Calendar.MINUTE, time.getMinute() - 30);
+                        cReminder.set(Calendar.MILLISECOND,0);
+                        halfHourBeforeDate = cReminder.getTime();
+                        ok.add(halfHourBeforeDate);
+
+
+                        dialog.dismiss();
+                    }
+                });
+
+                fifteenMinBefore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alarmState = 1;
+                        cReminder.set(Calendar.MINUTE, time.getMinute() - 15);
+                        cReminder.set(Calendar.MILLISECOND,0);
+                        fifteenMinBeforeDate = cReminder.getTime();
+                        ok.add(fifteenMinBeforeDate);
+
+
+
+                        dialog.dismiss();
+                    }
+                });
                 tenMinBefore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -547,7 +671,9 @@ public class Edit_Update_Activity extends AppCompatActivity {
                         alarmState = 1;
                         cReminder.set(Calendar.MINUTE, time.getMinute() - 10);
                         cReminder.set(Calendar.MILLISECOND,0);
-                        ok.add(cReminder.getTime());
+
+                        tenMinBeforeDate=cReminder.getTime();
+                        ok.add(tenMinBeforeDate);
 
                         dialog.dismiss();
                     }
@@ -561,52 +687,14 @@ public class Edit_Update_Activity extends AppCompatActivity {
                         alarmState = 1;
                         cReminder.set(Calendar.MINUTE, time.getMinute() - 5);
                         cReminder.set(Calendar.MILLISECOND,0);
-                        ok.add(cReminder.getTime());
+                        fiveMinBeforeDate = cReminder.getTime();
+                        ok.add(fiveMinBeforeDate);
 
 
                         dialog.dismiss();
                     }
                 });
-                eventsTimeReminder.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alarmState = 1;
-                        cReminder.set(Calendar.MILLISECOND,0);
-                        ok.add(cReminder.getTime());
 
-                        dialog.dismiss();
-                    }
-                });
-                fiveMinLater.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        alarmState = 1;
-                        cReminder.set(Calendar.MINUTE, time.getMinute() + 5);
-
-                        cReminder.set(Calendar.MILLISECOND,0);
-                        ok.add(cReminder.getTime());
-
-
-
-                        dialog.dismiss();
-                    }
-                });
-                tenMinLater.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        alarmState = 1;
-                        cReminder.set(Calendar.MINUTE, time.getMinute() + 10);
-
-
-                        cReminder.set(Calendar.MILLISECOND,0);
-                        ok.add(cReminder.getTime());
-
-
-                        dialog.dismiss();
-                    }
-                });
 
                 customChoice.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -664,6 +752,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
         }
     }
+
 
 
     public void updEventAction() {

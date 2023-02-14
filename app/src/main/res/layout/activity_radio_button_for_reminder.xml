@@ -7,6 +7,66 @@
     android:orientation="vertical">
 
 
+
+    <TextView
+        android:id="@+id/oneDayBefore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="1 μέρα νωρίτερα"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+
+        android:textStyle="bold" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+    <TextView
+        android:id="@+id/oneHourMinBefore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="1 ώρα νωρίτερα"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+    <TextView
+        android:id="@+id/halfHourMinBefore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="30 λεπτα νωρίτερα"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+
+
+    <TextView
+        android:id="@+id/fifteenMinBefore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="15 λεπτα νωρίτερα"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+
+        android:textStyle="bold" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -28,6 +88,8 @@
         android:layout_height="1dp"
         android:background="@android:color/darker_gray" />
 
+
+
     <TextView
         android:id="@+id/fiveMinBefore"
         android:layout_width="match_parent"
@@ -35,38 +97,6 @@
         android:layout_margin="10dp"
         android:text="5 λεπτα νωρίτερα"
         android:textColor="@color/black"
-        android:textSize="20sp"
-
-        android:textStyle="bold" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
-
-    <TextView
-        android:id="@+id/eventsTimeReminder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="Την ώρα του συμβάντος"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-
-        android:textStyle="bold" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
-
-    <TextView
-        android:id="@+id/fiveMinLater"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="5 λεπτα αργότερα"
-        android:textColor="@color/black"
 
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -76,20 +106,7 @@
         android:layout_height="1dp"
         android:background="@android:color/darker_gray" />
 
-    <TextView
-        android:id="@+id/tenMinLater"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="10 λεπτα αργότερα"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
 
     <TextView
         android:id="@+id/customChoice"

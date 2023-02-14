@@ -195,7 +195,7 @@ public class EventCursorAdapter extends CursorAdapter {
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(mContext, AlarmReceiver.class);
 
-        intent.putExtra("calendar", c.getTime());
+//        intent.putExtra("calendar", c.getTime());
         intent.putExtra("title", title);
         intent.putExtra("comment", comment);
 

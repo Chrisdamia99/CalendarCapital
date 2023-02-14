@@ -41,6 +41,7 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -58,6 +59,7 @@ public class EventEdit extends AppCompatActivity {
 
     private EditText eventNameET, eventCommentET;
     private TextView eventDateTV, eventTimeTV, changeTimeTV, changeDateTV, addAlarmButton;
+    private TextView oneDayBefore ,oneHourMinBefore , halfHourMinBefore,     fifteenMinBefore, tenMinBefore, fiveMinBefore, customChoice;
     Button btnSave;
     RemindersAdapter remindersAdapter;
     ImageButton cancelReminderImageView, eventEditBackButton, eventEditRefreshButton;
@@ -66,9 +68,10 @@ public class EventEdit extends AppCompatActivity {
     int hour, min;
     private static LocalDate date;
     private static LocalTime time;
-
+   public Date oneDayBeforeDate, oneHourBeforeDate,halfHourBeforeDate,fifteenMinBeforeDate,tenMinBeforeDate,fiveMinBeforeDate;
     int alarmState;
     Calendar cReminder = Calendar.getInstance();
+
 
     ArrayList<Date> ok = new ArrayList<>();
     ArrayList<String> testRem = new ArrayList<>();
@@ -87,6 +90,7 @@ public class EventEdit extends AppCompatActivity {
         alarmState = 0;
         createNotificationChannel();
         updateIfEmptyListView();
+        hideAdReminderDynamically();
 
 
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -160,6 +164,54 @@ public class EventEdit extends AppCompatActivity {
 
     }
 
+    private void hideAdReminderDynamically()
+    {
+
+
+        Timer t = new Timer();
+        t.scheduleAtFixedRate(
+                new TimerTask() {
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                // update ui here
+                                for (int i=0; i<ok.size(); i++) {
+                                    if (ok.get(i) == oneDayBeforeDate  ) {
+                                        oneDayBefore.setVisibility(View.GONE);
+
+                                    }
+
+                                    if (ok.get(i) == oneHourBeforeDate  ) {
+                                        oneHourMinBefore.setVisibility(View.GONE);
+                                    }
+
+                                    if (ok.get(i) == halfHourBeforeDate  ) {
+                                        halfHourMinBefore.setVisibility(View.GONE);
+                                    }
+
+                                    if (ok.get(i) == fifteenMinBeforeDate  ) {
+                                        fifteenMinBefore.setVisibility(View.GONE);
+                                    }
+
+                                    if (ok.get(i) == tenMinBeforeDate ) {
+                                        tenMinBefore.setVisibility(View.GONE);
+                                    }
+
+                                    if (ok.get(i) == fiveMinBeforeDate  ) {
+                                        fiveMinBefore.setVisibility(View.GONE);
+                                    }
+
+                                }
+
+
+                            }
+                        });
+
+                    }
+                }, 0, 100); //runs every three seconds
+    }
 
     public void updateIfEmptyListView() {
         Timer t = new Timer();
@@ -171,6 +223,17 @@ public class EventEdit extends AppCompatActivity {
                             @Override
                             public void run() {
                                 // update ui here
+                                if (ok.size()==5)
+                                {
+                                    addAlarmButton.setVisibility(View.GONE);
+                                }else
+                                {
+                                    addAlarmButton.setVisibility(View.VISIBLE);
+                                }
+
+
+
+
                                 if (ok.isEmpty()) {
 //                            remindersAdapter = new RemindersAdapter(EventEdit.this, ok);
 //                            remindersAdapter.notifyDataSetChanged();
@@ -425,7 +488,7 @@ public class EventEdit extends AppCompatActivity {
 
         intent.removeExtra("title");
         intent.removeExtra("comment");
-        intent.removeExtra("calendar");
+//        intent.removeExtra("calendar");
 
 
         String strTitle = eventNameET.getText().toString();
@@ -433,7 +496,7 @@ public class EventEdit extends AppCompatActivity {
 
         intent.putExtra("title", strTitle);
         intent.putExtra("comment", strComment);
-        intent.putExtra("calendar", myTime);
+//        intent.putExtra("calendar", myTime);
 
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(EventEdit.this, alarmId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -465,12 +528,16 @@ public class EventEdit extends AppCompatActivity {
 
         LayoutInflater lf = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View rowView = lf.inflate(R.layout.activity_radio_button_for_reminder, null);
-        TextView tenMinBefore = rowView.findViewById(R.id.tenMinBefore);
-        TextView fiveMinBefore = rowView.findViewById(R.id.fiveMinBefore);
-        TextView eventsTimeReminder = rowView.findViewById(R.id.eventsTimeReminder);
-        TextView fiveMinLater = rowView.findViewById(R.id.fiveMinLater);
-        TextView tenMinLater = rowView.findViewById(R.id.tenMinLater);
-        TextView customChoice = rowView.findViewById(R.id.customChoice);
+
+         oneDayBefore = rowView.findViewById(R.id.oneDayBefore);
+         oneHourMinBefore = rowView.findViewById(R.id.oneHourMinBefore);
+         halfHourMinBefore = rowView.findViewById(R.id.halfHourMinBefore);
+        fifteenMinBefore = rowView.findViewById(R.id.fifteenMinBefore);
+        tenMinBefore = rowView.findViewById(R.id.tenMinBefore);
+       fiveMinBefore = rowView.findViewById(R.id.fiveMinBefore);
+         customChoice = rowView.findViewById(R.id.customChoice);
+
+
 
 
         cReminder.set(Calendar.YEAR, date.getYear());
@@ -490,20 +557,75 @@ public class EventEdit extends AppCompatActivity {
             @Override
             public void onShow(DialogInterface dialog) {
 
+                oneDayBefore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alarmState=1;
+
+                        date.minusDays(1);
+                        cReminder.setTime(Date.from(date.minusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                        cReminder.set(Calendar.HOUR_OF_DAY,time.getHour());
+                        cReminder.set(Calendar.MINUTE,time.getMinute());
+                        cReminder.set(Calendar.MILLISECOND,0);
+                        oneDayBeforeDate = cReminder.getTime();
+                        ok.add(oneDayBeforeDate);
+                        dialog.dismiss();
+
+                    }
+                });
+
+                oneHourMinBefore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alarmState = 1;
+                        cReminder.set(Calendar.HOUR_OF_DAY, time.getHour() - 1);
+                        cReminder.set(Calendar.MILLISECOND,0);
+                        oneHourBeforeDate = cReminder.getTime();
+                        ok.add(oneHourBeforeDate);
+
+                        dialog.dismiss();
+                    }
+                });
+
+                halfHourMinBefore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alarmState = 1;
+                        cReminder.set(Calendar.MINUTE, time.getMinute() - 30);
+                        cReminder.set(Calendar.MILLISECOND,0);
+                        halfHourBeforeDate = cReminder.getTime();
+                        ok.add(halfHourBeforeDate);
+
+
+                        dialog.dismiss();
+                    }
+                });
+                fifteenMinBefore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alarmState = 1;
+                        cReminder.set(Calendar.MINUTE, time.getMinute() - 15);
+                        cReminder.set(Calendar.MILLISECOND,0);
+                        fifteenMinBeforeDate = cReminder.getTime();
+                        ok.add(fifteenMinBeforeDate);
+
+
+                        dialog.dismiss();
+                    }
+                });
+
                 tenMinBefore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        Calendar tenminutesBeforeFixed;
                         alarmState = 1;
                         cReminder.set(Calendar.MINUTE, time.getMinute() - 10);
                         cReminder.set(Calendar.MILLISECOND,0);
-                        ok.add(cReminder.getTime());
-                        tenminutesBeforeFixed = cReminder;
+                        tenMinBeforeDate=cReminder.getTime();
+
+                        ok.add(tenMinBeforeDate);
 
 
-//                        reminderLayout.setVisibility(View.VISIBLE);
-//                        reminderInfoTV.setText("Η υπενθύμιση ορίστηκε στις: " + cReminder.getTime().toString().trim());
 
                         dialog.dismiss();
                     }
@@ -512,68 +634,18 @@ public class EventEdit extends AppCompatActivity {
                 fiveMinBefore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Calendar fiveminutesBeforeFixed;
 
                         alarmState = 1;
                         cReminder.set(Calendar.MINUTE, time.getMinute() - 5);
                         cReminder.set(Calendar.MILLISECOND,0);
-                        fiveminutesBeforeFixed = cReminder;
-                        ok.add(cReminder.getTime());
+                        fiveMinBeforeDate = cReminder.getTime();
+                        ok.add(fiveMinBeforeDate);
 
-//                        reminderLayout.setVisibility(View.VISIBLE);
-//                        reminderInfoTV.setText("Η υπενθύμιση ορίστηκε στις: " + cReminder.getTime().toString().trim());
 
                         dialog.dismiss();
                     }
                 });
-                eventsTimeReminder.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alarmState = 1;
-//                        reminderLayout.setVisibility(View.VISIBLE);
-//                        reminderInfoTV.setText("Η υπενθύμιση ορίστηκε στις: " + cReminder.getTime().toString().trim());
-                        cReminder.set(Calendar.MILLISECOND,0);
-                        ok.add(cReminder.getTime());
 
-                        dialog.dismiss();
-                    }
-                });
-                fiveMinLater.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Calendar fiveminutesLaterFixed;
-                        alarmState = 1;
-                        cReminder.set(Calendar.MINUTE, time.getMinute() + 5);
-                        cReminder.set(Calendar.MILLISECOND,0);
-                        fiveminutesLaterFixed = cReminder;
-
-                        ok.add(cReminder.getTime());
-
-
-//                        reminderLayout.setVisibility(View.VISIBLE);
-//                        reminderInfoTV.setText("Η υπενθύμιση ορίστηκε στις: " + cReminder.getTime().toString().trim());
-
-                        dialog.dismiss();
-                    }
-                });
-                tenMinLater.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Calendar tenminutesLaterFixed;
-                        alarmState = 1;
-                        cReminder.set(Calendar.MINUTE, time.getMinute() + 10);
-                        cReminder.set(Calendar.MILLISECOND,0);
-                        tenminutesLaterFixed = cReminder;
-
-                        ok.add(cReminder.getTime());
-
-//                        reminderLayout.setVisibility(View.VISIBLE);
-//                        reminderInfoTV.setText("Η υπενθύμιση ορίστηκε στις: " + cReminder.getTime().toString().trim());
-
-                        dialog.dismiss();
-                    }
-                });
 
                 customChoice.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -604,6 +676,7 @@ public class EventEdit extends AppCompatActivity {
                         }
                     }
                 }
+
 
                 remindersAdapter = new RemindersAdapter(getApplicationContext(), ok);
 

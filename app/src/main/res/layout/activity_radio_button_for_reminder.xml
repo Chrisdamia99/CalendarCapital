@@ -21,6 +21,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:id="@+id/oneDayView"
         android:background="@android:color/darker_gray" />
     <TextView
         android:id="@+id/oneHourMinBefore"
@@ -36,6 +37,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:id="@+id/oneHourView"
         android:background="@android:color/darker_gray" />
 
     <TextView
@@ -52,6 +54,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:id="@+id/halfMinView"
         android:background="@android:color/darker_gray" />
 
 
@@ -70,6 +73,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:id="@+id/fifteenMinView"
         android:background="@android:color/darker_gray" />
 
     <TextView
@@ -86,6 +90,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:id="@+id/tenMinView"
         android:background="@android:color/darker_gray" />
 
 
@@ -104,6 +109,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:id="@+id/fiveMinView"
         android:background="@android:color/darker_gray" />
 
 
@@ -113,7 +119,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="Επεξεργασία.."
+        android:text="@string/custom_gr"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold" />

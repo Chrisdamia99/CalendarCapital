@@ -39,4 +39,11 @@
     <string name="comment_info">Comment:</string>
     <string name="event_title_hint">Event title</string>
     <string name="event_comment_hint">Event comment</string>
+
+    <string name="every_day_gr">Κάθε μέρα</string>
+    <string name="every_week_gr">Κάθε βδομάδα</string>
+    <string name="every_month_gr">Κάθε μήνα</string>
+    <string name="every_year_gr">Κάθε χρόνο</string>
+    <string name="custom_gr">Επεξεργασία</string>
+    <string name="repeat_gr">Επανάληψη</string>
 </resources>

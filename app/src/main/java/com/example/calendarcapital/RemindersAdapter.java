@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,6 +29,7 @@ import java.util.Locale;
 public class RemindersAdapter extends ArrayAdapter<Date> {
     LayoutInflater inflater;
     ArrayList<Date> myTest;
+
     MyDatabaseHelper myDB = new MyDatabaseHelper(this.getContext());
 
     public RemindersAdapter(@NonNull Context context, List<Date> reminders) {
@@ -49,22 +53,25 @@ public class RemindersAdapter extends ArrayAdapter<Date> {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.reminders_for_eventedit, parent, false);
         }
-        LinearLayout remindersLay = convertView.findViewById(R.id.reminderLayout);
         ImageButton cancelReminderImageView = convertView.findViewById(R.id.cancelReminderImageView);
         TextView reminderSetTV = convertView.findViewById(R.id.reminderSetTV);
 
 //        setReminders(myTest  ,reminderSetTV,cancelReminderImageView,remindersLay);
-        setRemindersVol2(getDate, reminderSetTV, cancelReminderImageView, remindersLay, position);
+        setRemindersVol2(getDate, reminderSetTV, cancelReminderImageView,  position);
+
 
 
         return convertView;
     }
 
-    public void setRemindersVol2(Date reminder, TextView reminderTV, ImageButton cancelBTN, LinearLayout reminderLay, int position) {
+    public void setRemindersVol2(Date reminder, TextView reminderTV, ImageButton cancelBTN,  int position) {
         String testStr = CalendarUtils.dateForReminder(reminder);
         Cursor myDbCursor = myDB.readAllData();
         Cursor remCursor = myDB.readAllReminder();
-
+        EventCursorAdapter EC  = new EventCursorAdapter(getContext(),myDbCursor);
+        View view1 = LayoutInflater.from(getContext()).inflate(R.layout.show_event_from_listview, null);
+        Cursor secMyDbCursor = myDB.readAllData();
+        Cursor secMyRemCursor = myDB.readAllReminder();
         reminderTV.setText(testStr);
 
         cancelBTN.setOnClickListener(new View.OnClickListener() {
@@ -84,17 +91,32 @@ public class RemindersAdapter extends ArrayAdapter<Date> {
                 }
                 myTest.remove(position);
 
-                myDbCursor.moveToPosition(-1);
-                remCursor.moveToPosition(-1);
-                while (myDbCursor.moveToNext()) {
-                    while (remCursor.moveToNext()) {
-                        if (myDbCursor.getString(5).equals("1")) {
-                            if (!myDbCursor.getString(0).equals(remCursor.getString(1))) {
-                                myDB.updateAlarmNum(myDbCursor.getString(0), "0");
+                secMyDbCursor.moveToPosition(-1);
+                secMyRemCursor.moveToPosition(-1);
+                String dbCr = DatabaseUtils.dumpCursorToString(secMyDbCursor);
+                String remCr = DatabaseUtils.dumpCursorToString(secMyRemCursor);
+                while (secMyDbCursor.moveToNext()) {
+                    if (secMyRemCursor.getCount() == 0) {
+                        myDB.updateAlarmNum(secMyDbCursor.getString(0), "0");
+
+                        RemindersAdapter.this.notifyDataSetChanged();
+                    EC.notifyDataSetChanged();
+
+                    }
+                    while (secMyRemCursor.moveToNext()) {
+                        dbCr = DatabaseUtils.dumpCursorToString(secMyDbCursor);
+                        remCr = DatabaseUtils.dumpCursorToString(secMyRemCursor);
+                        if (secMyDbCursor.getString(5).equals("1")) {
+                            dbCr = DatabaseUtils.dumpCursorToString(secMyDbCursor);
+                            remCr = DatabaseUtils.dumpCursorToString(secMyRemCursor);
+                            if (!secMyDbCursor.getString(0).equals(secMyRemCursor.getString(1)) || secMyRemCursor.getCount() == 0) {
+                                myDB.updateAlarmNum(secMyDbCursor.getString(0), "0");
                             }
                         }
                     }
                 }
+
+
 
                 RemindersAdapter.this.notifyDataSetChanged();
 

@@ -42,14 +42,16 @@ public class Event {
     private LocalDate date;
     private LocalTime time;
     private String alarm;
+    private String repeat;
 
-    public Event(String id, String name, String comment, LocalDate date, LocalTime time, String alarm) {
+    public Event(String id, String name, String comment, LocalDate date, LocalTime time, String alarm,String repeat) {
         this.id = id;
         this.comment = comment;
         this.name = name;
         this.date = date;
         this.time = time;
         this.alarm = alarm;
+        this.repeat = repeat;
 
 
     }
@@ -115,5 +117,13 @@ public class Event {
 
     public void setAlarm(String alarm) {
         this.alarm = alarm;
+    }
+
+    public String getRepeat() {
+        return repeat;
+    }
+
+    public void setRepeat(String repeat) {
+        this.repeat = repeat;
     }
 }

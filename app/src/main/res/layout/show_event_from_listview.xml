@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
     android:layout_width="match_parent"
     android:orientation="vertical"
 android:background="@drawable/rounded_alertdialog"
-
     android:id="@+id/lin_lv_dialog_layout"
     android:layout_height="match_parent">
 
@@ -252,16 +250,6 @@ android:background="@drawable/rounded_alertdialog"
             >
 
 
-        <TextView
-            android:id="@+id/alarmInfo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/rounded_corners_ad_title"
-            android:textColor="@color/white"
-            android:text="Καμία υπενθύμιση"
-            android:textStyle="bold"
-            android:textSize="12sp"
-            android:gravity="center"/>
 
             <ListView
                 android:id="@+id/existedRemindersListView"

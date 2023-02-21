@@ -64,7 +64,7 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
                 if (LocalTime.parse(cursor.getString(4)).equals(time)) {
                     Event eventDB = new Event(cursor.getString(0), cursor.getString(1), cursor.getString(2),
                             CalendarUtils.stringToLocalDate(cursor.getString(3)), LocalTime.parse(cursor.getString(4)),
-                            cursor.getString(5));
+                            cursor.getString(5),cursor.getString(6));
                     ArrayList<Event> eventArrayDB = new ArrayList<>();
                     eventArrayDB.add(eventDB);
                     HourEvent event = new HourEvent(LocalTime.parse(cursor.getString(4)), eventArrayDB);

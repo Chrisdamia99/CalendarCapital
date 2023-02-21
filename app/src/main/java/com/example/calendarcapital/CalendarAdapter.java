@@ -94,7 +94,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
         while (cursor.moveToNext()) {
             Event eventDB = new Event(cursor.getString(0), cursor.getString(1), cursor.getString(2),
                     CalendarUtils.stringToLocalDate(cursor.getString(3)), LocalTime.parse(cursor.getString(4)),
-                    cursor.getString(5));
+                    cursor.getString(5),cursor.getString(6));
             myEvents.add(eventDB);
 
 

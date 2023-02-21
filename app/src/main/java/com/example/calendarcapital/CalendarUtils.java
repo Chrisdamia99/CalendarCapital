@@ -9,14 +9,18 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class CalendarUtils {
@@ -51,7 +55,118 @@ public class CalendarUtils {
         calendar.setTime(date);
         return calendar;
     }
+    public static Calendar LocalDateToLocalDateTimeToCalendar(LocalDate date,LocalTime time) {
+                Calendar calendar=Calendar.getInstance();
 
+            // Combine LocalDate and LocalTime to create a LocalDateTime
+            LocalDateTime localDateTime = date.atTime(time);
+
+            // Convert LocalDateTime to a ZonedDateTime
+            ZoneId zoneId = ZoneId.systemDefault(); // Get the system default time zone
+            ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
+
+            // Convert ZonedDateTime to a Calendar
+           return  calendar = GregorianCalendar.from(zonedDateTime);
+
+
+    }
+    public static Date dateForMinusDay(LocalDate date,LocalTime time)
+    {   Calendar cReminder = Calendar.getInstance();
+        cReminder.set(Calendar.YEAR, date.getYear());
+        cReminder.set(Calendar.MONTH, date.getMonth().getValue() - 1);
+        cReminder.set(Calendar.DAY_OF_MONTH, date.getDayOfMonth());
+
+
+        cReminder.set(Calendar.HOUR_OF_DAY, time.getHour());
+        cReminder.set(Calendar.MINUTE, time.getMinute());
+        cReminder.set(Calendar.SECOND, time.getSecond());
+        date.minusDays(1);
+        cReminder.setTime(Date.from(date.minusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        cReminder.set(Calendar.HOUR_OF_DAY,time.getHour());
+        cReminder.set(Calendar.MINUTE,time.getMinute());
+        cReminder.set(Calendar.MILLISECOND,0);
+
+        return cReminder.getTime();
+    }
+
+    public static Date dateForOneHourBefore(LocalDate date,LocalTime time)
+    {Calendar cReminder = Calendar.getInstance();
+        cReminder.set(Calendar.YEAR, date.getYear());
+        cReminder.set(Calendar.MONTH, date.getMonth().getValue() - 1);
+        cReminder.set(Calendar.DAY_OF_MONTH, date.getDayOfMonth());
+
+
+        cReminder.set(Calendar.HOUR_OF_DAY, time.getHour());
+        cReminder.set(Calendar.MINUTE, time.getMinute());
+        cReminder.set(Calendar.SECOND, time.getSecond());
+        cReminder.set(Calendar.HOUR_OF_DAY, time.getHour() - 1);
+        cReminder.set(Calendar.MILLISECOND,0);
+
+        return cReminder.getTime();
+    }
+
+
+    public static Date dateForHalfHourBefore(LocalDate date,LocalTime time)
+    {Calendar cReminder = Calendar.getInstance();
+        cReminder.set(Calendar.YEAR, date.getYear());
+        cReminder.set(Calendar.MONTH, date.getMonth().getValue() - 1);
+        cReminder.set(Calendar.DAY_OF_MONTH, date.getDayOfMonth());
+
+
+        cReminder.set(Calendar.HOUR_OF_DAY, time.getHour());
+        cReminder.set(Calendar.MINUTE, time.getMinute());
+        cReminder.set(Calendar.SECOND, time.getSecond());
+        cReminder.set(Calendar.MINUTE, time.getMinute() - 30);
+        cReminder.set(Calendar.MILLISECOND,0);
+        return cReminder.getTime();
+    }
+
+
+    public static Date dateForFifteenMinBefore(LocalDate date,LocalTime time)
+    {Calendar cReminder = Calendar.getInstance();
+        cReminder.set(Calendar.YEAR, date.getYear());
+        cReminder.set(Calendar.MONTH, date.getMonth().getValue() - 1);
+        cReminder.set(Calendar.DAY_OF_MONTH, date.getDayOfMonth());
+
+
+        cReminder.set(Calendar.HOUR_OF_DAY, time.getHour());
+        cReminder.set(Calendar.MINUTE, time.getMinute());
+        cReminder.set(Calendar.SECOND, time.getSecond());
+        cReminder.set(Calendar.MINUTE, time.getMinute() - 15);
+        cReminder.set(Calendar.MILLISECOND,0);
+        return cReminder.getTime();    }
+
+
+    public static Date dateForTenMinBefore(LocalDate date,LocalTime time)
+    {Calendar cReminder = Calendar.getInstance();
+        cReminder.set(Calendar.YEAR, date.getYear());
+        cReminder.set(Calendar.MONTH, date.getMonth().getValue() - 1);
+        cReminder.set(Calendar.DAY_OF_MONTH, date.getDayOfMonth());
+
+
+        cReminder.set(Calendar.HOUR_OF_DAY, time.getHour());
+        cReminder.set(Calendar.MINUTE, time.getMinute());
+        cReminder.set(Calendar.SECOND, time.getSecond());
+        cReminder.set(Calendar.MINUTE, time.getMinute() - 10);
+        cReminder.set(Calendar.MILLISECOND,0);
+        return cReminder.getTime();
+    }
+
+
+    public static Date dateForFiveMinBefore(LocalDate date,LocalTime time)
+    {   Calendar cReminder = Calendar.getInstance();
+        cReminder.set(Calendar.YEAR, date.getYear());
+        cReminder.set(Calendar.MONTH, date.getMonth().getValue() - 1);
+        cReminder.set(Calendar.DAY_OF_MONTH, date.getDayOfMonth());
+
+
+        cReminder.set(Calendar.HOUR_OF_DAY, time.getHour());
+        cReminder.set(Calendar.MINUTE, time.getMinute());
+        cReminder.set(Calendar.SECOND, time.getSecond());
+        cReminder.set(Calendar.MINUTE, time.getMinute() - 5);
+        cReminder.set(Calendar.MILLISECOND,0);
+        return cReminder.getTime();
+    }
     public static Date stringToDateFormat(String myDate) {
 
 //        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");

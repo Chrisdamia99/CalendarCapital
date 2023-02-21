@@ -57,12 +57,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 //Implements calendaradapter onitemlistener
@@ -227,18 +230,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
 
     public void onMyBackPressed() {
-        // Pop current view type off the stack
-//        if (stack.size()>1){
-//        stack.removeFirst();}
-//        // Check the previous view type
-//        Object[] arr = stack.toArray();
-//        for (int i=0; i< stack.size()-1; i++)
-//        {
-//            if (arr[i] == arr[i+1])
-//            {
-//                stack.remove(arr[i]);
-//            }
-//        }
+
         String previousViewType = stack.peekFirst();
 
 
@@ -312,8 +304,12 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                 String date_upd = String.valueOf(hourAdapter.getItem(position).getEvents().get(0).getDate());
                 String time_upd = String.valueOf(hourAdapter.getItem(position).getEvents().get(0).getTime());
                 String alarmState = hourAdapter.getItem(position).getEvents().get(0).getAlarm();
+                String repeatState = hourAdapter.getItem(position).getEvents().get(0).getRepeat();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+
+
 
 
                 viewFinal = CA.setAllFields(view1, myEventId, myTitle, myComment, myDate, myTime);
@@ -406,24 +402,14 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                                 i.putExtra("date", date_upd);
                                 i.putExtra("time", time_upd);
                                 i.putExtra("alarm", alarmState);
+                                i.putExtra("repeat",repeatState);
                                 startActivity(i);
                             }
                         }).setOnCancelListener(new DialogInterface.OnCancelListener() {
                             @Override
                             public void onCancel(DialogInterface dialog) {
                                 hourAdapter.notifyDataSetChanged();
-                                //---------------ERROR WHILE DELETE-----------//
-//                                String previousViewType = stack.peekFirst();
-//
-//                                if (previousViewType.equals("week")) {
-//                                    stack.addFirst("week");
-//                                } else if (previousViewType.equals("double-click-month")) {
-//                                    stack.addFirst("double-click-month");
-//                                } else if (previousViewType.equals("double-click-week")) {
-//                                    stack.addFirst("double-click-week");
-//                                } else {
-//                                    stack.addFirst("daily");
-//                                }
+
 
 
                             }
@@ -432,18 +418,6 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                             public void onDismiss(DialogInterface dialog) {
 
                                 hourAdapter.notifyDataSetChanged();
-                                //---------------ERROR WHILE DELETE-----------//
-//                                String previousViewType = stack.peekFirst();
-//
-//                                if (previousViewType.equals("week")) {
-//                                    setWeek();
-//                                } else if (previousViewType.equals("double-click-month")) {
-//                                    setDaily();
-//                                } else if (previousViewType.equals("double-click-week")) {
-//                                    setDaily();
-//                                } else {
-//                                    setDaily();
-//                                }
 
                             }
                         });

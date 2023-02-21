@@ -30,12 +30,18 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_DATE = "event_date";
     private static final String COLUMN_TIME = "event_time";
     private static final String COLUMN_ALARM = "event_alarm";
+    private static final String COLUMN_REPEAT_ALARM = "event_repeat";
 
 
     private static final String TABLE_NAME_REMINDER = "my_reminders_db";
     public static final String COLUMN_ID_REMINDER = "_id";
     private static final String COLUMN_EVENT_ID = "event_id";
     private static final String COLUMN_REMINDER = "reminder_date";
+
+    private static final String TABLE_NAME_REPEAT ="my_repeat_db";
+    public static final String COLUMN_ID_REPEAT ="_id";
+    private static final String COLUMN_EVENT_REPEAT_ID ="event_repeat_id";
+    private static final String COLUMN_REPEAT ="repeat_date";
 
 
     MyDatabaseHelper(@Nullable Context context) {
@@ -51,15 +57,22 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_COMMENT + " TEXT, " +
                 COLUMN_DATE + " TEXT, " +
                 COLUMN_TIME + " TEXT, " +
-                COLUMN_ALARM + " TEXT);";
+                COLUMN_ALARM + " TEXT, " +
+                COLUMN_REPEAT_ALARM + " TEXT);";
 
         String query_reminder = "CREATE TABLE " + TABLE_NAME_REMINDER +
                 " (" + COLUMN_ID_REMINDER + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_EVENT_ID + " TEXT, " +
                 COLUMN_REMINDER + " TEXT);";
 
+        String query_repeat ="CREATE TABLE " + TABLE_NAME_REPEAT +
+                " (" + COLUMN_ID_REPEAT + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_EVENT_REPEAT_ID + " TEXT, " +
+                COLUMN_REPEAT + " TEXT);";
+
         db.execSQL(query);
         db.execSQL(query_reminder);
+        db.execSQL(query_repeat);
     }
 
     @Override
@@ -67,11 +80,12 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_REMINDER);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_REPEAT);
         onCreate(db);
 
     }
 
-    void addEvent(String title, String comment, LocalDate date, LocalTime time, String alarm) {
+    void addEvent(String title, String comment, LocalDate date, LocalTime time, String alarm,String repeat) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -80,6 +94,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_DATE, String.valueOf(date));
         cv.put(COLUMN_TIME, String.valueOf(time));
         cv.put(COLUMN_ALARM, alarm);
+        cv.put(COLUMN_REPEAT_ALARM,repeat);
 
 
         long result = db.insert(TABLE_NAME, null, cv);
@@ -111,6 +126,34 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    void addRepeat(String event_repeat_id, Date repeat)
+    {  SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_EVENT_REPEAT_ID, event_repeat_id);
+        cv.put(COLUMN_REPEAT, String.valueOf(repeat));
+
+        long result = db.insert(TABLE_NAME_REPEAT, null, cv);
+        if (result == -1) {
+            Toast.makeText(context, "Data Failed", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Data Added Successfully", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    Cursor readAllRepeat()
+    {
+        String query_repeat = "SELECT * FROM " + TABLE_NAME_REPEAT;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        if (db != null) {
+            cursor = db.rawQuery(query_repeat, null);
+        }
+        return cursor;
+    }
+
     Cursor readAllReminder() {
         String query_reminder = "SELECT * FROM " + TABLE_NAME_REMINDER;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -132,6 +175,23 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             cursor = db.rawQuery(query, null);
         }
         return cursor;
+    }
+
+    void updateRepeatNum(String row_id, String repeat)
+    {   SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_REPEAT, repeat);
+
+
+        long result = db.update(TABLE_NAME, cv, "_id=?", new String[]{row_id});
+
+        if (result == -1) {
+            Toast.makeText(context, "Failed to Update", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Successfully Update", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     void updateAlarmNum(String row_id, String alarm) {
@@ -166,7 +226,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    void updateData(String row_id, String title, String comments, LocalDate date, LocalTime time, String alarm) {
+    void updateData(String row_id, String title, String comments, LocalDate date, LocalTime time, String alarm,String repeat) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -175,6 +235,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_DATE, String.valueOf(date));
         cv.put(COLUMN_TIME, String.valueOf(time));
         cv.put(COLUMN_ALARM, alarm);
+        cv.put(COLUMN_REPEAT_ALARM, repeat);
 
         long result = db.update(TABLE_NAME, cv, "_id=?", new String[]{row_id});
 
@@ -225,6 +286,18 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    void deleteOneRowRepeat(String row_id)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        long result = db.delete(TABLE_NAME_REPEAT, "_id=?", new String[]{row_id});
+        if (result == -1) {
+            Toast.makeText(context, "Failed to Delete.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Deleted Successfully.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     void deleteAllData() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_NAME);
@@ -233,6 +306,12 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     void deleteAllDataReminder() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_NAME_REMINDER);
+    }
+
+    void deleteAllDataRepeat()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_NAME_REPEAT);
     }
 
 

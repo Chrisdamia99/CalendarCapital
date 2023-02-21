@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +29,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class EventCursorAdapter extends CursorAdapter {
@@ -56,7 +60,6 @@ public class EventCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-
 
         TextView id_lv_tv = view.findViewById(R.id.id_lv_tv);
         TextView title_lv_tv = view.findViewById(R.id.title_lv_tv);
@@ -88,9 +91,10 @@ public class EventCursorAdapter extends CursorAdapter {
         TextView comment_lv_tv = view.findViewById(R.id.comment_lv_tv);
         TextView date_lv_tv = view.findViewById(R.id.date_lv_tv);
         TextView time_lv_tv = view.findViewById(R.id.time_lv_tv);
-        TextView alarmInfo = view.findViewById(R.id.alarmInfo);
-//        ImageButton cancelReminderFromList = view.findViewById(R.id.cancelReminderFromList);
+        LinearLayout lin_lv_dialog_layout = view.findViewById(R.id.lin_lv_dialog_layout);
         ListView existedRemindersListView = view.findViewById(R.id.existedRemindersListView);
+        View test = LayoutInflater.from(mContext).inflate(R.layout.show_event_from_listview,null);
+
 
 
         id_lv_tv.setText(id);
@@ -112,7 +116,10 @@ public class EventCursorAdapter extends CursorAdapter {
             if (cursor.getString(0).equals(id)) {
                 alarmDate = cursor.getString(5);
                 if (alarmDate.equals("1") && existedReminders.isEmpty()) {
-                    alarmInfo.setVisibility(View.GONE);
+                    lin_lv_dialog_layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                    existedRemindersListView.setVisibility(View.GONE);
+                    test.invalidate();
+
 
                     cursorRem.moveToPosition(-1);
                     //----Problem here maybe--------//
@@ -160,20 +167,54 @@ public class EventCursorAdapter extends CursorAdapter {
                     existedRemindersListView.setVisibility(View.VISIBLE);
                     existedRemindersListView.setAdapter(remindersAdapter);
                 } else if (!existedReminders.isEmpty()) {
-                    alarmInfo.setVisibility(View.GONE);
+                    lin_lv_dialog_layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                    test.invalidate();
+
                     remindersAdapter = new RemindersAdapter(mContext, existedReminders);
 
-                    existedRemindersListView.setVisibility(View.VISIBLE);
-                    existedRemindersListView.setAdapter(remindersAdapter);
+                    existedRemindersListView.setVisibility(View.GONE);
+//                    existedRemindersListView.setAdapter(remindersAdapter);
                 } else {
-                    alarmInfo.setText("Καμία υπενθύμιση.");
-//                    cancelReminderFromList.setVisibility(View.GONE);
+                    lin_lv_dialog_layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                    test.invalidate();
+                    existedRemindersListView.setVisibility(View.GONE);
                     break;
                 }
             }
 
 
+
+
         }
+
+//        cursor.close();
+//        cursorRem.close();
+        Cursor secMyDb= myDb.readAllData();
+        Timer t = new Timer();
+
+
+//        t.scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//                cursor.moveToPosition(-1);
+//               String testBd= DatabaseUtils.dumpCursorToString(cursor);
+//                while (cursor.moveToNext())
+//                {
+//                    if (cursor.getString(5).equals("0"))
+//                    {
+//
+//                        alarmInfo.setVisibility(View.VISIBLE);
+////                        view.invalidate();
+//
+//
+//
+//                    }
+//
+//                }
+//
+//            }
+//        }, 0, 100);
+
 
 
         EventCursorAdapter.this.notifyDataSetChanged();
@@ -186,8 +227,14 @@ public class EventCursorAdapter extends CursorAdapter {
         Cursor cursor = myDB.readAllData();
         while (cursor.moveToNext()) {
             if (cursor.getString(0).equals(String.valueOf(alarmId))) {
+                if (cursor.getString(6).equals("0")){
                 myDB.updateData(cursor.getString(0), cursor.getString(1), cursor.getString(2), LocalDate.parse(cursor.getString(3)),
-                        LocalTime.parse(cursor.getString(4)), "true");
+                        LocalTime.parse(cursor.getString(4)), "true","0");
+        }else if (cursor.getString(6).equals("1"))
+                {
+                    myDB.updateData(cursor.getString(0), cursor.getString(1), cursor.getString(2), LocalDate.parse(cursor.getString(3)),
+                            LocalTime.parse(cursor.getString(4)), "true","1");
+                }
 
 
             }
@@ -215,8 +262,14 @@ public class EventCursorAdapter extends CursorAdapter {
         Calendar DBdate;
         while (cursor.moveToNext()) {
             if (cursor.getString(0).equals(String.valueOf(alarmId))) {
-                myDB.updateData(cursor.getString(0), cursor.getString(1), cursor.getString(2), LocalDate.parse(cursor.getString(3)),
-                        LocalTime.parse(cursor.getString(4)), "false");
+                if (cursor.getString(6).equals("0")){
+                    myDB.updateData(cursor.getString(0), cursor.getString(1), cursor.getString(2), LocalDate.parse(cursor.getString(3)),
+                            LocalTime.parse(cursor.getString(4)), "false","0");
+                }else if (cursor.getString(6).equals("1"))
+                {
+                    myDB.updateData(cursor.getString(0), cursor.getString(1), cursor.getString(2), LocalDate.parse(cursor.getString(3)),
+                            LocalTime.parse(cursor.getString(4)), "false","1");
+                }
 
             }
         }

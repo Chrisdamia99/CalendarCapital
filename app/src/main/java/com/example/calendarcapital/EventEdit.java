@@ -6,6 +6,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.BackoffPolicy;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
@@ -17,6 +26,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,6 +51,7 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.sql.ResultSet;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -53,6 +64,7 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 
 public class EventEdit extends AppCompatActivity {
@@ -514,14 +526,13 @@ public class EventEdit extends AppCompatActivity {
     public void startAlarm(int alarmId, Calendar cc) {
 
 
-        Date myTime = cc.getTime();
+
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         Intent intent = new Intent(EventEdit.this, AlarmReceiver.class);
 
         intent.removeExtra("title");
         intent.removeExtra("comment");
-//        intent.removeExtra("calendar");
 
 
         String strTitle = eventNameET.getText().toString();
@@ -529,7 +540,6 @@ public class EventEdit extends AppCompatActivity {
 
         intent.putExtra("title", strTitle);
         intent.putExtra("comment", strComment);
-//        intent.putExtra("calendar", myTime);
 
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(EventEdit.this, alarmId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -563,9 +573,9 @@ public class EventEdit extends AppCompatActivity {
         cRepeat.set(Calendar.DAY_OF_MONTH, date.getDayOfMonth());
 
 
-        cRepeat.set(Calendar.HOUR_OF_DAY, time.getHour());
-        cRepeat.set(Calendar.MINUTE, time.getMinute());
-        cRepeat.set(Calendar.SECOND, time.getSecond());
+        cRepeat.set(Calendar.HOUR_OF_DAY, 8);
+        cRepeat.set(Calendar.MINUTE, 0);
+        cRepeat.set(Calendar.SECOND, 0);
 
 
         LayoutInflater lf = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -655,11 +665,10 @@ public class EventEdit extends AppCompatActivity {
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-        Intent intent = new Intent(EventEdit.this, AlarmReceiver.class);
+        Intent intent = new Intent(EventEdit.this, RepeatReceiver.class);
 
         intent.removeExtra("title");
         intent.removeExtra("comment");
-//        intent.removeExtra("calendar");
 
 
         String strTitle = eventNameET.getText().toString();
@@ -667,35 +676,41 @@ public class EventEdit extends AppCompatActivity {
 
         intent.putExtra("title", strTitle);
         intent.putExtra("comment", strComment);
-//        intent.putExtra("calendar", myTime);
 
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(EventEdit.this, alarmId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 //        alarmManager.setExact(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(), pendingIntent);
+        long startTime = cc.getTimeInMillis();
+
         if (repeatState==1) {
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(),AlarmManager.INTERVAL_DAY , pendingIntent);
+            long intervalDay = AlarmManager.INTERVAL_DAY;
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime,intervalDay , pendingIntent);
         }else if (repeatState==2)
-        {
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(),AlarmManager.INTERVAL_DAY * 7 , pendingIntent);
+        {long intervalWeek = AlarmManager.INTERVAL_DAY * 7;
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime,intervalWeek, pendingIntent);
         }else if (repeatState==3)
         {
             if (date.getMonthValue()!=2)
-            {
-                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(),AlarmManager.INTERVAL_DAY*30 , pendingIntent);
+            { long intervalMonth = AlarmManager.INTERVAL_DAY*30;
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime,intervalMonth , pendingIntent);
             }else if (date.getMonthValue()==2 && date.isLeapYear())
             {
-                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(),AlarmManager.INTERVAL_DAY*29 , pendingIntent);
+                long intervalMonthFebLeap = AlarmManager.INTERVAL_DAY*30;
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime,intervalMonthFebLeap , pendingIntent);
             }else if (date.getMonthValue()==2 && !date.isLeapYear())
             {
-                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(),AlarmManager.INTERVAL_DAY*28 , pendingIntent);
+                long intervalMonthFeb = AlarmManager.INTERVAL_DAY*30;
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime,intervalMonthFeb , pendingIntent);
             }
         }else if (repeatState==4)
         {
+            long intervalYear = AlarmManager.INTERVAL_DAY*365;
             if (date.isLeapYear()) {
-                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(), AlarmManager.INTERVAL_DAY*365, pendingIntent);
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime, intervalYear, pendingIntent);
             }else
             {
-                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(), AlarmManager.INTERVAL_DAY*366, pendingIntent);
+                long intervalYearLeap = AlarmManager.INTERVAL_DAY*366;
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime, intervalYearLeap, pendingIntent);
             }
         }else if (repeatState==5)
         {
@@ -707,7 +722,8 @@ public class EventEdit extends AppCompatActivity {
         Toast.makeText(EventEdit.this, "Alarm set at: " + cc.getTime().toString(), Toast.LENGTH_SHORT).show();
     }
 
-    public void addAlarm() {
+
+        public void addAlarm() {
 
 
         LayoutInflater lf = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -941,18 +957,50 @@ public class EventEdit extends AppCompatActivity {
 
         Cursor cursorRepeat = myDB.readAllRepeat();
         Cursor newEventRepeat = myDB.readAllData();
+//        if (repeatState!=0)
+//        {
+//
+//            while(newEventRepeat.moveToNext()) {
+//                newEventRepeat.moveToLast();
+//                cursorRepeat.moveToLast();
+//              String testOk =  DatabaseUtils.dumpCursorToString(cursorRepeat);
+//
+//                idForReminder = newEventRepeat.getString(0);
+//                myDB.addRepeat(idForReminder,cRepeat.getTime());
+//             testOk =   DatabaseUtils.dumpCursorToString(cursorRepeat);
+//                startRepeatingAlarm(Integer.parseInt(cursorRepeat.getString(0)), CalendarUtils.LocalDateToLocalDateTimeToCalendar(date, time), repeatState);
+//            }
+//
+//        }
+//
         if (repeatState!=0)
         {
 
 
-            while(newEventRepeat.moveToNext()) {
-                newEventRepeat.moveToLast();
+            while (newEventRepeat.moveToNext())
+        {
+
+            if (newEventRepeat.moveToLast())
+            {
                 idForReminder = newEventRepeat.getString(0);
                 myDB.addRepeat(idForReminder,cRepeat.getTime());
-
-                startRepeatingAlarm(Integer.parseInt(cursorRepeat.getString(0)), CalendarUtils.LocalDateToLocalDateTimeToCalendar(date, time), repeatState);
+                while (cursorRepeat.moveToNext())
+                {
+                    if (cursorRepeat.getString(1).equals(newEventRepeat.getString(0)))
+                    {
+                        startRepeatingAlarm(Integer.parseInt(cursorRepeat.getString(0)),cRepeat,repeatState);
+                    }
+                }
             }
+
+
+
         }
+
+
+        }
+
+
         Intent i1 = new Intent(EventEdit.this, MainActivity.class);
 
 

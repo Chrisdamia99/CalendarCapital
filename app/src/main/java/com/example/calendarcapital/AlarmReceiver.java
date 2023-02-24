@@ -14,9 +14,7 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +25,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     String comment;
     String text;
 
-    Date timeForAlarm;
 
 
     @Override
@@ -51,15 +48,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             event = (String) b.get("title");
             comment = (String) b.get("comment");
-//            timeForAlarm = (Date) b.get("calendar");
 
             text = "Reminder for the Event: " + "\n" + event + "\n" + "Comments: " + "\n" + comment;
         }
-
-//        Timer t = new Timer();
-//        TimerTask tm = new TimerTask() {
-//            @Override
-//            public void run() {
 
 
                 Intent activityIntent = new Intent(context, MainActivity.class);

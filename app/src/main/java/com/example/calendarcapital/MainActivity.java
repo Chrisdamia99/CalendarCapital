@@ -25,6 +25,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -89,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     Bundle b;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         setNavigationViewListener();
         getIntentFromEventEdit();
         dublicatesInStack();
+
 
 
         drawerLayout = findViewById(R.id.drawerLayout);
@@ -189,7 +193,6 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         }
 
     }
-
 
     public void getStackFromSave() {
 
@@ -328,15 +331,27 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                                         String id_row = hourAdapter.getItem(position).getEvents().get(0).getId();
                                         Cursor myDb = myDB.readAllData();
                                         Cursor remCursor = myDB.readAllReminder();
+                                        Cursor repeatCursor= myDB.readAllRepeat();
                                         myDB.deleteOneRow(id_row);
                                         remCursor.moveToPosition(-1);
                                         while (remCursor.moveToNext()) {
-                                            if (remCursor.getString(1).equals(id_row))
+                                            if (remCursor.getString(1).equals(id_row)){
                                                 myDB.deleteOneRowReminder(remCursor.getString(0));
+
                                             String alarmId = remCursor.getString(0);
-                                            cancelAlarm(Integer.parseInt(alarmId));
+                                            cancelAlarm(Integer.parseInt(alarmId));}
                                             CA.notifyDataSetChanged();
                                             hourAdapter.notifyDataSetChanged();
+                                        }
+                                        while (repeatCursor.moveToNext())
+                                        {   if (repeatCursor.getString(1).equals(id_row)){
+                                            myDB.deleteOneRowRepeat(repeatCursor.getString(0));
+                                            //ΝΑ ΤΟ ΕΝΕΡΓΟΠΟΙΗΣΩ ΟΤΑΝ ΛΕΙΤΟΥΡΓΟΥΝ ΤΑ ΑΛΑΡΜ ΓΙΑ ΝΑ ΚΑΝΟΥΝ ΚΑΝΣΕΛ, ΜΕ ΑΛΛΗ ΜΕΘΟΔΟ ΚΑΝΣΕΛ_ΑΛΑΡΜ
+//                                            String alarmId = repeatCursor.getString(0);
+//                                            cancelAlarm(Integer.parseInt(alarmId));
+                                        }
+                                        CA.notifyDataSetChanged();
+                                        hourAdapter.notifyDataSetChanged();
                                         }
 
 

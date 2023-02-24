@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
 
     <application
         android:allowBackup="true"
@@ -48,7 +50,14 @@
         <receiver
             android:name=".AlarmReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true"
+            android:label="AlarmReceiver"/>
+
+        <receiver
+            android:name=".RepeatReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:label="RepeatReceiver"/>
     </application>
 
 </manifest>

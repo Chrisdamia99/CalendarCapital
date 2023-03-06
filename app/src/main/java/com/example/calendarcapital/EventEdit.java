@@ -16,6 +16,7 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.NotificationChannel;
@@ -64,30 +65,35 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 
 public class EventEdit extends AppCompatActivity {
 
-    private EditText eventNameET, eventCommentET;
-    private TextView eventDateTV, eventTimeTV, changeTimeTV, changeDateTV, addAlarmButton,addRepeatButton;
-    private TextView oneDayBefore ,oneHourMinBefore , halfHourMinBefore,     fifteenMinBefore, tenMinBefore, fiveMinBefore, customChoice;
-    private TextView everyDay,everyWeek,everyMonth,everyYear,customRepeat;
+    private EditText eventNameET, eventCommentET,repeatCounter;
+    private TextView eventDateTV, eventTimeTV, changeTimeTV, changeDateTV, addAlarmButton, addRepeatButton;
+    private TextView oneDayBefore, oneHourMinBefore, halfHourMinBefore, fifteenMinBefore, tenMinBefore, fiveMinBefore, customChoice;
+    private TextView everyDay, everyWeek, everyMonth, everyYear, customRepeat;
     Button btnSave;
-    private View oneDayView,oneHourView,halfMinView,fifteenMinView,tenMinView,fiveMinView,aboveAlarmButton;
+    private View oneDayView, oneHourView, halfMinView, fifteenMinView, tenMinView, fiveMinView, aboveAlarmButton;
     RemindersAdapter remindersAdapter;
-    ImageButton cancelReminderImageView, eventEditBackButton, eventEditRefreshButton,cancelRepeat;
+    ImageButton cancelReminderImageView, eventEditBackButton, eventEditRefreshButton, cancelRepeat;
     LinearLayout reminderLayout;
     ListView remindersListView;
     int hour, min;
     private static LocalDate date;
     private static LocalTime time;
-   public Date oneDayBeforeDate, oneHourBeforeDate,halfHourBeforeDate,fifteenMinBeforeDate,tenMinBeforeDate,fiveMinBeforeDate;
-    int alarmState,repeatState;
+    public Date oneDayBeforeDate, oneHourBeforeDate, halfHourBeforeDate, fifteenMinBeforeDate, tenMinBeforeDate, fiveMinBeforeDate;
+    int alarmState, repeatState;
     Calendar cReminder = Calendar.getInstance();
     Calendar cRepeat = Calendar.getInstance();
     ArrayList<Date> ok = new ArrayList<>();
     ArrayList<String> testRem = new ArrayList<>();
+    private Activity mCurrentActivity;
+    int repeatCounterInt;
+
 
 
     @Override
@@ -101,7 +107,8 @@ public class EventEdit extends AppCompatActivity {
         eventDateTV.setText(CalendarUtils.formattedDateEventEdit(date));
         btnSave = findViewById(R.id.btnSave);
         alarmState = 0;
-        repeatState =0;
+        repeatState = 0;
+        mCurrentActivity = this;
         createNotificationChannel();
         updateIfEmptyListView();
         hideAdReminderDynamically();
@@ -167,7 +174,7 @@ public class EventEdit extends AppCompatActivity {
         cancelRepeat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                repeatState=0;
+                repeatState = 0;
                 cancelRepeat.setVisibility(View.GONE);
                 addRepeatButton.setText(R.string.repeat_gr);
             }
@@ -190,118 +197,101 @@ public class EventEdit extends AppCompatActivity {
         cancelReminderImageView = findViewById(R.id.cancelReminderImageView);
         eventEditRefreshButton = findViewById(R.id.eventEditRefreshButton);
         remindersListView = findViewById(R.id.remindersListView);
-        aboveAlarmButton=findViewById(R.id.aboveAddRemView);
+        aboveAlarmButton = findViewById(R.id.aboveAddRemView);
         addRepeatButton = findViewById(R.id.addRepeatButton);
         cancelRepeat = findViewById(R.id.cancelRepeat);
 
 
+
     }
 
-    private void hideAdReminderDynamically()
-    {
+    private void hideAdReminderDynamically() {
+        if (mCurrentActivity instanceof Edit_Update_Activity) {
+            ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+            scheduler.scheduleAtFixedRate(new Runnable() {
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // update ui here
 
 
-        Timer t = new Timer();
-        t.scheduleAtFixedRate(
-                new TimerTask() {
-                    public void run() {
-                        runOnUiThread(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                // update ui here
-                                for (int i=0; i<ok.size(); i++) {
-                                    if (ok.get(i) == oneDayBeforeDate  ) {
-                                        oneDayBefore.setVisibility(View.GONE);
-                                        oneDayView.setVisibility(View.GONE);
-                                    }
-
-                                    if (ok.get(i) == oneHourBeforeDate  ) {
-                                        oneHourMinBefore.setVisibility(View.GONE);
-                                        oneHourView.setVisibility(View.GONE);
-
-                                    }
-
-                                    if (ok.get(i) == halfHourBeforeDate  ) {
-                                        halfHourMinBefore.setVisibility(View.GONE);
-                                        halfMinView.setVisibility(View.GONE);
-
-                                    }
-
-                                    if (ok.get(i) == fifteenMinBeforeDate  ) {
-                                        fifteenMinBefore.setVisibility(View.GONE);
-                                        fifteenMinView.setVisibility(View.GONE);
-
-                                    }
-
-                                    if (ok.get(i) == tenMinBeforeDate ) {
-                                        tenMinBefore.setVisibility(View.GONE);
-                                        tenMinView.setVisibility(View.GONE);
-
-                                    }
-
-                                    if (ok.get(i) == fiveMinBeforeDate  ) {
-                                        fiveMinBefore.setVisibility(View.GONE);
-                                        fiveMinView.setVisibility(View.GONE);
-
-                                    }
-
+                            for (int i = 0; i < ok.size(); i++) {
+                                if (ok.get(i).equals(oneDayBeforeDate)) {
+                                    oneDayBefore.setVisibility(View.GONE);
+                                    oneDayView.setVisibility(View.GONE);
                                 }
 
+                                if (ok.get(i).equals(oneHourBeforeDate)) {
+                                    oneHourMinBefore.setVisibility(View.GONE);
+                                    oneHourView.setVisibility(View.GONE);
+                                }
 
+                                if (ok.get(i).equals(halfHourBeforeDate)) {
+                                    halfHourMinBefore.setVisibility(View.GONE);
+                                    halfMinView.setVisibility(View.GONE);
+                                }
+
+                                if (ok.get(i).equals(fifteenMinBeforeDate)) {
+                                    fifteenMinBefore.setVisibility(View.GONE);
+                                    fifteenMinView.setVisibility(View.GONE);
+                                }
+
+                                if (ok.get(i).equals(tenMinBeforeDate)) {
+                                    tenMinBefore.setVisibility(View.GONE);
+                                    tenMinView.setVisibility(View.GONE);
+                                }
+
+                                if (ok.get(i).equals(fiveMinBeforeDate)) {
+                                    fiveMinBefore.setVisibility(View.GONE);
+                                    fiveMinView.setVisibility(View.GONE);
+                                }
                             }
-                        });
+                        }
+                    });
+                }
+            }, 0, 100, TimeUnit.MILLISECONDS); //runs every 100 milliseconds
+        }
 
-                    }
-                }, 0, 100); //runs every three seconds
     }
 
     public void updateIfEmptyListView() {
-        Timer t = new Timer();
-        t.scheduleAtFixedRate(
-                new TimerTask() {
-                    public void run() {
-                        runOnUiThread(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                // update ui here
-                                if (ok.size()==5)
-                                {
-                                    addAlarmButton.setVisibility(View.GONE);
-                                    aboveAlarmButton.setVisibility(View.GONE);
-                                }else
-                                {
-                                    addAlarmButton.setVisibility(View.VISIBLE);
-                                    aboveAlarmButton.setVisibility(View.VISIBLE);
-                                }
-
-
-
-
-                                if (ok.isEmpty()) {
-//                            remindersAdapter = new RemindersAdapter(EventEdit.this, ok);
-//                            remindersAdapter.notifyDataSetChanged();
-                                    remindersListView.setVisibility(View.GONE);
-
-                                } else if (ok.size() == 1) {
-                                    ok.sort((o1, o2) -> o1.compareTo(o2));
-                                    ViewGroup.LayoutParams paramsListView = remindersListView.getLayoutParams();
-                                    paramsListView.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-
-                                    remindersListView.setLayoutParams(paramsListView);
-                                } else {
-                                    ok.sort((o1, o2) -> o1.compareTo(o2));
-                                    ViewGroup.LayoutParams paramsListView = remindersListView.getLayoutParams();
-                                    paramsListView.height = 500;
-
-                                    remindersListView.setLayoutParams(paramsListView);
-                                }
+        if (mCurrentActivity instanceof EventEdit) {
+            ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+            scheduler.scheduleAtFixedRate(new Runnable() {
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // update ui here
+                            if (ok.size() == 5) {
+                                addAlarmButton.setVisibility(View.GONE);
+                                aboveAlarmButton.setVisibility(View.GONE);
+                            } else {
+                                addAlarmButton.setVisibility(View.VISIBLE);
+                                aboveAlarmButton.setVisibility(View.VISIBLE);
                             }
-                        });
 
-                    }
-                }, 0, 100); //runs every three seconds
+                            if (ok.isEmpty()) {
+                                remindersListView.setVisibility(View.GONE);
+                            } else if (ok.size() == 1) {
+                                ok.sort((o1, o2) -> o1.compareTo(o2));
+                                ViewGroup.LayoutParams paramsListView = remindersListView.getLayoutParams();
+                                paramsListView.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                                remindersListView.setLayoutParams(paramsListView);
+                            } else {
+                                ok.sort((o1, o2) -> o1.compareTo(o2));
+                                ViewGroup.LayoutParams paramsListView = remindersListView.getLayoutParams();
+                                paramsListView.height = 500;
+                                remindersListView.setLayoutParams(paramsListView);
+                            }
+                        }
+                    });
+                }
+            }, 0, 100, TimeUnit.MILLISECONDS);
+        }
 
 
     }
@@ -526,7 +516,6 @@ public class EventEdit extends AppCompatActivity {
     public void startAlarm(int alarmId, Calendar cc) {
 
 
-
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         Intent intent = new Intent(EventEdit.this, AlarmReceiver.class);
@@ -552,21 +541,9 @@ public class EventEdit extends AppCompatActivity {
     }
 
 
-    public void cancelAlarm(int alarmId) {
 
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, AlarmReceiver.class);
+    public void addRepeat() {
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, alarmId, intent, 0);
-
-        alarmManager.cancel(pendingIntent);
-        Toast.makeText(this, "Alarm Cancelled", Toast.LENGTH_SHORT).show();
-
-
-    }
-
-    public void addRepeat()
-    {
 
         cRepeat.set(Calendar.YEAR, date.getYear());
         cRepeat.set(Calendar.MONTH, date.getMonth().getValue() - 1);
@@ -587,8 +564,10 @@ public class EventEdit extends AppCompatActivity {
         everyYear = rowView.findViewById(R.id.everyYear);
         customRepeat = rowView.findViewById(R.id.customRepeat);
 
+
+
         final AlertDialog dialog = new AlertDialog.Builder(this).setView(rowView)
-                    .setTitle("Επιλογή Επανάληψης")
+                .setTitle("Επιλογή Επανάληψης")
                 .create();
 
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -597,10 +576,11 @@ public class EventEdit extends AppCompatActivity {
                 everyDay.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        repeatState =1;
+
+                        alertDialogCountRepeat();
+                        repeatState = 1;
                         cancelRepeat.setVisibility(View.VISIBLE);
                         addRepeatButton.setText(R.string.every_day_gr);
-
 
                         dialog.dismiss();
                     }
@@ -609,7 +589,8 @@ public class EventEdit extends AppCompatActivity {
                 everyWeek.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        repeatState =2;
+                        alertDialogCountRepeat();
+                        repeatState = 2;
                         cancelRepeat.setVisibility(View.VISIBLE);
                         addRepeatButton.setText(R.string.every_week_gr);
 
@@ -620,7 +601,8 @@ public class EventEdit extends AppCompatActivity {
                 everyMonth.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        repeatState =3;
+                        alertDialogCountRepeat();
+                        repeatState = 3;
                         cancelRepeat.setVisibility(View.VISIBLE);
                         addRepeatButton.setText(R.string.every_month_gr);
 
@@ -632,7 +614,8 @@ public class EventEdit extends AppCompatActivity {
                 everyYear.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        repeatState =4;
+                        alertDialogCountRepeat();
+                        repeatState = 4;
                         cancelRepeat.setVisibility(View.VISIBLE);
                         addRepeatButton.setText(R.string.every_year_gr);
 
@@ -643,7 +626,8 @@ public class EventEdit extends AppCompatActivity {
                 customRepeat.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        repeatState =5;
+                        alertDialogCountRepeat();
+                        repeatState = 5;
                         dialog.dismiss();
                     }
                 });
@@ -651,17 +635,19 @@ public class EventEdit extends AppCompatActivity {
 
             }
         });
-
+            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    String ok = String.valueOf(repeatCounterInt);
+                    Toast.makeText(EventEdit.this, "repeat counter: " + ok, Toast.LENGTH_SHORT).show();
+                }
+            });
         dialog.show();
-
-
-
 
 
     }
 
-    public void startRepeatingAlarm(int alarmId, Calendar cc, int repeatState)
-    {
+    public void startRepeatingAlarm(int alarmId, Calendar cc, int repeatState) {
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
@@ -682,68 +668,59 @@ public class EventEdit extends AppCompatActivity {
 //        alarmManager.setExact(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(), pendingIntent);
         long startTime = cc.getTimeInMillis();
 
-        if (repeatState==1) {
+        if (repeatState == 1) {
             long intervalDay = AlarmManager.INTERVAL_DAY;
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime,intervalDay , pendingIntent);
-        }else if (repeatState==2)
-        {long intervalWeek = AlarmManager.INTERVAL_DAY * 7;
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime,intervalWeek, pendingIntent);
-        }else if (repeatState==3)
-        {
-            if (date.getMonthValue()!=2)
-            { long intervalMonth = AlarmManager.INTERVAL_DAY*30;
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime,intervalMonth , pendingIntent);
-            }else if (date.getMonthValue()==2 && date.isLeapYear())
-            {
-                long intervalMonthFebLeap = AlarmManager.INTERVAL_DAY*30;
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime,intervalMonthFebLeap , pendingIntent);
-            }else if (date.getMonthValue()==2 && !date.isLeapYear())
-            {
-                long intervalMonthFeb = AlarmManager.INTERVAL_DAY*30;
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime,intervalMonthFeb , pendingIntent);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime, intervalDay, pendingIntent);
+        } else if (repeatState == 2) {
+            long intervalWeek = AlarmManager.INTERVAL_DAY * 7;
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime, intervalWeek, pendingIntent);
+        } else if (repeatState == 3) {
+            if (date.getMonthValue() != 2) {
+                long intervalMonth = AlarmManager.INTERVAL_DAY * 30;
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime, intervalMonth, pendingIntent);
+            } else if (date.getMonthValue() == 2 && date.isLeapYear()) {
+                long intervalMonthFebLeap = AlarmManager.INTERVAL_DAY * 30;
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime, intervalMonthFebLeap, pendingIntent);
+            } else if (date.getMonthValue() == 2 && !date.isLeapYear()) {
+                long intervalMonthFeb = AlarmManager.INTERVAL_DAY * 30;
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime, intervalMonthFeb, pendingIntent);
             }
-        }else if (repeatState==4)
-        {
-            long intervalYear = AlarmManager.INTERVAL_DAY*365;
+        } else if (repeatState == 4) {
+            long intervalYear = AlarmManager.INTERVAL_DAY * 365;
             if (date.isLeapYear()) {
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime, intervalYear, pendingIntent);
-            }else
-            {
-                long intervalYearLeap = AlarmManager.INTERVAL_DAY*366;
+            } else {
+                long intervalYearLeap = AlarmManager.INTERVAL_DAY * 366;
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime, intervalYearLeap, pendingIntent);
             }
-        }else if (repeatState==5)
-        {
+        } else if (repeatState == 5) {
 //            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(), , pendingIntent);
         }
-
 
 
         Toast.makeText(EventEdit.this, "Alarm set at: " + cc.getTime().toString(), Toast.LENGTH_SHORT).show();
     }
 
 
-        public void addAlarm() {
+    public void addAlarm() {
 
 
         LayoutInflater lf = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View rowView = lf.inflate(R.layout.activity_radio_button_for_reminder, null);
 
-         oneDayBefore = rowView.findViewById(R.id.oneDayBefore);
-         oneHourMinBefore = rowView.findViewById(R.id.oneHourMinBefore);
-         halfHourMinBefore = rowView.findViewById(R.id.halfHourMinBefore);
+        oneDayBefore = rowView.findViewById(R.id.oneDayBefore);
+        oneHourMinBefore = rowView.findViewById(R.id.oneHourMinBefore);
+        halfHourMinBefore = rowView.findViewById(R.id.halfHourMinBefore);
         fifteenMinBefore = rowView.findViewById(R.id.fifteenMinBefore);
         tenMinBefore = rowView.findViewById(R.id.tenMinBefore);
-       fiveMinBefore = rowView.findViewById(R.id.fiveMinBefore);
-         customChoice = rowView.findViewById(R.id.customChoice);
-        oneDayView = (View)rowView.findViewById(R.id.oneDayView);
-        oneHourView = (View)rowView.findViewById(R.id.oneHourView);
-        halfMinView = (View)rowView.findViewById(R.id.halfMinView);
-        fifteenMinView =(View) rowView.findViewById(R.id.fifteenMinView);
-        tenMinView =(View) rowView.findViewById(R.id.tenMinView);
-        fiveMinView = (View)rowView.findViewById(R.id.fiveMinView);
-
-
+        fiveMinBefore = rowView.findViewById(R.id.fiveMinBefore);
+        customChoice = rowView.findViewById(R.id.customChoice);
+        oneDayView = (View) rowView.findViewById(R.id.oneDayView);
+        oneHourView = (View) rowView.findViewById(R.id.oneHourView);
+        halfMinView = (View) rowView.findViewById(R.id.halfMinView);
+        fifteenMinView = (View) rowView.findViewById(R.id.fifteenMinView);
+        tenMinView = (View) rowView.findViewById(R.id.tenMinView);
+        fiveMinView = (View) rowView.findViewById(R.id.fiveMinView);
 
 
         cReminder.set(Calendar.YEAR, date.getYear());
@@ -766,13 +743,13 @@ public class EventEdit extends AppCompatActivity {
                 oneDayBefore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        alarmState=1;
+                        alarmState = 1;
 
                         date.minusDays(1);
                         cReminder.setTime(Date.from(date.minusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()));
-                        cReminder.set(Calendar.HOUR_OF_DAY,time.getHour());
-                        cReminder.set(Calendar.MINUTE,time.getMinute());
-                        cReminder.set(Calendar.MILLISECOND,0);
+                        cReminder.set(Calendar.HOUR_OF_DAY, time.getHour());
+                        cReminder.set(Calendar.MINUTE, time.getMinute());
+                        cReminder.set(Calendar.MILLISECOND, 0);
                         oneDayBeforeDate = cReminder.getTime();
                         ok.add(oneDayBeforeDate);
                         dialog.dismiss();
@@ -785,7 +762,7 @@ public class EventEdit extends AppCompatActivity {
                     public void onClick(View v) {
                         alarmState = 1;
                         cReminder.set(Calendar.HOUR_OF_DAY, time.getHour() - 1);
-                        cReminder.set(Calendar.MILLISECOND,0);
+                        cReminder.set(Calendar.MILLISECOND, 0);
                         oneHourBeforeDate = cReminder.getTime();
                         ok.add(oneHourBeforeDate);
 
@@ -798,7 +775,7 @@ public class EventEdit extends AppCompatActivity {
                     public void onClick(View v) {
                         alarmState = 1;
                         cReminder.set(Calendar.MINUTE, time.getMinute() - 30);
-                        cReminder.set(Calendar.MILLISECOND,0);
+                        cReminder.set(Calendar.MILLISECOND, 0);
                         halfHourBeforeDate = cReminder.getTime();
                         ok.add(halfHourBeforeDate);
 
@@ -811,7 +788,7 @@ public class EventEdit extends AppCompatActivity {
                     public void onClick(View v) {
                         alarmState = 1;
                         cReminder.set(Calendar.MINUTE, time.getMinute() - 15);
-                        cReminder.set(Calendar.MILLISECOND,0);
+                        cReminder.set(Calendar.MILLISECOND, 0);
                         fifteenMinBeforeDate = cReminder.getTime();
                         ok.add(fifteenMinBeforeDate);
 
@@ -826,11 +803,10 @@ public class EventEdit extends AppCompatActivity {
 
                         alarmState = 1;
                         cReminder.set(Calendar.MINUTE, time.getMinute() - 10);
-                        cReminder.set(Calendar.MILLISECOND,0);
-                        tenMinBeforeDate=cReminder.getTime();
+                        cReminder.set(Calendar.MILLISECOND, 0);
+                        tenMinBeforeDate = cReminder.getTime();
 
                         ok.add(tenMinBeforeDate);
-
 
 
                         dialog.dismiss();
@@ -843,7 +819,7 @@ public class EventEdit extends AppCompatActivity {
 
                         alarmState = 1;
                         cReminder.set(Calendar.MINUTE, time.getMinute() - 5);
-                        cReminder.set(Calendar.MILLISECOND,0);
+                        cReminder.set(Calendar.MILLISECOND, 0);
                         fiveMinBeforeDate = cReminder.getTime();
                         ok.add(fiveMinBeforeDate);
 
@@ -897,6 +873,37 @@ public class EventEdit extends AppCompatActivity {
 
     }
 
+    private void alertDialogCountRepeat()
+    {
+        final  View viewCountRepeat = getLayoutInflater().inflate(R.layout.repeat_counter, null);
+
+        repeatCounter = viewCountRepeat.findViewById(R.id.repeatCounter);
+
+        AlertDialog.Builder builderCountRepeat = new AlertDialog.Builder(EventEdit.this);
+        builderCountRepeat.setView(viewCountRepeat).setPositiveButton("Ναι", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                repeatCounterInt = Integer.parseInt(repeatCounter.getText().toString());
+                dialog.dismiss();
+            }
+        }).setNegativeButton("Άκυρο", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                addRepeat();
+            }
+        }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                addRepeat();
+            }
+        }).setTitle("Προσθέστε το πλήθος επαναλήψεων.");
+        builderCountRepeat.show();
+    }
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -921,7 +928,7 @@ public class EventEdit extends AppCompatActivity {
         ok.sort((o1, o2) -> o1.compareTo(o2));
 
 
-        myDB.addEvent(eventName, eventComment, date, time, String.valueOf(alarmState),String.valueOf(repeatState));
+        myDB.addEvent(eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState));
         if (ok.size() > 0) {
 
             while (cursor.moveToNext()) {
@@ -937,7 +944,7 @@ public class EventEdit extends AppCompatActivity {
 
         cursorRem.moveToPosition(-1);
         cursor.moveToPosition(-1);
-        while(cursor.moveToNext()) {
+        while (cursor.moveToNext()) {
             while (cursorRem.moveToNext()) {
                 if (cursorRem.getString(1).equals(idForReminder)) {
                     testRem.add(cursorRem.getString(0));
@@ -945,63 +952,45 @@ public class EventEdit extends AppCompatActivity {
                 }
 
 
-
-
             }
 
         }
+        cursor.close();
+        cursorRem.close();
 
-                                for (int i=0; i<testRem.size(); i++) {
-                            startAlarm(Integer.parseInt(testRem.get(i)),CalendarUtils.dateToCalendar(ok.get(i)));
-                        }
+        for (int i = 0; i < testRem.size(); i++) {
+            startAlarm(Integer.parseInt(testRem.get(i)), CalendarUtils.dateToCalendar(ok.get(i)));
+        }
 
         Cursor cursorRepeat = myDB.readAllRepeat();
         Cursor newEventRepeat = myDB.readAllData();
-//        if (repeatState!=0)
-//        {
-//
-//            while(newEventRepeat.moveToNext()) {
-//                newEventRepeat.moveToLast();
-//                cursorRepeat.moveToLast();
-//              String testOk =  DatabaseUtils.dumpCursorToString(cursorRepeat);
-//
-//                idForReminder = newEventRepeat.getString(0);
-//                myDB.addRepeat(idForReminder,cRepeat.getTime());
-//             testOk =   DatabaseUtils.dumpCursorToString(cursorRepeat);
-//                startRepeatingAlarm(Integer.parseInt(cursorRepeat.getString(0)), CalendarUtils.LocalDateToLocalDateTimeToCalendar(date, time), repeatState);
-//            }
-//
-//        }
-//
-        if (repeatState!=0)
-        {
+
+        if (repeatState != 0) {
 
 
-            while (newEventRepeat.moveToNext())
-        {
+            while (newEventRepeat.moveToNext()) {
 
-            if (newEventRepeat.moveToLast())
-            {
-                idForReminder = newEventRepeat.getString(0);
-                myDB.addRepeat(idForReminder,cRepeat.getTime());
-                while (cursorRepeat.moveToNext())
-                {
-                    if (cursorRepeat.getString(1).equals(newEventRepeat.getString(0)))
-                    {
-                        startRepeatingAlarm(Integer.parseInt(cursorRepeat.getString(0)),cRepeat,repeatState);
+                if (newEventRepeat.moveToLast()) {
+                    idForReminder = newEventRepeat.getString(0);
+                    myDB.addRepeat(idForReminder, cRepeat.getTime(),repeatCounterInt);
+                    while (cursorRepeat.moveToNext()) {
+                        if (cursorRepeat.getString(1).equals(newEventRepeat.getString(0))) {
+                            startRepeatingAlarm(Integer.parseInt(cursorRepeat.getString(0)), cRepeat, repeatState);
+                        }
                     }
                 }
+
+
             }
 
 
-
         }
-
-
-        }
-
+        cursorRepeat.close();
+        newEventRepeat.close();
+        myDB.close();
 
         Intent i1 = new Intent(EventEdit.this, MainActivity.class);
+        String ok = String.valueOf(repeatCounterInt);
 
 
         Boolean myBool = true;

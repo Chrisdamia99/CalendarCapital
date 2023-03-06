@@ -4,69 +4,41 @@ import static com.example.calendarcapital.CalendarUtils.daysInMonthArray;
 import static com.example.calendarcapital.CalendarUtils.daysInWeekArray;
 import static com.example.calendarcapital.CalendarUtils.monthYearFromDate;
 import static com.example.calendarcapital.CalendarUtils.selectedDate;
-import static com.example.calendarcapital.CalendarUtils.selectedTime;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import androidx.core.view.GravityCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.transition.Slide;
-
-import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.Dialog;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-
-import android.util.LayoutDirection;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupMenu;
-
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
+
 
 
 //Implements calendaradapter onitemlistener
@@ -280,7 +252,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         hourAdapter.sort((o1, o2) -> o1.events.get(0).getTime().compareTo(o2.events.get(0).getTime()));
         monthListView.setAdapter(hourAdapter);
 
-
+        myDB.close();
     }
 
     private void DialogClickedItemAndDelete() {
@@ -329,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         String id_row = hourAdapter.getItem(position).getEvents().get(0).getId();
-                                        Cursor myDb = myDB.readAllData();
+
                                         Cursor remCursor = myDB.readAllReminder();
                                         Cursor repeatCursor= myDB.readAllRepeat();
                                         myDB.deleteOneRow(id_row);
@@ -343,16 +315,22 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                                             CA.notifyDataSetChanged();
                                             hourAdapter.notifyDataSetChanged();
                                         }
+
+                                        remCursor.close();
                                         while (repeatCursor.moveToNext())
                                         {   if (repeatCursor.getString(1).equals(id_row)){
                                             myDB.deleteOneRowRepeat(repeatCursor.getString(0));
-                                            //ΝΑ ΤΟ ΕΝΕΡΓΟΠΟΙΗΣΩ ΟΤΑΝ ΛΕΙΤΟΥΡΓΟΥΝ ΤΑ ΑΛΑΡΜ ΓΙΑ ΝΑ ΚΑΝΟΥΝ ΚΑΝΣΕΛ, ΜΕ ΑΛΛΗ ΜΕΘΟΔΟ ΚΑΝΣΕΛ_ΑΛΑΡΜ
-//                                            String alarmId = repeatCursor.getString(0);
-//                                            cancelAlarm(Integer.parseInt(alarmId));
+                                            String alarmId = repeatCursor.getString(0);
+                                            cancelRepeat(Integer.parseInt(alarmId));
+                                            CA.notifyDataSetChanged();
+                                            hourAdapter.notifyDataSetChanged();
+
                                         }
                                         CA.notifyDataSetChanged();
                                         hourAdapter.notifyDataSetChanged();
                                         }
+                                        myDB.close();
+                                        repeatCursor.close();
 
 
                                         String previousViewType = stack.peekFirst();
@@ -477,6 +455,17 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         Toast.makeText(this, "Alarm Cancelled", Toast.LENGTH_SHORT).show();
 
 
+    }
+
+    public void cancelRepeat(int alarmId)
+    {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this,RepeatReceiver.class);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,alarmId,intent,0);
+
+        alarmManager.cancel(pendingIntent);
+        Toast.makeText(this, "Repeat Cancelled", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -752,9 +741,9 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         prevMonth.setVisibility(View.GONE);
         nextMonth.setVisibility(View.GONE);
         calendarRecyclerView.setVisibility(View.GONE);
-
-
         hourAdapter.notifyDataSetChanged();
+        myDB.close();
+
 
     }
 

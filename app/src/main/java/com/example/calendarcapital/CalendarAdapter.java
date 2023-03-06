@@ -4,36 +4,23 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.time.LocalDate;
-
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+
 
 class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends the recyclerview that
         // do adapt from class calendarviewholder
 {
     private final ArrayList<LocalDate> days;
+    private final ArrayList<LocalDate> daysForRepeat;
 
     private final OnItemListener onItemListener;
     private MyDatabaseHelper myDB;
@@ -45,6 +32,8 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
         this.onItemListener = onItemListener;
         this.myDB = new MyDatabaseHelper(context.getApplicationContext());
         this.context = context;
+        this.daysForRepeat = new ArrayList<>();
+
     }
 
     @SuppressLint("ResourceAsColor")
@@ -56,6 +45,19 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.calendar_cell, parent, false);
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+
+        int year = CalendarUtils.selectedDate.getYear();
+
+        // Loop through all 365 or 366 days of the year
+//        for (int i = 1; i <= (year % 4 == 0 && year % 100 != 0 || year % 400 == 0 ? 366 : 365); i++) {
+//            // Add the local date to the ArrayList
+//            daysForRepeat.add(LocalDate.ofYearDay(year, i));
+//        }
+        int numDaysInYear = year % 4 == 0 && year % 100 != 0 || year % 400 == 0 ? 366 : 365;
+        for (int i = 1; i <= numDaysInYear; i++) {
+            // Add the local date to the ArrayList
+            daysForRepeat.add(LocalDate.ofYearDay(year, i));
+        }
 
 
         if (days.size() > 15) //month view
@@ -78,6 +80,10 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
         holder.eventDayText.setVisibility(View.GONE);
         holder.eventDayText2.setVisibility(View.GONE);
         holder.eventDayText3.setVisibility(View.GONE);
+        holder.eventRepeatText1.setVisibility(View.GONE);
+        holder.eventRepeatText2.setVisibility(View.GONE);
+        holder.eventRepeatText3.setVisibility(View.GONE);
+
 
 
         final LocalDate date = days.get(position);
@@ -100,11 +106,32 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
 
         }
 
+
+
         myEvents.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
 
         myEvents.sort((o1, o2) -> o2.getTime().compareTo(o1.getTime()));
 
-
+//        for (int i = LocalDate.now().getDayOfYear()-1; i < daysForRepeat.size(); i+=7) {
+//            for (int j = 0; j < myEvents.size(); j++) {
+//
+//                Event event = myEvents.get(j);
+//                if (event.getDate().equals(daysForRepeat.get(i))) {
+//                    if (event.getRepeat().equals("2")) { // check if the event is repeating every 7 days
+//                        LocalDate startDate = event.getDate();
+//                        int daysBetween = (int) startDate.until(date.plusDays(7)).getDays(); // calculate the number of days between the start date and the current date
+//
+//                        if (daysBetween % 7 == 0 && daysBetween >= 0)
+//                        { // check if the current date is a multiple of 7 days after the start date
+//                            holder.eventRepeatText2.setVisibility(View.VISIBLE);
+//                            holder.eventRepeatText2.setText(event.getName());
+//                        }
+//                    }
+//                }
+//            }
+//
+//
+//        }
         cursor.moveToPosition(-1);
         while (cursor.moveToNext()) {
 
@@ -116,12 +143,14 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                         holder.eventDayText.setText(myEvents.get(0).getName());
                         holder.eventDayText.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
                         holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner);
+
+
                     }
+
+
                 } else {
-//                for (int i = myEvents.size()-1; i >= 0; i--) {
                     for (int i = 0; i < myEvents.size() - 1; i++) {
 
-//                        if (myEvents.get(i).getDate().equals(date) && LocalTime.parse(cursor.getString(4)).equals(myEvents.get(i).getTime())) {
                         if (myEvents.get(i).getDate().equals(date) && !myEvents.get(i).getId().equals(myEvents.get(i + 1).getId())
                                 && myEvents.get(i + 1).getDate().equals(date)) {
 
@@ -137,6 +166,8 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                             holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner);
 
                         }
+
+
 
 
                     }
@@ -175,7 +206,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                                             && !Objects.equals(myEvents.get(j).getId(), myEvents.get(k).getId())) {
                                         holder.eventDayText3.setVisibility(View.VISIBLE);
                                         holder.eventDayText3.setText(myEvents.get(k).getName());
-                                        holder.eventDayText3.setText(myEvents.get(k).getName());
+//                                        holder.eventDayText3.setText(myEvents.get(k).getName());
                                         holder.eventDayText3.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
                                         holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner);
 
@@ -192,7 +223,12 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
 
 
             }
+
+
+
         }
+        cursor.close();
+        myDB.close();
 
 
     }

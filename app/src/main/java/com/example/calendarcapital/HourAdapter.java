@@ -78,6 +78,8 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
 
             }
         }
+        cursor.close();
+        myDB.close();
 
 
     }

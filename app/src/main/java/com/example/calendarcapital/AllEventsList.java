@@ -58,7 +58,8 @@ public class AllEventsList {
 
 
         }
-
+    cursor.close();
+        myDB.close();
 
         Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
         return eventsDB;
@@ -104,7 +105,8 @@ public class AllEventsList {
 
         Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
 
-
+        cursor.close();
+        myDB.close();
         return eventsDB;
     }
 

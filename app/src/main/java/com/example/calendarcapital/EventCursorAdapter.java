@@ -27,10 +27,7 @@ import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
+
 
 
 public class EventCursorAdapter extends CursorAdapter {
@@ -186,34 +183,10 @@ public class EventCursorAdapter extends CursorAdapter {
 
 
         }
+        cursor.close();
+        cursorRem.close();
+        myDb.close();
 
-//        cursor.close();
-//        cursorRem.close();
-        Cursor secMyDb= myDb.readAllData();
-        Timer t = new Timer();
-
-
-//        t.scheduleAtFixedRate(new TimerTask() {
-//            @Override
-//            public void run() {
-//                cursor.moveToPosition(-1);
-//               String testBd= DatabaseUtils.dumpCursorToString(cursor);
-//                while (cursor.moveToNext())
-//                {
-//                    if (cursor.getString(5).equals("0"))
-//                    {
-//
-//                        alarmInfo.setVisibility(View.VISIBLE);
-////                        view.invalidate();
-//
-//
-//
-//                    }
-//
-//                }
-//
-//            }
-//        }, 0, 100);
 
 
 

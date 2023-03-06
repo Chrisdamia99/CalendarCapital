@@ -10,32 +10,31 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
+
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 public class AlarmReceiver extends BroadcastReceiver {
-    Vibrator v;
-    String event;
-    String comment;
-    String text;
 
-
+    private String event;
+    private String comment;
+    private String text;
+    private Ringtone r;
+    private Vibrator vibrator;
+    private boolean isNotificationDeleted;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
         Bundle b = intent.getExtras();
-
         event = "";
         comment = "";
+        isNotificationDeleted = false;
 
-        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         if (vibrator != null && vibrator.hasVibrator()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 vibrator.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE));
@@ -45,58 +44,60 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
 
         if (b != null) {
-
-            event = (String) b.get("title");
-            comment = (String) b.get("comment");
-
+            event = b.getString("title");
+            comment = b.getString("comment");
             text = "Reminder for the Event: " + "\n" + event + "\n" + "Comments: " + "\n" + comment;
         }
 
+        Intent activityIntent = new Intent(context, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, activityIntent, 0);
 
-                Intent activityIntent = new Intent(context, MainActivity.class);
+        Intent stopRingtoneIntent = new Intent(context, StopRingtoneReceiver.class);
+        PendingIntent pendingStopRingtoneIntent = PendingIntent.getBroadcast(context, 0, stopRingtoneIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        Log.d("AlarmReceiver", "pendingStopRingtoneIntent created");
 
-                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, activityIntent, 0);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "myandroid")
+                .setSmallIcon(R.drawable.alarm)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentTitle(event)
+                .setContentText(text)
+                .setAutoCancel(true)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
+                .setContentIntent(pendingIntent)
+                .setDeleteIntent(pendingStopRingtoneIntent)
+                .setDefaults(NotificationCompat.DEFAULT_ALL);
 
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+        notificationManagerCompat.notify(123, builder.build());
 
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "myandroid")
-                        .setSmallIcon(R.drawable.alarm)
-                        .setPriority(2)
-                        .setContentTitle(event)
-                        .setContentText(text)
-                        .setAutoCancel(true)
-                        .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(text))
-                        .setContentIntent(pendingIntent)
-                        .setDeleteIntent(pendingIntent)
-                        .setDefaults(NotificationCompat.DEFAULT_ALL);
+        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        r = RingtoneManager.getRingtone(context, notification);
+        r.play();
 
-                NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-                notificationManagerCompat.notify(123, builder.build());
-
-                Notification notification1 = builder.build();
-                notification1.flags |= Notification.FLAG_AUTO_CANCEL;
-
-
-//                v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-//                long[] pattern = {0, 300, 1000};
-
-
-                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-
-                Ringtone r = RingtoneManager.getRingtone(context, notification);
-                r.play();
-
-                if (r.isPlaying()) {
-                    ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-                    executorService.schedule(() -> r.stop(), 5, TimeUnit.SECONDS);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isNotificationDeleted) {
+                    stopRingtone();
                 }
-
-
             }
-//        };
-//        t.schedule(tm, timeForAlarm);
-
-
+        }, 1000);
     }
 
-//}
+    public void stopRingtone() {
+        if (r != null && r.isPlaying()) {
+            r.stop();
+        }
+        if (vibrator != null) {
+            vibrator.cancel();
+        }
+    }
+
+
+    public void onNotificationDeleted(Context context, int notificationId, int reason) {
+        isNotificationDeleted = true;
+        stopRingtone();
+    }
+}
+
+

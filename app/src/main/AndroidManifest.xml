@@ -58,6 +58,15 @@
             android:enabled="true"
             android:exported="true"
             android:label="RepeatReceiver"/>
+
+        <receiver android:name=".StopRingtoneReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="STOP_RINGTONE" />
+            </intent-filter>
+        </receiver>
+
+
     </application>
 
 </manifest>

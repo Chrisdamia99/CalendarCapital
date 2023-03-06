@@ -90,3 +90,27 @@
 //                popupMenu.show();
 //            }
 //        });
+
+
+-------------------Loop for repeat----------------
+         if (cursor.getString(6).equals("1"))
+                        {
+                            for (int j=0; j<days.size(); j++)
+                            {
+                                if (days.get(j).equals(date)) {
+                                    holder.eventRepeatText1.setVisibility(View.VISIBLE);
+                                    holder.eventRepeatText1.setText(myEvents.get(0).getName());
+                                }
+                            }
+                        }
+                        if (cursor.getString(6).equals("2"))
+                        {
+
+                                if (days.get(i).equals(date)) {
+                                    for (int j=0; j<days.size(); j=j+6) {
+                                        holder.eventRepeatText2.setVisibility(View.VISIBLE);
+                                        holder.eventRepeatText2.setText(myEvents.get(0).getName());
+                                    }
+                                }
+
+                        }

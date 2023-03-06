@@ -66,10 +66,7 @@ public class RemindersAdapter extends ArrayAdapter<Date> {
 
     public void setRemindersVol2(Date reminder, TextView reminderTV, ImageButton cancelBTN,  int position) {
         String testStr = CalendarUtils.dateForReminder(reminder);
-        Cursor myDbCursor = myDB.readAllData();
         Cursor remCursor = myDB.readAllReminder();
-        EventCursorAdapter EC  = new EventCursorAdapter(getContext(),myDbCursor);
-        View view1 = LayoutInflater.from(getContext()).inflate(R.layout.show_event_from_listview, null);
         Cursor secMyDbCursor = myDB.readAllData();
         Cursor secMyRemCursor = myDB.readAllReminder();
         reminderTV.setText(testStr);
@@ -89,26 +86,24 @@ public class RemindersAdapter extends ArrayAdapter<Date> {
                         RemindersAdapter.this.notifyDataSetChanged();
                     }
                 }
+                remCursor.close();
                 myTest.remove(position);
 
                 secMyDbCursor.moveToPosition(-1);
                 secMyRemCursor.moveToPosition(-1);
-                String dbCr = DatabaseUtils.dumpCursorToString(secMyDbCursor);
-                String remCr = DatabaseUtils.dumpCursorToString(secMyRemCursor);
+
                 while (secMyDbCursor.moveToNext()) {
                     if (secMyRemCursor.getCount() == 0) {
                         myDB.updateAlarmNum(secMyDbCursor.getString(0), "0");
 
                         RemindersAdapter.this.notifyDataSetChanged();
-                    EC.notifyDataSetChanged();
+
 
                     }
                     while (secMyRemCursor.moveToNext()) {
-                        dbCr = DatabaseUtils.dumpCursorToString(secMyDbCursor);
-                        remCr = DatabaseUtils.dumpCursorToString(secMyRemCursor);
+
                         if (secMyDbCursor.getString(5).equals("1")) {
-                            dbCr = DatabaseUtils.dumpCursorToString(secMyDbCursor);
-                            remCr = DatabaseUtils.dumpCursorToString(secMyRemCursor);
+
                             if (!secMyDbCursor.getString(0).equals(secMyRemCursor.getString(1)) || secMyRemCursor.getCount() == 0) {
                                 myDB.updateAlarmNum(secMyDbCursor.getString(0), "0");
                             }
@@ -118,7 +113,11 @@ public class RemindersAdapter extends ArrayAdapter<Date> {
 
 
 
+
                 RemindersAdapter.this.notifyDataSetChanged();
+                secMyDbCursor.close();
+                secMyRemCursor.close();
+                myDB.close();
 
 
             }

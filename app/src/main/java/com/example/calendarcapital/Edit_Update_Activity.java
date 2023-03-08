@@ -1060,7 +1060,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
         if (repeatState != 0) {
             while (newEventRepeat.moveToNext()) {
                 if (newEventRepeat.moveToLast()) {
-                    myDB.addRepeat(id_row, cRepeat.getTime(),repeatCounterInt);
+//                    myDB.addRepeat(id_row, cRepeat.getTime(),repeatCounterInt);
+                    myDB.addRepeat(id_row, cRepeat.getTime());
                     while (cursorRepeat.moveToNext()) {
                         if (cursorRepeat.getString(1).equals(newEventRepeat.getString(0))) {
                             startRepeatingAlarm(Integer.parseInt(cursorRepeat.getString(1)), cRepeat, repeatState);

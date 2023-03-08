@@ -32,6 +32,7 @@ public class RepeatReceiver extends BroadcastReceiver {
     private boolean isNotificationDeleted;
 
 
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -55,7 +56,6 @@ public class RepeatReceiver extends BroadcastReceiver {
 
             event = (String) b.get("title");
             comment = (String) b.get("comment");
-
             text = "Reminder for the Event: " + "\n" + event + "\n" + "Comments: " + "\n" + comment;
         }
 

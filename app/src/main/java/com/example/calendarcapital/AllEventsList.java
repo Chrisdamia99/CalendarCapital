@@ -29,6 +29,7 @@ public class AllEventsList {
     public static ArrayList<HourEvent> hourEventListFromDatabase(Context context, MyDatabaseHelper myDB) {
         ArrayList<HourEvent> eventsDB = new ArrayList<>();
         Cursor cursor = myDB.readAllData();
+        Cursor cursorRepeat = myDB.readAllRepeat();
 
 
         while (cursor.moveToNext()) {
@@ -50,6 +51,16 @@ public class AllEventsList {
                 eventsDB.add(hourEventDB);
 
                 Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
+                if (!repeat.equals("0"))
+                {
+                    if (CalendarUtils.formattedDate(selectedDate).equals(CalendarUtils.formattedDate(dateDB))) {
+                        eventarrayDB.add(eventDB);
+
+                        eventsDB.add(hourEventDB);
+
+                        Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
+                    }
+                }
 
             }
 
@@ -58,6 +69,8 @@ public class AllEventsList {
 
 
         }
+
+
     cursor.close();
         myDB.close();
 

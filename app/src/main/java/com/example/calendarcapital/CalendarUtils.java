@@ -233,6 +233,16 @@ public class CalendarUtils {
         return localDate;
     }
 
+    public static LocalDate stringToDateRepeat(String date)
+    {
+        Locale locale = new Locale("el", "GR");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", locale);
+
+        LocalDate localDate = LocalDate.parse(date, formatter);
+
+        return localDate;
+    }
+
     public static String dateForReminder(Date date) {
         return (String) android.text.format.DateFormat.format("yyyy-MM-dd kk:mm:ss a", date);
     }

@@ -218,8 +218,13 @@
                         android:visibility="gone"
                         android:backgroundTint="@color/primaryLightTirquiso"
                         android:background="@drawable/cancel_reminder" />
-                </LinearLayout>
 
+                </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:id="@+id/repeatCountTv"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
 
                 <View
                     android:layout_width="match_parent"

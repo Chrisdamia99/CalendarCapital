@@ -42,7 +42,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ID_REPEAT ="_id";
     private static final String COLUMN_EVENT_REPEAT_ID ="event_repeat_id";
     private static final String COLUMN_REPEAT ="repeat_date";
-    private static final String COLUMN_REPEAT_COUNT = "repeat_count";
+
 
 
 
@@ -70,8 +70,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         String query_repeat ="CREATE TABLE " + TABLE_NAME_REPEAT +
                 " (" + COLUMN_ID_REPEAT + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_EVENT_REPEAT_ID + " TEXT, " +
-                COLUMN_REPEAT + " TEXT, " +
-                COLUMN_REPEAT_COUNT + " TEXT);";
+                COLUMN_REPEAT  + " TEXT);";
 
         db.execSQL(query);
         db.execSQL(query_reminder);
@@ -129,13 +128,12 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    void addRepeat(String event_repeat_id, Date repeat, int count_repeat)
+    void addRepeat(String event_repeat_id, Date repeat)
     {  SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
         cv.put(COLUMN_EVENT_REPEAT_ID, event_repeat_id);
         cv.put(COLUMN_REPEAT, String.valueOf(repeat));
-        cv.put(COLUMN_REPEAT_COUNT,String.valueOf(count_repeat));
 
         long result = db.insert(TABLE_NAME_REPEAT, null, cv);
         if (result == -1) {

@@ -865,14 +865,14 @@ public class EventEdit extends AppCompatActivity {
 
                 if (repeatState == 1) {
 
-                    for (int i = 0; i < repeatCounterInt-1; i++) {
+                    for (int i = 0; i < repeatCounterInt; i++) {
                         cRepeat.add(Calendar.DAY_OF_YEAR,1);
                         repeats_list.add(cRepeat.getTime());
 
                     }
                 } else if (repeatState == 2) {
 
-                    for (int i = 0; i < repeatCounterInt-1; i++) {
+                    for (int i = 0; i < repeatCounterInt; i++) {
 
                         cRepeat.add(Calendar.DAY_OF_YEAR,7);
                         repeats_list.add(cRepeat.getTime());
@@ -880,7 +880,7 @@ public class EventEdit extends AppCompatActivity {
 
 
                 } else if (repeatState == 3) {
-                    for (int i = 0; i < repeatCounterInt-1; i++) {
+                    for (int i = 0; i < repeatCounterInt; i++) {
 
                         cRepeat.add(Calendar.MONTH,1);
                         repeats_list.add(cRepeat.getTime());
@@ -888,7 +888,7 @@ public class EventEdit extends AppCompatActivity {
 
                 } else if (repeatState == 4) {
 
-                    for (int i = 0; i < repeatCounterInt-1; i++) {
+                    for (int i = 0; i < repeatCounterInt; i++) {
 
                         cRepeat.add(Calendar.YEAR,1);
                         repeats_list.add(cRepeat.getTime());

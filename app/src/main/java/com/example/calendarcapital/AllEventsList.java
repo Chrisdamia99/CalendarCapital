@@ -51,16 +51,16 @@ public class AllEventsList {
                 eventsDB.add(hourEventDB);
 
                 Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
-                if (!repeat.equals("0"))
-                {
-                    if (CalendarUtils.formattedDate(selectedDate).equals(CalendarUtils.formattedDate(dateDB))) {
-                        eventarrayDB.add(eventDB);
-
-                        eventsDB.add(hourEventDB);
-
-                        Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
-                    }
-                }
+//                if (!repeat.equals("0"))
+//                {
+//                    if (CalendarUtils.formattedDate(selectedDate).equals(CalendarUtils.formattedDate(dateDB))) {
+//                        eventarrayDB.add(eventDB);
+//
+//                        eventsDB.add(hourEventDB);
+//
+//                        Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
+//                    }
+//                }
 
             }
 

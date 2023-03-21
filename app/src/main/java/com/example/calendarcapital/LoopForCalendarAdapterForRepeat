@@ -1,0 +1,247 @@
+
+
+
+//                    if (dayOfCalendarRepeat.get(1).getEvent_id().equals(myEvents.get(e).getId())) {
+//                        holder.eventRepeatText2.setVisibility(View.VISIBLE);
+//                        holder.eventRepeatText2.setText(myEvents.get(e).getName());
+//                        holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
+//                    }
+
+
+//                else if (dayOfCalendarRepeat.size()==3)
+//                {
+//                    if (dayOfCalendarRepeat.get(0).getEvent_id().equals(myEvents.get(e).getId())) {
+//                        holder.eventRepeatText1.setVisibility(View.VISIBLE);
+//                        holder.eventRepeatText1.setText(myEvents.get(e).getName());
+//                        holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+//                    }
+//                    if (dayOfCalendarRepeat.get(1).getEvent_id().equals(myEvents.get(e).getId())) {
+//                        holder.eventRepeatText2.setVisibility(View.VISIBLE);
+//                        holder.eventRepeatText2.setText(myEvents.get(e).getName());
+//                        holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
+//                    }
+//                    if (dayOfCalendarRepeat.get(2).getEvent_id().equals(myEvents.get(e).getId())) {
+//                        holder.eventRepeatText2.setVisibility(View.VISIBLE);
+//                        holder.eventRepeatText2.setText(myEvents.get(e).getName());
+//                        holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
+//                    }
+//                }
+
+
+
+//            for (int dd=0; dd<daysForRepeat.size(); dd++)
+//        {
+//            for (int e=0; e<myEvents.size(); e++)
+//            {
+//                for (int r=0; r<myRepeats.size(); r++)
+//                {
+//                    if (myRepeats.get(r).getRepeatDate().equals(daysForRepeat.get(dd)))
+//                    {
+//                        dayOfCalendarRepeat.add(myRepeats.get(r));
+//
+//                    }
+//
+//                    if (dayOfCalendarRepeat.size()==1)
+//                    {
+//                        if (dayOfCalendarRepeat.get(0).getEvent_id().equals(myEvents.get(e).getId())) {
+//                            holder.eventRepeatText1.setVisibility(View.VISIBLE);
+//                            holder.eventRepeatText1.setText(myEvents.get(e).getName());
+//                            holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                            holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+//                        }
+//                    }else if (dayOfCalendarRepeat.size()==2)
+//                    {
+//                        if (dayOfCalendarRepeat.get(0).getEvent_id().equals(myEvents.get(e).getId())) {
+//                            holder.eventRepeatText1.setVisibility(View.VISIBLE);
+//                            holder.eventRepeatText1.setText(myEvents.get(e).getName());
+//                            holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                            holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+//                        }
+//                        if (dayOfCalendarRepeat.get(1).getEvent_id().equals(myEvents.get(e).getId())) {
+//                            holder.eventRepeatText2.setVisibility(View.VISIBLE);
+//                            holder.eventRepeatText2.setText(myEvents.get(e).getName());
+//                            holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                            holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
+//                        }
+//
+//
+//                    }
+//                    else if (dayOfCalendarRepeat.size()==3)
+//                    {
+//                        if (dayOfCalendarRepeat.get(0).getEvent_id().equals(myEvents.get(e).getId())) {
+//                            holder.eventRepeatText1.setVisibility(View.VISIBLE);
+//                            holder.eventRepeatText1.setText(myEvents.get(e).getName());
+//                            holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                            holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+//                        }
+//                        if (dayOfCalendarRepeat.get(1).getEvent_id().equals(myEvents.get(e).getId())) {
+//                            holder.eventRepeatText2.setVisibility(View.VISIBLE);
+//                            holder.eventRepeatText2.setText(myEvents.get(e).getName());
+//                            holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                            holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
+//                        }
+//                        if (dayOfCalendarRepeat.get(2).getEvent_id().equals(myEvents.get(e).getId())) {
+//                            holder.eventRepeatText2.setVisibility(View.VISIBLE);
+//                            holder.eventRepeatText2.setText(myEvents.get(e).getName());
+//                            holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                            holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
+//                        }
+//                    }
+//                    if (myRepeats.get(r).getRepeatDate().equals(myRepeatDate) && myRepeats.get(r).getEvent_id().equals(myEvents.get(e).getId()))
+//                    {
+//                        holder.eventRepeatText1.setVisibility(View.VISIBLE);
+//                        holder.eventRepeatText1.setText(myEvents.get(e).getName());
+//                        holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+//                    }
+//
+//                    if (myRepeats.get(r).getRepeatDate().equals(myRepeatDate) && myRepeats.get(r).getEvent_id().equals(myEvents.get(e).getId())
+//                     && !holder.eventRepeatText1.getText().toString().isEmpty())
+//                    {
+//                        holder.eventRepeatText2.setVisibility(View.VISIBLE);
+//                        holder.eventRepeatText2.setText(myEvents.get(e+1).getName());
+//                        holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
+//                    }
+//                    if (myRepeats.get(r).getRepeatDate().equals(myRepeatDate) && myRepeats.get(r).getEvent_id().equals(myEvents.get(e).getId())
+//                            && !holder.eventRepeatText2.getText().toString().isEmpty())
+//                    {
+//                        holder.eventRepeatText3.setVisibility(View.VISIBLE);
+//                        holder.eventRepeatText3.setText(myEvents.get(e+2).getName());
+//                        holder.eventRepeatText3.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                        holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner);
+//                    }
+//                    if (myRepeats.get(r).getRepeatDate().equals(myRepeatDate))
+//                    {
+//                        holder.eventRepeatText1.setVisibility(View.VISIBLE);
+//                        holder.eventRepeatText1.setText(myEvents.get(e).getName());
+//                        holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+//                    }
+//                    for (int i = 0; i < myRepeatsSameDate.size(); i++)
+//                    {
+//                        if (myRepeats.get(r).getRepeatDate().equals(myRepeatDate) && !myRepeats.get(r).getEvent_id().equals(myRepeatsSameDate.get(i).getEvent_id())
+//                                && myRepeatsSameDate.get(i).getEvent_id().equals(myEvents.get(e).getId())) {
+//                            holder.eventRepeatText2.setVisibility(View.VISIBLE);
+//                            holder.eventRepeatText2.setText(myEvents.get(e).getName());
+//                            holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                            holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+
+
+
+
+//        for (int dd = 0; dd < daysForRepeat.size(); dd++) {
+//            for (int e = 0; e < myEvents.size(); e++) {
+//                for (int r = 0; r < myRepeats.size(); r++) {
+//                    for (int i = 0; i < myRepeatsSameDate.size(); i++)
+//                    {
+//
+//                        if (myEvents.get(e).getId().equals(myRepeats.get(r).getEvent_id())) {
+//
+//                            if (myRepeats.get(r).getRepeatDate().equals(myRepeatDate)) {
+//                                holder.eventRepeatText1.setVisibility(View.VISIBLE);
+//                                holder.eventRepeatText1.setText(myEvents.get(e).getName());
+//                                holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                                holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+//
+//
+//                                if (myRepeatsSameDate.get(i).getRepeatDate().equals(myRepeats.get(r).getRepeatDate())) {
+//                                    if (myEvents.get(e).getId().equals(myRepeatsSameDate.get(i).getEvent_id())) {
+//                                        holder.eventRepeatText2.setVisibility(View.VISIBLE);
+//                                        holder.eventRepeatText2.setText(myEvents.get(e).getName());
+//                                        holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
+//                                    }
+//                                }
+//
+//
+//                            }
+//
+//                        }
+//                    }
+//                }
+//            }
+//        }
+
+
+---------------------------------------------------------21/03/2023--------------------------------------------------
+
+//        for (int dd=0; dd<daysForRepeat.size(); dd++)
+//        {
+//            for (int mr=0; mr<myRepeats.size(); mr++)
+//            {
+//                if (daysForRepeat.get(dd).equals(myRepeats.get(mr).getRepeatDate()))
+//                {
+//                    for (int me=0; me<myEvents.size(); me++)
+//                    {
+//                        if (myRepeats.get(mr).getEvent_id().equals(myEvents.get(me).getId()))
+//                        {
+//                            holder.eventRepeatText1.setVisibility(View.VISIBLE);
+//                        holder.eventRepeatText1.setText(myEvents.get(me).getName());
+//                        holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+//                        }
+//                    }
+//                }
+//            }
+//
+//
+//
+//        }
+
+
+//        for (int dd=0; dd<daysForRepeat.size(); dd++)
+//        {
+//
+//
+//            for (int r=0; r<myRepeats.size(); r++)
+//            {
+//                if (myRepeats.get(r).getRepeatDate().equals(daysForRepeat.get(dd)))
+//                {
+//                    dayOfCalendarRepeat.add(myRepeats.get(r));
+//
+//                }
+//
+//            }
+//
+//
+//
+//            for (int e=0; e<myEvents.size()-1; e++)
+//            {
+//                if (dayOfCalendarRepeat.size()==1)
+//                {
+//                    if (dayOfCalendarRepeat.get(0).getEvent_id().equals(myEvents.get(e).getId())) {
+//                        holder.eventRepeatText1.setVisibility(View.VISIBLE);
+//                        holder.eventRepeatText1.setText(myEvents.get(e).getName());
+//                        holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+//                    }
+//                }else
+//                    if (dayOfCalendarRepeat.size()==2)
+//                {
+//                    if (dayOfCalendarRepeat.get(0).getEvent_id().equals(myEvents.get(e).getId())) {
+//                        holder.eventRepeatText1.setVisibility(View.VISIBLE);
+//                        holder.eventRepeatText1.setText(myEvents.get(e).getName());
+//                        holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+//                    }else {
+//                        holder.eventRepeatText2.setVisibility(View.VISIBLE);
+//                        holder.eventRepeatText2.setText(myEvents.get(e).getName());
+//                        holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
+//                    }
+//
+//
+//                }
+//
+//            }
+//        }

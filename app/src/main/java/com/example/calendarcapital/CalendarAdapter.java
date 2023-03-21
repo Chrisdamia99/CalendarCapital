@@ -190,14 +190,7 @@ for (int i=0; i< myRepeats.size(); i++)
     }
 }
 
-//        for (int samR=0; samR<myRepeats.size(); samR++)
-//        {
-//            for (int samR2=samR+1; samR2<myRepeats.size()-1; samR2++)
-//            if (myRepeats.get(samR).getRepeatDate().equals(myRepeats.get(samR2).getRepeatDate()))
-//            {
-//                myRepeatsSameDate.add(myRepeats.get(samR));
-//            }
-//        }
+
         myRepeats.size();
         myRepeatsSameDate.size();
 
@@ -246,54 +239,46 @@ for (int i=0; i< myRepeats.size(); i++)
 
 
         }
+        cursor.moveToPosition(-1);
+        while (cursor.moveToNext()) {
+
+            List<String> eventNamesForRepeats = new ArrayList<>();
+            for (Event event : myEvents) {
+                for (Repeat repeat : myRepeats) {
+                    if (repeat.getRepeatDate().equals(myRepeatDate)) {
+                        eventNamesForRepeats.add(event.getName());
+                    }
+                }
+            }
+
+            int numEvents = eventNamesForRepeats.size();
+            if (numEvents >= 1) {
+                holder.eventRepeatText1.setVisibility(View.VISIBLE);
+                holder.eventRepeatText1.setText(eventNamesForRepeats.get(0));
+                holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+                holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+            }
+
+            if (numEvents >= 2) {
+                holder.eventRepeatText2.setVisibility(View.VISIBLE);
+                holder.eventRepeatText2.setText(eventNamesForRepeats.get(1));
+                holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+                holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
+            }
+
+            if (numEvents >= 3) {
+                holder.eventRepeatText3.setVisibility(View.VISIBLE);
+                holder.eventRepeatText3.setText(eventNamesForRepeats.get(2));
+                holder.eventRepeatText3.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+                holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner);
+            }
+
+
+
+        }
         cursor.close();
         myDB.close();
 
-
-        for (int dd=0; dd<daysForRepeat.size(); dd++)
-        {
-            dayOfCalendarRepeat.clear();
-
-
-            for (int r=0; r<myRepeats.size(); r++)
-            {
-                if (myRepeats.get(r).getRepeatDate().equals(daysForRepeat.get(dd)))
-                {
-                    dayOfCalendarRepeat.add(myRepeats.get(r));
-
-                }
-
-            }
-            for (int e=0; e<myEvents.size()-1; e++)
-            {
-//                if (dayOfCalendarRepeat.size()==1)
-//                {
-//                    if (dayOfCalendarRepeat.get(0).getEvent_id().equals(myEvents.get(e).getId())) {
-//                        holder.eventRepeatText1.setVisibility(View.VISIBLE);
-//                        holder.eventRepeatText1.setText(myEvents.get(e).getName());
-//                        holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-//                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
-//                    }
-//                }else
-                    if (dayOfCalendarRepeat.size()==2)
-                {
-                    if (dayOfCalendarRepeat.get(0).getEvent_id().equals(myEvents.get(e).getId())) {
-                        holder.eventRepeatText1.setVisibility(View.VISIBLE);
-                        holder.eventRepeatText1.setText(myEvents.get(e).getName());
-                        holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
-                    }else {
-                        holder.eventRepeatText2.setVisibility(View.VISIBLE);
-                        holder.eventRepeatText2.setText(myEvents.get(e).getName());
-                        holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
-                    }
-
-
-                }
-
-            }
-        }
 
 
     }

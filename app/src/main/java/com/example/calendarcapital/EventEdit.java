@@ -40,6 +40,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 
@@ -67,6 +68,8 @@ public class EventEdit extends AppCompatActivity {
     ArrayList<String> list_reminders_for_db = new ArrayList<>();
     ArrayList<String> list_repeat_for_db = new ArrayList<>();
     private Activity mCurrentActivity;
+    private ScheduledExecutorService executorService;
+    private ScheduledFuture<?> scheduledFuture;
     int repeatCounterInt;
 
 
@@ -84,9 +87,9 @@ public class EventEdit extends AppCompatActivity {
         alarmState = 0;
         repeatState = 0;
         mCurrentActivity = this;
-        createNotificationChannel();
         updateIfEmptyListView();
-        hideAdReminderDynamically();
+
+        createNotificationChannel();
 
 
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -183,9 +186,9 @@ public class EventEdit extends AppCompatActivity {
     }
 
     private void hideAdReminderDynamically() {
-        if (mCurrentActivity instanceof Edit_Update_Activity) {
-            ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-            scheduler.scheduleAtFixedRate(new Runnable() {
+        if (mCurrentActivity instanceof EventEdit) {
+            executorService = Executors.newSingleThreadScheduledExecutor();
+            scheduledFuture = executorService.scheduleAtFixedRate(new Runnable() {
                 @Override
                 public void run() {
                     runOnUiThread(new Runnable() {
@@ -286,7 +289,6 @@ public class EventEdit extends AppCompatActivity {
 
                     eventDateTV.setText(CalendarUtils.formattedDateEventEdit(myDD));
 
-//                    eventDateTV.setText("Date: " + dayOfMonth + " " + str + " " + year);
 
                 } else if (dayOfMonth < 10 && trueMonth < 10) {
                     String strMonth = String.format("%02d", trueMonth);
@@ -294,7 +296,6 @@ public class EventEdit extends AppCompatActivity {
 
                     LocalDate myDD = LocalDate.of(year, trueMonth, dayOfMonth);
                     eventDateTV.setText(CalendarUtils.formattedDateEventEdit(myDD));
-//                    eventDateTV.setText("Date: " + strDay + " " + strMonth + " " + year);
                 } else if (dayOfMonth < 10 && trueMonth >= 10) {
                     String strDay = String.format("%02d", dayOfMonth);
 
@@ -303,14 +304,12 @@ public class EventEdit extends AppCompatActivity {
                     eventDateTV.setText(CalendarUtils.formattedDateEventEdit(myDD));
 
 
-//                    eventDateTV.setText("Date: " + strDay + " " + trueMonth + " " + year);
 
                 } else {
 
                     LocalDate myDD = LocalDate.of(year, trueMonth, dayOfMonth);
                     eventDateTV.setText(CalendarUtils.formattedDateEventEdit(myDD));
 
-//                    eventDateTV.setText("Date: " + dayOfMonth + " " + trueMonth + " " + year);
                 }
                 date = LocalDate.of(year, trueMonth, dayOfMonth);
 
@@ -392,17 +391,15 @@ public class EventEdit extends AppCompatActivity {
                 if (hour < 10 && min < 10) {
                     String hourStr = String.format("%02d", hour);
                     String minStr = String.format("%02d", min);
-                    String allTime = hourStr + ":" + minStr;
+
 
                     cReminder.set(Calendar.HOUR_OF_DAY, hour);
                     cReminder.set(Calendar.MINUTE, min);
                     cReminder.set(Calendar.SECOND, 0);
                     cReminder.set(Calendar.MILLISECOND, 0);
-//                    reminderLayout.setVisibility(View.VISIBLE);
                     fixedFromChangeTime = cReminder;
 
                     reminders_list.add(fixedFromChangeTime.getTime());
-//                    reminderInfoTV.setText("Η υπενθύμιση ορίστηκε στις: " + cReminder.getTime().toString().trim());
 
 
                 } else if (hour < 10 && min >= 10) {
@@ -417,10 +414,7 @@ public class EventEdit extends AppCompatActivity {
 
                     reminders_list.add(fixedFromChangeTime.getTime());
 
-//                    reminderLayout.setVisibility(View.VISIBLE);
 
-
-//                    reminderInfoTV.setText("Η υπενθύμιση ορίστηκε στις: " + cReminder.getTime().toString().trim());
                 } else if (hour >= 10 && min < 10) {
                     String minStr = String.format("%02d", min);
 
@@ -433,10 +427,7 @@ public class EventEdit extends AppCompatActivity {
                     fixedFromChangeTime = cReminder;
                     reminders_list.add(fixedFromChangeTime.getTime());
 
-//                    reminderLayout.setVisibility(View.VISIBLE);
-//
-//
-//                    reminderInfoTV.setText("Η υπενθύμιση ορίστηκε στις: " + cReminder.getTime().toString().trim());
+
 
 
                 } else {
@@ -450,9 +441,7 @@ public class EventEdit extends AppCompatActivity {
 
                     reminders_list.add(fixedFromChangeTime.getTime());
 
-//                    reminderLayout.setVisibility(View.VISIBLE);
-//
-//                    reminderInfoTV.setText("Η υπενθύμιση ορίστηκε στις: " + cReminder.getTime().toString().trim());
+
 
 
                 }
@@ -696,6 +685,7 @@ public class EventEdit extends AppCompatActivity {
         tenMinView = (View) rowView.findViewById(R.id.tenMinView);
         fiveMinView = (View) rowView.findViewById(R.id.fiveMinView);
 
+        hideAdReminderDynamically();
 
         cReminder.set(Calendar.YEAR, date.getYear());
         cReminder.set(Calendar.MONTH, date.getMonth().getValue() - 1);

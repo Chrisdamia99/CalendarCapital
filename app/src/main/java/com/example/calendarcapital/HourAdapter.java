@@ -2,6 +2,7 @@ package com.example.calendarcapital;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.sql.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -21,6 +25,7 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
 
     Context context = this.getContext();
     MyDatabaseHelper myDB = new MyDatabaseHelper(context);
+
 
     public HourAdapter(@NonNull Context context, List<HourEvent> hourEvents) {
         super(context, 0, hourEvents);
@@ -37,17 +42,18 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.hour_cell, parent, false);
 
 
-        compareAndGetValuesFromDB(convertView, event.time);
+        compareAndGetValuesFromDBWithId(convertView, event.getId(), event.getTime());
+
 
 
         setEvents(convertView, event.events);
-
 
         return convertView;
     }
 
 
-    private void compareAndGetValuesFromDB(View convertView, LocalTime time) {
+
+    private void compareAndGetValuesFromDBWithId(View convertView, String id, LocalTime time) {
         Cursor cursor = myDB.readAllData();
 
 
@@ -61,17 +67,29 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
             }
         } else {
             while (cursor.moveToNext()) {
-                if (LocalTime.parse(cursor.getString(4)).equals(time)) {
+
+                if (cursor.getString(0).equals(id)) {
                     Event eventDB = new Event(cursor.getString(0), cursor.getString(1), cursor.getString(2),
                             CalendarUtils.stringToLocalDate(cursor.getString(3)), LocalTime.parse(cursor.getString(4)),
-                            cursor.getString(5),cursor.getString(6));
+                            cursor.getString(5), cursor.getString(6));
                     ArrayList<Event> eventArrayDB = new ArrayList<>();
+
+                    if (eventDB.getId().equals("4")) {
+                        System.out.println("k");
+                    }
+                    LocalDate cursorDate = LocalDate.parse(cursor.getString(3));
+                    LocalTime cursorTime = LocalTime.parse(cursor.getString(4));
+                    String cursorId = cursor.getString(0);
                     eventArrayDB.add(eventDB);
-                    HourEvent event = new HourEvent(LocalTime.parse(cursor.getString(4)), eventArrayDB);
+
+                    HourEvent event = new HourEvent(cursorTime, eventArrayDB, cursorId);
+
                     event.setEvents(eventArrayDB);
-                    event.setTime(LocalTime.parse(cursor.getString(4)));
+                    event.setTime(cursorTime);
+
+
                     //Καλείτε η setHour και δίνω στην λίστα τις τιμές της ώρες από την βάση δεδομένων και το αντίστοιχο event
-                    setHour(convertView, time, LocalDate.parse(cursor.getString(3)));
+                    setHour(convertView, time, cursorDate);
 
 
                 }
@@ -80,9 +98,9 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
         }
         cursor.close();
         myDB.close();
-
-
     }
+
+
 
 
     private void setHour(View convertView, LocalTime time, LocalDate date) {

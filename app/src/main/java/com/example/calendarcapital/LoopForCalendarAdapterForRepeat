@@ -245,3 +245,112 @@
 //
 //            }
 //        }
+
+
+------------------------------------------------------------23/02/2023------------------------------------------------------------
+
+/            for (int mr=0; mr<myRepeats.size()-1; mr++)
+//            {
+//
+//
+//                if (daysForRepeat.get(dd).equals(myRepeats.get(mr).getRepeatDate()))
+//                {
+//                    for (int me=0; me<myEvents.size()-1; me++)
+//                    {
+//                        if (myRepeats.get(mr).getEvent_id().equals(myEvents.get(me).getId()))
+//                        {
+//
+//                            holder.eventRepeatText1.setVisibility(View.VISIBLE);
+//                        holder.eventRepeatText1.setText(myEvents.get(me).getName());
+//                        holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+//                        }else if (myRepeats.get(mr+1).getEvent_id().equals(myEvents.get(me).getId()))
+//                        {
+//
+//                            holder.eventRepeatText2.setVisibility(View.VISIBLE);
+//                            holder.eventRepeatText2.setText(myEvents.get(me+1).getName());
+//                            holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                            holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
+//                        }
+//                    }
+//                }
+//            }
+
+
+
+//
+//            List<String> eventNamesForRepeats = new ArrayList<>();
+//            myRepeats.sort((o1, o2) -> o2.getRepeatDate().compareTo(o1.getRepeatDate()));
+//            for (Event event : myEvents) {
+//                for (Repeat repeat : myRepeats) {
+//                    if (repeat.getRepeatDate().equals(myRepeatDate)) {
+//                        String eventName = event.getName();
+//                        if (!eventNamesForRepeats.contains(eventName)) {
+//                            eventNamesForRepeats.add(eventName);
+//                        }                    }
+//                }
+//            }
+//
+//
+//            int numRepeatEvents = eventNamesForRepeats.size();
+//            if (numRepeatEvents >= 1) {
+//                holder.eventRepeatText1.setVisibility(View.VISIBLE);
+//                holder.eventRepeatText1.setText(eventNamesForRepeats.get(0));
+//                holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+//
+//
+//            }
+//
+//            if (numRepeatEvents >= 2) {
+//
+//                holder.eventRepeatText2.setVisibility(View.VISIBLE);
+//                holder.eventRepeatText2.setText(eventNamesForRepeats.get(1));
+//                holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
+//
+//
+//
+//
+//            }
+//
+//            if (numRepeatEvents >= 3) {
+//                holder.eventRepeatText3.setVisibility(View.VISIBLE);
+//                holder.eventRepeatText3.setText(eventNamesForRepeats.get(2));
+//                holder.eventRepeatText3.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner);
+//            }
+
+---------------------------------------------------------23/03/2023------------------------------------------------
+
+//                for (int dd=0; dd<daysForRepeat.size(); dd++)
+//        {
+//
+//
+//            for (int mr=0; mr<myRepeats.size(); mr++)
+//            {
+//                if (daysForRepeat.get(dd).equals(myRepeats.get(mr).getRepeatDate()))
+//                {
+//                    for( int mRe=0; mRe<myRepeatEvents.size()-1; mRe++) {
+//                        if (myRepeats.get(mr).getEvent_id().equals(myRepeatEvents.get(mRe).getId()) &&
+//                         myRepeats.get(mr).getRepeatDate().equals(myRepeatDate))
+//                        {
+//                            holder.eventRepeatText1.setVisibility(View.VISIBLE);
+//                             holder.eventRepeatText1.setText(myRepeatEvents.get(mRe).getName());
+//                            holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                            holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+//                        }else if (myRepeats.get(mr).getEvent_id().equals(myRepeatEvents.get(mRe+1).getId()) &&
+//                                myRepeats.get(mr).getRepeatDate().equals(myRepeatDate))
+//                        {
+//                            holder.eventRepeatText2.setVisibility(View.VISIBLE);
+//                            holder.eventRepeatText2.setText(myRepeatEvents.get(mRe+1).getName());
+//                            holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                            holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
+//                        }
+//                    }
+//                }
+//            }
+//
+//
+//
+//        }

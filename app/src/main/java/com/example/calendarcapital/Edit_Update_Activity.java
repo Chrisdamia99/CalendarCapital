@@ -29,7 +29,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -37,8 +36,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -72,8 +69,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
     String id_row, title, comment;
 
-    ArrayList<Date> ok = new ArrayList<>();
-    ArrayList<String> testRemUpd = new ArrayList<>();
+    ArrayList<Date> reminders_upd_list = new ArrayList<>();
+    ArrayList<String> idsOfNewReminders = new ArrayList<>();
 
 
     @Override
@@ -84,7 +81,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
         getSetIntentData();
         showExistedRemindersFromDB();
         mCurrentActivity = this;
-
         btnUpdate = findViewById(R.id.btnUpdate);
         createNotificationChannel();
         updateIfEmptyListView();
@@ -224,33 +220,33 @@ public class Edit_Update_Activity extends AppCompatActivity {
                         public void run() {
                             // update ui here
                             setRemindersForListViaDate();
-                            for (int i = 0; i < ok.size(); i++) {
-                                if (ok.get(i).equals(oneDayBeforeDate)) {
+                            for (int i = 0; i < reminders_upd_list.size(); i++) {
+                                if (reminders_upd_list.get(i).equals(oneDayBeforeDate)) {
                                     oneDayBefore.setVisibility(View.GONE);
                                     oneDayView.setVisibility(View.GONE);
                                 }
 
-                                if (ok.get(i).equals(oneHourBeforeDate)) {
+                                if (reminders_upd_list.get(i).equals(oneHourBeforeDate)) {
                                     oneHourMinBefore.setVisibility(View.GONE);
                                     oneHourView.setVisibility(View.GONE);
                                 }
 
-                                if (ok.get(i).equals(halfHourBeforeDate)) {
+                                if (reminders_upd_list.get(i).equals(halfHourBeforeDate)) {
                                     halfHourMinBefore.setVisibility(View.GONE);
                                     halfMinView.setVisibility(View.GONE);
                                 }
 
-                                if (ok.get(i).equals(fifteenMinBeforeDate)) {
+                                if (reminders_upd_list.get(i).equals(fifteenMinBeforeDate)) {
                                     fifteenMinBefore.setVisibility(View.GONE);
                                     fifteenMinView.setVisibility(View.GONE);
                                 }
 
-                                if (ok.get(i).equals(tenMinBeforeDate)) {
+                                if (reminders_upd_list.get(i).equals(tenMinBeforeDate)) {
                                     tenMinBefore.setVisibility(View.GONE);
                                     tenMinView.setVisibility(View.GONE);
                                 }
 
-                                if (ok.get(i).equals(fiveMinBeforeDate)) {
+                                if (reminders_upd_list.get(i).equals(fiveMinBeforeDate)) {
                                     fiveMinBefore.setVisibility(View.GONE);
                                     fiveMinView.setVisibility(View.GONE);
                                 }
@@ -274,7 +270,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
         while (cursor.moveToNext()) {
             if (cursor.getString(0).equals(id_row)) {
                 alarmDate = cursor.getString(5);
-                if (alarmDate.equals("1") && ok.isEmpty()) {
+                if (alarmDate.equals("1") && reminders_upd_list.isEmpty()) {
 
 
                     cursorRem.moveToPosition(-1);
@@ -286,47 +282,47 @@ public class Edit_Update_Activity extends AppCompatActivity {
                             long mytestLong = Date.parse(cursorRem.getString(2));
                             Date lastDate = new Date(mytestLong);
                             lastDate.setSeconds(0);
-                            ok.add(lastDate);
+                            reminders_upd_list.add(lastDate);
 
 
                         }
                     }
-                    ok.sort((o1, o2) -> o1.compareTo(o2));
+                    reminders_upd_list.sort((o1, o2) -> o1.compareTo(o2));
 
-                    for (int i = 0; i < ok.size(); i++) {
-                        for (int j = i + 1; j < ok.size(); j++) {
-                            if (ok.get(i).getMonth() == ok.get(j).getMonth() &&
-                                    ok.get(i).getYear() == ok.get(j).getYear() &&
-                                    ok.get(i).getDay() == ok.get(j).getDay() &&
-                                    ok.get(i).getHours() == ok.get(j).getHours() &&
-                                    ok.get(i).getMinutes() == ok.get(j).getMinutes()) {
-                                ok.remove(i);
+                    for (int i = 0; i < reminders_upd_list.size(); i++) {
+                        for (int j = i + 1; j < reminders_upd_list.size(); j++) {
+                            if (reminders_upd_list.get(i).getMonth() == reminders_upd_list.get(j).getMonth() &&
+                                    reminders_upd_list.get(i).getYear() == reminders_upd_list.get(j).getYear() &&
+                                    reminders_upd_list.get(i).getDay() == reminders_upd_list.get(j).getDay() &&
+                                    reminders_upd_list.get(i).getHours() == reminders_upd_list.get(j).getHours() &&
+                                    reminders_upd_list.get(i).getMinutes() == reminders_upd_list.get(j).getMinutes()) {
+                                reminders_upd_list.remove(i);
 
                             }
                         }
                     }
 
-                    for (int i = 0; i < ok.size(); i++) {
-                        for (int j = i + 1; j < ok.size(); j++) {
-                            if (ok.get(i).getMonth() == ok.get(j).getMonth() &&
-                                    ok.get(i).getYear() == ok.get(j).getYear() &&
-                                    ok.get(i).getDay() == ok.get(j).getDay() &&
-                                    ok.get(i).getHours() == ok.get(j).getHours() &&
-                                    ok.get(i).getMinutes() == ok.get(j).getMinutes()) {
-                                ok.remove(i);
+                    for (int i = 0; i < reminders_upd_list.size(); i++) {
+                        for (int j = i + 1; j < reminders_upd_list.size(); j++) {
+                            if (reminders_upd_list.get(i).getMonth() == reminders_upd_list.get(j).getMonth() &&
+                                    reminders_upd_list.get(i).getYear() == reminders_upd_list.get(j).getYear() &&
+                                    reminders_upd_list.get(i).getDay() == reminders_upd_list.get(j).getDay() &&
+                                    reminders_upd_list.get(i).getHours() == reminders_upd_list.get(j).getHours() &&
+                                    reminders_upd_list.get(i).getMinutes() == reminders_upd_list.get(j).getMinutes()) {
+                                reminders_upd_list.remove(i);
 
                             }
                         }
                     }
 
-                    ok.sort((o1, o2) -> o1.compareTo(o2));
-                    remindersAdapter = new RemindersAdapter(Edit_Update_Activity.this, ok);
+                    reminders_upd_list.sort((o1, o2) -> o1.compareTo(o2));
+                    remindersAdapter = new RemindersAdapter(Edit_Update_Activity.this, reminders_upd_list);
 
                     remindersListViewUPD.setVisibility(View.VISIBLE);
                     remindersListViewUPD.setAdapter(remindersAdapter);
-                } else if (!ok.isEmpty()) {
+                } else if (!reminders_upd_list.isEmpty()) {
 
-                    remindersAdapter = new RemindersAdapter(Edit_Update_Activity.this, ok);
+                    remindersAdapter = new RemindersAdapter(Edit_Update_Activity.this, reminders_upd_list);
 
                     remindersListViewUPD.setVisibility(View.VISIBLE);
                     remindersListViewUPD.setAdapter(remindersAdapter);
@@ -353,7 +349,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                         @Override
                         public void run() {
                             // update ui here
-                            if (ok.size() == 5) {
+                            if (reminders_upd_list.size() == 5) {
                                 addAlarmButtonUPD.setVisibility(View.GONE);
                                 aboveAlarmButtonUPD.setVisibility(View.GONE);
                             } else {
@@ -361,17 +357,17 @@ public class Edit_Update_Activity extends AppCompatActivity {
                                 aboveAlarmButtonUPD.setVisibility(View.VISIBLE);
                             }
 
-                            if (ok.isEmpty()) {
+                            if (reminders_upd_list.isEmpty()) {
 //                            remindersAdapter = new RemindersAdapter(EventEdit.this, ok);
 //                            remindersAdapter.notifyDataSetChanged();
                                 remindersListViewUPD.setVisibility(View.GONE);
-                            } else if (ok.size() == 1) {
-                                ok.sort((o1, o2) -> o1.compareTo(o2));
+                            } else if (reminders_upd_list.size() == 1) {
+                                reminders_upd_list.sort((o1, o2) -> o1.compareTo(o2));
                                 ViewGroup.LayoutParams paramsListView = remindersListViewUPD.getLayoutParams();
                                 paramsListView.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                                 remindersListViewUPD.setLayoutParams(paramsListView);
                             } else {
-                                ok.sort((o1, o2) -> o1.compareTo(o2));
+                                reminders_upd_list.sort((o1, o2) -> o1.compareTo(o2));
                                 ViewGroup.LayoutParams paramsListView = remindersListViewUPD.getLayoutParams();
                                 paramsListView.height = 500;
                                 remindersListViewUPD.setLayoutParams(paramsListView);
@@ -530,7 +526,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                     cReminder.set(Calendar.MILLISECOND, 0);
                     fixedFromChangeTime = cReminder;
 
-                    ok.add(fixedFromChangeTime.getTime());
+                    reminders_upd_list.add(fixedFromChangeTime.getTime());
 
 
                 } else if (hour < 10 && min >= 10) {
@@ -542,7 +538,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                     cReminder.set(Calendar.MILLISECOND, 0);
                     fixedFromChangeTime = cReminder;
 
-                    ok.add(fixedFromChangeTime.getTime());
+                    reminders_upd_list.add(fixedFromChangeTime.getTime());
 
                 } else if (hour >= 10 && min < 10) {
 
@@ -552,7 +548,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                     cReminder.set(Calendar.SECOND, 0);
                     cReminder.set(Calendar.MILLISECOND, 0);
                     fixedFromChangeTime = cReminder;
-                    ok.add(fixedFromChangeTime.getTime());
+                    reminders_upd_list.add(fixedFromChangeTime.getTime());
 
 
                 } else {
@@ -563,7 +559,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                     cReminder.set(Calendar.MILLISECOND, 0);
                     fixedFromChangeTime = cReminder;
 
-                    ok.add(fixedFromChangeTime.getTime());
+                    reminders_upd_list.add(fixedFromChangeTime.getTime());
 
 
                 }
@@ -578,20 +574,20 @@ public class Edit_Update_Activity extends AppCompatActivity {
             @Override
             public void onDismiss(DialogInterface dialog) {
 
-                for (int i = 0; i < ok.size(); i++) {
-                    for (int j = i + 1; j < ok.size(); j++) {
-                        if (ok.get(i).getMonth() == ok.get(j).getMonth() &&
-                                ok.get(i).getYear() == ok.get(j).getYear() &&
-                                ok.get(i).getDay() == ok.get(j).getDay() &&
-                                ok.get(i).getHours() == ok.get(j).getHours() &&
-                                ok.get(i).getMinutes() == ok.get(j).getMinutes()) {
-                            ok.remove(i);
+                for (int i = 0; i < reminders_upd_list.size(); i++) {
+                    for (int j = i + 1; j < reminders_upd_list.size(); j++) {
+                        if (reminders_upd_list.get(i).getMonth() == reminders_upd_list.get(j).getMonth() &&
+                                reminders_upd_list.get(i).getYear() == reminders_upd_list.get(j).getYear() &&
+                                reminders_upd_list.get(i).getDay() == reminders_upd_list.get(j).getDay() &&
+                                reminders_upd_list.get(i).getHours() == reminders_upd_list.get(j).getHours() &&
+                                reminders_upd_list.get(i).getMinutes() == reminders_upd_list.get(j).getMinutes()) {
+                            reminders_upd_list.remove(i);
 
                             Toast.makeText(Edit_Update_Activity.this, "Σφάλμα, η υπενθύμιση υπάρχει.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
-                remindersAdapter = new RemindersAdapter(getApplicationContext(), ok);
+                remindersAdapter = new RemindersAdapter(getApplicationContext(), reminders_upd_list);
 
                 remindersListViewUPD.setVisibility(View.VISIBLE);
                 remindersListViewUPD.setAdapter(remindersAdapter);
@@ -746,7 +742,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                         cReminder.set(Calendar.MINUTE, time.getMinute());
                         cReminder.set(Calendar.MILLISECOND, 0);
                         oneDayBeforeDate = cReminder.getTime();
-                        ok.add(oneDayBeforeDate);
+                        reminders_upd_list.add(oneDayBeforeDate);
                         dialog.dismiss();
 
                     }
@@ -759,7 +755,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                         cReminder.set(Calendar.HOUR_OF_DAY, time.getHour() - 1);
                         cReminder.set(Calendar.MILLISECOND, 0);
                         oneHourBeforeDate = cReminder.getTime();
-                        ok.add(oneHourBeforeDate);
+                        reminders_upd_list.add(oneHourBeforeDate);
 
                         dialog.dismiss();
                     }
@@ -772,7 +768,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                         cReminder.set(Calendar.MINUTE, time.getMinute() - 30);
                         cReminder.set(Calendar.MILLISECOND, 0);
                         halfHourBeforeDate = cReminder.getTime();
-                        ok.add(halfHourBeforeDate);
+                        reminders_upd_list.add(halfHourBeforeDate);
 
 
                         dialog.dismiss();
@@ -786,7 +782,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                         cReminder.set(Calendar.MINUTE, time.getMinute() - 15);
                         cReminder.set(Calendar.MILLISECOND, 0);
                         fifteenMinBeforeDate = cReminder.getTime();
-                        ok.add(fifteenMinBeforeDate);
+                        reminders_upd_list.add(fifteenMinBeforeDate);
 
 
                         dialog.dismiss();
@@ -802,7 +798,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                         cReminder.set(Calendar.MILLISECOND, 0);
 
                         tenMinBeforeDate = cReminder.getTime();
-                        ok.add(tenMinBeforeDate);
+                        reminders_upd_list.add(tenMinBeforeDate);
 
                         dialog.dismiss();
                     }
@@ -817,7 +813,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                         cReminder.set(Calendar.MINUTE, time.getMinute() - 5);
                         cReminder.set(Calendar.MILLISECOND, 0);
                         fiveMinBeforeDate = cReminder.getTime();
-                        ok.add(fiveMinBeforeDate);
+                        reminders_upd_list.add(fiveMinBeforeDate);
 
 
                         dialog.dismiss();
@@ -841,21 +837,21 @@ public class Edit_Update_Activity extends AppCompatActivity {
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                for (int i = 0; i < ok.size(); i++) {
-                    for (int j = i + 1; j < ok.size(); j++) {
-                        if (ok.get(i).getMonth() == ok.get(j).getMonth() &&
-                                ok.get(i).getYear() == ok.get(j).getYear() &&
-                                ok.get(i).getDay() == ok.get(j).getDay() &&
-                                ok.get(i).getHours() == ok.get(j).getHours() &&
-                                ok.get(i).getMinutes() == ok.get(j).getMinutes()) {
-                            ok.remove(i);
+                for (int i = 0; i < reminders_upd_list.size(); i++) {
+                    for (int j = i + 1; j < reminders_upd_list.size(); j++) {
+                        if (reminders_upd_list.get(i).getMonth() == reminders_upd_list.get(j).getMonth() &&
+                                reminders_upd_list.get(i).getYear() == reminders_upd_list.get(j).getYear() &&
+                                reminders_upd_list.get(i).getDay() == reminders_upd_list.get(j).getDay() &&
+                                reminders_upd_list.get(i).getHours() == reminders_upd_list.get(j).getHours() &&
+                                reminders_upd_list.get(i).getMinutes() == reminders_upd_list.get(j).getMinutes()) {
+                            reminders_upd_list.remove(i);
 
                             Toast.makeText(Edit_Update_Activity.this, "Σφάλμα, η υπενθύμιση υπάρχει.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
 
-                remindersAdapter = new RemindersAdapter(getApplicationContext(), ok);
+                remindersAdapter = new RemindersAdapter(getApplicationContext(), reminders_upd_list);
 
                 remindersListViewUPD.setVisibility(View.VISIBLE);
                 remindersListViewUPD.setAdapter(remindersAdapter);
@@ -973,31 +969,29 @@ public class Edit_Update_Activity extends AppCompatActivity {
         }
     }
 
-
-    public void updEventAction() {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
+    private void updateAndSaveEventIfRepeating(String unique_id)
+    {MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
         String eventName = eventNameETUPD.getText().toString();
         String eventComment = eventCommentETUPD.getText().toString();
-
-
         Cursor cursorRem = myDB.readAllReminder();
-        ok.sort((o1, o2) -> o1.compareTo(o2));
+        reminders_upd_list.sort((o1, o2) -> o1.compareTo(o2));
 
 
-        if (ok.size() > 0) {
+
+        if (reminders_upd_list.size() > 0) {
             alarmState = 1;
-            myDB.updateData(id_row, eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState));
-
+//            myDB.updateData(id_row, eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState));
+            myDB.updateRepeatingEvent(id_row,unique_id,eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState));
             cursorRem.moveToPosition(-1);
 
 
-            for (int i = 0; i < ok.size(); i++) {
+            for (int i = 0; i < reminders_upd_list.size(); i++) {
                 while (cursorRem.moveToNext()) {
                     long mytestLong = Date.parse(cursorRem.getString(2));
                     Date lastDate = new Date(mytestLong);
-                    for (int j = 0; j < ok.size(); j++) {
-                        if (ok.get(j).equals(lastDate)) {
-                            ok.remove(j);
+                    for (int j = 0; j < reminders_upd_list.size(); j++) {
+                        if (reminders_upd_list.get(j).equals(lastDate)) {
+                            reminders_upd_list.remove(j);
                         }
 
 
@@ -1005,8 +999,60 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
                 }
 
-                if (ok.size() > 0) {
-                    myDB.addReminder(id_row, ok.get(i));
+                if (reminders_upd_list.size() > 0) {
+                    myDB.addReminder(id_row, reminders_upd_list.get(i));
+
+
+                }
+            }
+
+
+        } else {
+            alarmState = 0;
+//            myDB.updateData(id_row, eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState));
+            myDB.updateRepeatingEvent(id_row,unique_id,eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState));
+
+        }
+
+
+        cursorRem.close();
+        myDB.close();
+    }
+
+    private void updateAndSaveEvent()
+    {
+        MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
+        String eventName = eventNameETUPD.getText().toString();
+        String eventComment = eventCommentETUPD.getText().toString();
+
+
+        Cursor cursorRem = myDB.readAllReminder();
+        reminders_upd_list.sort((o1, o2) -> o1.compareTo(o2));
+
+
+        if (reminders_upd_list.size() > 0) {
+            alarmState = 1;
+            myDB.updateData(id_row, eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState));
+
+            cursorRem.moveToPosition(-1);
+
+
+            for (int i = 0; i < reminders_upd_list.size(); i++) {
+                while (cursorRem.moveToNext()) {
+                    long mytestLong = Date.parse(cursorRem.getString(2));
+                    Date lastDate = new Date(mytestLong);
+                    for (int j = 0; j < reminders_upd_list.size(); j++) {
+                        if (reminders_upd_list.get(j).equals(lastDate)) {
+                            reminders_upd_list.remove(j);
+                        }
+
+
+                    }
+
+                }
+
+                if (reminders_upd_list.size() > 0) {
+                    myDB.addReminder(id_row, reminders_upd_list.get(i));
 
 
                 }
@@ -1016,12 +1062,16 @@ public class Edit_Update_Activity extends AppCompatActivity {
         } else {
             alarmState = 0;
             myDB.updateData(id_row, eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState));
-            ok.size();
+
         }
 
 
         cursorRem.close();
+        myDB.close();
+    }
 
+    private void updateAndSaveReminders()
+    {        MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
 
         Cursor secondRem = myDB.readAllReminder();
 
@@ -1029,13 +1079,13 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
         while (secondRem.moveToNext()) {
 
-            for (int i = 0; i < ok.size(); i++) {
+            for (int i = 0; i < reminders_upd_list.size(); i++) {
 
                 long mytestLongUpd = Date.parse(secondRem.getString(2));
                 Date lastDateUpd = new Date(mytestLongUpd);
                 if (secondRem.getString(1).equals(id_row)) {
-                    if (lastDateUpd.equals(ok.get(i))) {
-                        testRemUpd.add(secondRem.getString(0));
+                    if (lastDateUpd.equals(reminders_upd_list.get(i))) {
+                        idsOfNewReminders.add(secondRem.getString(0));
                     }
                 }
 
@@ -1046,12 +1096,16 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
 
         secondRem.close();
+        myDB.close();
 
-
-        for (int i = 0; i < testRemUpd.size(); i++) {
-            startAlarm(Integer.parseInt(testRemUpd.get(i)), CalendarUtils.dateToCalendar(ok.get(i)));
+        for (int i = 0; i < idsOfNewReminders.size(); i++) {
+            startAlarm(Integer.parseInt(idsOfNewReminders.get(i)), CalendarUtils.dateToCalendar(reminders_upd_list.get(i)));
         }
 
+    }
+
+    private void updateAndSaveRepeat()
+    {        MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
 
         Cursor cursorRepeat = myDB.readAllRepeat();
         Cursor newEventRepeat = myDB.readAllData();
@@ -1060,8 +1114,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
         if (repeatState != 0) {
             while (newEventRepeat.moveToNext()) {
                 if (newEventRepeat.moveToLast()) {
-//                    myDB.addRepeat(id_row, cRepeat.getTime(),repeatCounterInt);
-                    myDB.addRepeat(id_row, cRepeat.getTime());
+                    myDB.addRepeat(id_row, CalendarUtils.dateToLocalDate(cRepeat.getTime()));
                     while (cursorRepeat.moveToNext()) {
                         if (cursorRepeat.getString(1).equals(newEventRepeat.getString(0))) {
                             startRepeatingAlarm(Integer.parseInt(cursorRepeat.getString(1)), cRepeat, repeatState);
@@ -1071,8 +1124,49 @@ public class Edit_Update_Activity extends AppCompatActivity {
             }
 
         }
-    cursorRepeat.close();
+        cursorRepeat.close();
         newEventRepeat.close();
+        myDB.close();
+
+    }
+
+    public void updEventAction() {
+        MyDatabaseHelper myDB = new MyDatabaseHelper(getApplicationContext());
+        Boolean eventOrRepeating;
+
+        Cursor eventCursor = myDB.readAllData();
+        Cursor repeatingEventCursor = myDB.readAllRepeatingEvents();
+
+        eventCursor.moveToPosition(-1);
+        while(eventCursor.moveToNext())
+        {
+            if (eventCursor.getString(0).equals(id_row) &&
+                    date.equals(CalendarUtils.stringToLocalDate(eventCursor.getString(3))))
+            {
+                updateAndSaveEvent();
+                updateAndSaveReminders();
+                updateAndSaveRepeat();
+                break;
+            }
+        }
+
+
+        repeatingEventCursor.moveToPosition(-1);
+        while (repeatingEventCursor.moveToNext())
+        {
+            if(repeatingEventCursor.getString(0).equals(id_row) &&
+                    CalendarUtils.stringToLocalDate(repeatingEventCursor.getString(4)).equals(date))
+            {
+                String unique_id = repeatingEventCursor.getString(1);
+             updateAndSaveEventIfRepeating(unique_id);
+                break;
+            }
+        }
+
+
+
+
+        eventCursor.close();
         myDB.close();
         Intent i1 = new Intent(Edit_Update_Activity.this, MainActivity.class);
         Boolean myBool = true;

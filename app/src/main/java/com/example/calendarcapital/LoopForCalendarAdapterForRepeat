@@ -354,3 +354,98 @@
 //
 //
 //        }
+-----------------------------------------------------28/03/2023-----------------------------------------------------------------
+
+//        cursor.moveToPosition(-1);
+
+//        for (int i = 0; i < daysForRepeat.size(); i++) {
+//            for (int j = i + 1; j < daysForRepeat.size(); j++) {
+//                if (daysForRepeat.get(i).equals(daysForRepeat.get(j))) {
+//                    daysForRepeat.remove(j);
+//                    j--;
+//                }
+//            }
+//        }
+//
+//        for (int dd = 0; dd < daysForRepeat.size(); dd++) {
+//            ArrayList<Repeat> tempRepeatEvents = new ArrayList<>();
+//            for (int mr = 0; mr < myRepeats.size(); mr++) {
+//
+//                if (myRepeats.get(mr).getRepeatDate().equals(myRepeatDate)) {
+//                    tempRepeatEvents.add(myRepeats.get(mr));
+//
+//                }
+//            }
+//            if (tempRepeatEvents.size() == 1) {
+//                for (int me = 0; me < myRepeatEvents.size(); me++) {
+//                    if (tempRepeatEvents.get(0).getEvent_id().equals(myRepeatEvents.get(me).getId()) &&
+//                            tempRepeatEvents.get(0).getRepeatDate().equals(myRepeatDate)) {
+//                        holder.eventRepeatText1.setVisibility(View.VISIBLE);
+//                        holder.eventRepeatText1.setText(myRepeatEvents.get(me).getName());
+//                        holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+//
+//                    }
+//                }
+//
+//            }
+//
+//            if (tempRepeatEvents.size() == 2) {
+//                for (int me = 0; me < myRepeatEvents.size(); me++) {
+//                    if (tempRepeatEvents.get(0).getEvent_id().equals(myRepeatEvents.get(me).getId()) &&
+//                            tempRepeatEvents.get(0).getRepeatDate().equals(myRepeatDate)) {
+//                        holder.eventRepeatText1.setVisibility(View.VISIBLE);
+//                        holder.eventRepeatText1.setText(myRepeatEvents.get(me).getName());
+//                        holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+//
+//
+//                    }
+//                    if (tempRepeatEvents.get(1).getEvent_id().equals(myRepeatEvents.get(me).getId()) &&
+//                            tempRepeatEvents.get(1).getRepeatDate().equals(myRepeatDate)) {
+//                        holder.eventRepeatText2.setVisibility(View.VISIBLE);
+//                        holder.eventRepeatText2.setText(myRepeatEvents.get(me).getName());
+//                        holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
+//
+//
+//                    }
+//
+//                }
+//            }
+//
+//            if (tempRepeatEvents.size() >= 3) {
+//                for (int me = 0; me < myRepeatEvents.size(); me++) {
+//                    if (tempRepeatEvents.get(0).getEvent_id().equals(myRepeatEvents.get(me).getId()) &&
+//                            tempRepeatEvents.get(0).getRepeatDate().equals(myRepeatDate)) {
+//                        holder.eventRepeatText1.setVisibility(View.VISIBLE);
+//                        holder.eventRepeatText1.setText(myRepeatEvents.get(me).getName());
+//                        holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+//
+//
+//                    }
+//                    if (tempRepeatEvents.get(1).getEvent_id().equals(myRepeatEvents.get(me).getId()) &&
+//                            tempRepeatEvents.get(1).getRepeatDate().equals(myRepeatDate)) {
+//                        holder.eventRepeatText2.setVisibility(View.VISIBLE);
+//                        holder.eventRepeatText2.setText(myRepeatEvents.get(me).getName());
+//                        holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
+//
+//
+//                    }
+//
+//                    if (tempRepeatEvents.get(2).getEvent_id().equals(myRepeatEvents.get(me).getId()) &&
+//                            tempRepeatEvents.get(2).getRepeatDate().equals(myRepeatDate)) {
+//                        holder.eventRepeatText3.setVisibility(View.VISIBLE);
+//                        holder.eventRepeatText3.setText(myRepeatEvents.get(me).getName());
+//                        holder.eventRepeatText3.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+//                        holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner);
+//
+//
+//                    }
+//
+//                }
+//            }
+//
+//        }

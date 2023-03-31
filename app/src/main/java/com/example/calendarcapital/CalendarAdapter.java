@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 
 class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends the recyclerview that
@@ -94,7 +95,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
 
 
         Cursor cursor = myDB.readAllData();
-        Cursor cursorRepeat = myDB.readAllRepeat();
+        Cursor cursorRepeatingEvents = myDB.readAllRepeatingEvents();
         holder.eventDayText.setVisibility(View.GONE);
         holder.eventDayText2.setVisibility(View.GONE);
         holder.eventDayText3.setVisibility(View.GONE);
@@ -128,12 +129,10 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
         else
             holder.dayOfMonth.setTextColor(Color.LTGRAY);
         ArrayList<Event> myEvents = new ArrayList<>();
-        ArrayList<Event> myRepeatEvents = new ArrayList<>();
-
-        ArrayList<Repeat> myRepeats = new ArrayList<>();
-        SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+        ArrayList<Event> myRepeatingEvents = new ArrayList<>();
 
 
+        cursor.moveToPosition(-1);
         while (cursor.moveToNext()) {
             Event eventDB = new Event(cursor.getString(0), cursor.getString(1), cursor.getString(2),
                     CalendarUtils.stringToLocalDate(cursor.getString(3)), LocalTime.parse(cursor.getString(4)),
@@ -143,40 +142,40 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
 
 
         }
-        cursorRepeat.moveToPosition(-1);
-        while (cursorRepeat.moveToNext()) {
-            try {
-                Repeat repeatDB = new Repeat(cursorRepeat.getString(0), cursorRepeat.getString(1), format.parse(cursorRepeat.getString(2)));
-                myRepeats.add(repeatDB);
-            } catch (ParseException e) {
-                e.printStackTrace();
-                Log.v("test", e.toString());
-            }
 
 
-        }
-        cursor.moveToPosition(-1);
-        while (cursor.moveToNext()) {
-            if (cursor.getString(6).equals("1")) {
-                Event repeatEvents = new Event(cursor.getString(0), cursor.getString(1), cursor.getString(2),
-                        CalendarUtils.stringToLocalDate(cursor.getString(3)), LocalTime.parse(cursor.getString(4)),
-                        cursor.getString(5), cursor.getString(6));
-                myRepeatEvents.add(repeatEvents);
-            }
+        cursorRepeatingEvents.moveToPosition(-1);
+        while (cursorRepeatingEvents.moveToNext())
+        {
+            Event repeatingEvents = new Event(cursorRepeatingEvents.getString(1),cursorRepeatingEvents.getString(2),cursorRepeatingEvents.getString(3),
+                                            CalendarUtils.stringToLocalDate(cursorRepeatingEvents.getString(4)),LocalTime.parse(cursorRepeatingEvents.getString(5)),cursorRepeatingEvents.getString(6),cursorRepeatingEvents.getString(7));
 
+            myRepeatingEvents.add(repeatingEvents);
         }
 
+        myRepeatingEvents.size();
+        myEvents.size();
 
         myEvents.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
 
         myEvents.sort((o1, o2) -> o2.getTime().compareTo(o1.getTime()));
 
+        myRepeatingEvents.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
+
+        myRepeatingEvents.sort((o1, o2) -> o2.getTime().compareTo(o1.getTime()));
 
         cursor.moveToPosition(-1);
-        while (cursor.moveToNext()) {
+        for (int i=0; i<days.size(); i++)
+        {
+//        while (cursor.moveToNext()) {
+
 
             List<String> eventNames = new ArrayList<>();
             for (Event event : myEvents) {
+                if (Objects.equals(event.getId(), "6"))
+                {
+                    System.out.println();
+                }
                 if (event.getDate().equals(date)) {
                     eventNames.add(event.getName());
                 }
@@ -205,105 +204,48 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
             }
 
 
+//       }
         }
 
 
         cursor.moveToPosition(-1);
+        for (int i=0; i<days.size(); i++) {
+//            while (cursor.moveToNext()) {
 
-        for (int i = 0; i < daysForRepeat.size(); i++) {
-            for (int j = i + 1; j < daysForRepeat.size(); j++) {
-                if (daysForRepeat.get(i).equals(daysForRepeat.get(j))) {
-                    daysForRepeat.remove(j);
-                    j--;
+                List<String> eventNamesRepeating = new ArrayList<>();
+                for (Event event : myRepeatingEvents) {
+                    if (event.getDate().equals(date)) {
+                        eventNamesRepeating.add(event.getName());
+                    }
                 }
-            }
+
+                int numEvents = eventNamesRepeating.size();
+                if (numEvents >= 1) {
+                    holder.eventDayText.setVisibility(View.VISIBLE);
+                    holder.eventDayText.setText(eventNamesRepeating.get(0));
+                    holder.eventDayText.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+                    holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner);
+                }
+
+                if (numEvents >= 2) {
+                    holder.eventDayText2.setVisibility(View.VISIBLE);
+                    holder.eventDayText2.setText(eventNamesRepeating.get(1));
+                    holder.eventDayText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+                    holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner);
+                }
+
+                if (numEvents >= 3) {
+                    holder.eventDayText3.setVisibility(View.VISIBLE);
+                    holder.eventDayText3.setText(eventNamesRepeating.get(2));
+                    holder.eventDayText3.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+                    holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner);
+                }
+
+
+//            }
         }
 
-
-        for (int dd = 0; dd < daysForRepeat.size(); dd++) {
-            ArrayList<Repeat> tempRepeatEvents = new ArrayList<>();
-            for (int mr = 0; mr < myRepeats.size(); mr++) {
-
-                if (myRepeats.get(mr).getRepeatDate().equals(daysForRepeat.get(dd))) {
-                    tempRepeatEvents.add(myRepeats.get(mr));
-
-                }
-            }
-            if (tempRepeatEvents.size() == 1) {
-                for (int me = 0; me < myRepeatEvents.size(); me++) {
-                    if (tempRepeatEvents.get(0).getEvent_id().equals(myRepeatEvents.get(me).getId()) &&
-                            tempRepeatEvents.get(0).getRepeatDate().equals(myRepeatDate)) {
-                        holder.eventRepeatText1.setVisibility(View.VISIBLE);
-                        holder.eventRepeatText1.setText(myRepeatEvents.get(me).getName());
-                        holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
-
-                    }
-                }
-
-            }
-
-            if (tempRepeatEvents.size() == 2) {
-                for (int me = 0; me < myRepeatEvents.size(); me++) {
-                    if (tempRepeatEvents.get(0).getEvent_id().equals(myRepeatEvents.get(me).getId()) &&
-                            tempRepeatEvents.get(0).getRepeatDate().equals(myRepeatDate)) {
-                        holder.eventRepeatText1.setVisibility(View.VISIBLE);
-                        holder.eventRepeatText1.setText(myRepeatEvents.get(me).getName());
-                        holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
-
-
-                    }
-                    if (tempRepeatEvents.get(1).getEvent_id().equals(myRepeatEvents.get(me).getId()) &&
-                            tempRepeatEvents.get(1).getRepeatDate().equals(myRepeatDate)) {
-                        holder.eventRepeatText2.setVisibility(View.VISIBLE);
-                        holder.eventRepeatText2.setText(myRepeatEvents.get(me).getName());
-                        holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
-
-
-                    }
-
-                }
-            }
-
-            if (tempRepeatEvents.size() == 3) {
-                for (int me = 0; me < myRepeatEvents.size(); me++) {
-                    if (tempRepeatEvents.get(0).getEvent_id().equals(myRepeatEvents.get(me).getId()) &&
-                            tempRepeatEvents.get(0).getRepeatDate().equals(myRepeatDate)) {
-                        holder.eventRepeatText1.setVisibility(View.VISIBLE);
-                        holder.eventRepeatText1.setText(myRepeatEvents.get(me).getName());
-                        holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
-
-
-                    }
-                    if (tempRepeatEvents.get(1).getEvent_id().equals(myRepeatEvents.get(me).getId()) &&
-                            tempRepeatEvents.get(1).getRepeatDate().equals(myRepeatDate)) {
-                        holder.eventRepeatText2.setVisibility(View.VISIBLE);
-                        holder.eventRepeatText2.setText(myRepeatEvents.get(me).getName());
-                        holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
-
-
-                    }
-
-                    if (tempRepeatEvents.get(2).getEvent_id().equals(myRepeatEvents.get(me).getId()) &&
-                            tempRepeatEvents.get(2).getRepeatDate().equals(myRepeatDate)) {
-                        holder.eventRepeatText3.setVisibility(View.VISIBLE);
-                        holder.eventRepeatText3.setText(myRepeatEvents.get(me).getName());
-                        holder.eventRepeatText3.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-                        holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner);
-
-
-                    }
-
-                }
-            }
-
-        }
-
-
+cursorRepeatingEvents.close();
         cursor.close();
         myDB.close();
 

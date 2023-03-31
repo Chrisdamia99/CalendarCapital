@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -215,6 +216,33 @@ public class CalendarUtils {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy", locale);
         return date.format(formatter);
     }
+    public static LocalTime dateToLocalTimeFormatted(LocalTime date)
+    {
+        Locale locale = new Locale("el", "GR");
+        String pattern = "HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern, locale);
+        String formattedDate = date.format(formatter);
+        return LocalTime.parse(formattedDate, formatter);
+    }
+    public static LocalDate dateToLocalDate(Date date)
+    {
+        Locale locale = new Locale("el", "GR");
+
+        LocalDate localDate;
+        String pattern = "dd/MM/yyyy";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern, locale);
+        Instant instant = date.toInstant();
+        localDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+        String formattedDate = localDate.format(formatter);
+        return LocalDate.parse(formattedDate, formatter);
+    }
+    public static LocalTime dateToLocalTime(Date date)
+    {   LocalTime localTime;
+        Instant instant = date.toInstant();
+        localTime = instant.atZone(ZoneId.systemDefault()).toLocalTime();
+        return localTime ;
+    }
+
 
     public static String monthDayFromDate(LocalDate date) {
         Locale locale = new Locale("el", "GR");

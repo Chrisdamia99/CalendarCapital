@@ -1,5 +1,7 @@
 package com.example.calendarcapital;
 
+import static com.example.calendarcapital.CalendarUtils.selectedDate;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
@@ -19,6 +21,8 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class HourAdapter extends ArrayAdapter<HourEvent> {
@@ -45,7 +49,7 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
         compareAndGetValuesFromDBWithId(convertView, event.getId(), event.getTime());
 
 
-
+        setHour(convertView,event.time,selectedDate);
         setEvents(convertView, event.events);
 
         return convertView;
@@ -74,11 +78,9 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
                             cursor.getString(5), cursor.getString(6));
                     ArrayList<Event> eventArrayDB = new ArrayList<>();
 
-                    if (eventDB.getId().equals("4")) {
-                        System.out.println("k");
-                    }
-                    LocalDate cursorDate = LocalDate.parse(cursor.getString(3));
+
                     LocalTime cursorTime = LocalTime.parse(cursor.getString(4));
+
                     String cursorId = cursor.getString(0);
                     eventArrayDB.add(eventDB);
 
@@ -88,14 +90,11 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
                     event.setTime(cursorTime);
 
 
-                    //Καλείτε η setHour και δίνω στην λίστα τις τιμές της ώρες από την βάση δεδομένων και το αντίστοιχο event
-                    setHour(convertView, time, cursorDate);
-
-
                 }
 
             }
         }
+
         cursor.close();
         myDB.close();
     }
@@ -103,7 +102,8 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
 
 
 
-    private void setHour(View convertView, LocalTime time, LocalDate date) {
+
+    private  void setHour(View convertView, LocalTime time, LocalDate date) {
 
 
         TextView timeTv = convertView.findViewById(R.id.timeTV);

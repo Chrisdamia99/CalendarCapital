@@ -976,14 +976,20 @@ public class EventEdit extends AppCompatActivity {
         String idForReminder = "";
         repeats_list.sort((o1, o2) -> o1.compareTo(o2));
 
-        if (repeats_list.size() > 0) {
-
-            while (cursor.moveToNext()) {
+        if (repeats_list.size()>0)
+        {
+            while (cursor.moveToNext())
+            {
                 cursor.moveToLast();
-
                 for (int i = 0; i < repeats_list.size(); i++) {
                     idForReminder = cursor.getString(0);
-                    myDB.addRepeat(idForReminder, repeats_list.get(i));
+                    LocalDate dateDB = CalendarUtils.dateToLocalDate(repeats_list.get(i));
+                    LocalTime timeDB = CalendarUtils.dateToLocalTime(repeats_list.get(i));
+                    myDB.addRepeat(idForReminder, dateDB);
+
+
+                    myDB.addRepeatingEvent(idForReminder,cursor.getString(1),cursor.getString(2),dateDB,
+                            CalendarUtils.dateToLocalTimeFormatted(timeDB),"0",cursor.getString(6));
 
                 }
             }

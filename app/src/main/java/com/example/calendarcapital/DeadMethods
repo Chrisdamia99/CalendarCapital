@@ -114,3 +114,67 @@
                                 }
 
                         }
+
+//------------------------EVENT CURSOR ADAPTER------------------------------
+//    private void startAlarm(int alarmId, Calendar c, String title, String comment) {
+//        MyDatabaseHelper myDB = new MyDatabaseHelper(mContext);
+//        Cursor cursor = myDB.readAllEvents();
+//        while (cursor.moveToNext()) {
+//            if (cursor.getString(0).equals(String.valueOf(alarmId))) {
+//                if (cursor.getString(6).equals("0")){
+//                myDB.updateData(cursor.getString(0), cursor.getString(1), cursor.getString(2), LocalDate.parse(cursor.getString(3)),
+//                        LocalTime.parse(cursor.getString(4)), "true","0");
+//        }else if (cursor.getString(6).equals("1"))
+//                {
+//                    myDB.updateData(cursor.getString(0), cursor.getString(1), cursor.getString(2), LocalDate.parse(cursor.getString(3)),
+//                            LocalTime.parse(cursor.getString(4)), "true","1");
+//                }
+//
+//
+//            }
+//        }
+//        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+//        Intent intent = new Intent(mContext, AlarmReceiver.class);
+//
+////        intent.putExtra("calendar", c.getTime());
+//        intent.putExtra("title", title);
+//        intent.putExtra("comment", comment);
+//
+//
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, alarmId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+//
+//        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+//        notifyDataSetChanged();
+//
+//    }
+
+//
+//    private void cancelAlarmCursorAdapter(int alarmId) {
+//        MyDatabaseHelper myDB = new MyDatabaseHelper(mContext);
+//        Cursor cursor = myDB.readAllEvents();
+//        cursor.moveToPosition(-1);
+//        Calendar DBdate;
+//        while (cursor.moveToNext()) {
+//            if (cursor.getString(0).equals(String.valueOf(alarmId))) {
+//                if (cursor.getString(6).equals("0")){
+//                    myDB.updateData(cursor.getString(0), cursor.getString(1), cursor.getString(2), LocalDate.parse(cursor.getString(3)),
+//                            LocalTime.parse(cursor.getString(4)), "false","0");
+//                }else if (cursor.getString(6).equals("1"))
+//                {
+//                    myDB.updateData(cursor.getString(0), cursor.getString(1), cursor.getString(2), LocalDate.parse(cursor.getString(3)),
+//                            LocalTime.parse(cursor.getString(4)), "false","1");
+//                }
+//
+//            }
+//        }
+//
+//
+//        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+//        Intent intent = new Intent(mContext, AlarmReceiver.class);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, alarmId, intent, 0);
+//        Toast.makeText(mContext, "Alarm Cancelled", Toast.LENGTH_SHORT).show();
+//
+//
+//        alarmManager.cancel(pendingIntent);
+//        notifyDataSetChanged();
+//    }

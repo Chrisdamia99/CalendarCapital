@@ -5,25 +5,17 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CursorAdapter;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.ParseException;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -104,7 +96,7 @@ public class EventCursorAdapter extends CursorAdapter {
         MyDatabaseHelper myDb = new MyDatabaseHelper(mContext);
 
 
-        Cursor cursor = myDb.readAllData();
+        Cursor cursor = myDb.readAllEvents();
         Cursor cursorRem = myDb.readAllReminder();
 
         existedReminders.sort((o1, o2) -> o1.compareTo(o2));
@@ -169,8 +161,8 @@ public class EventCursorAdapter extends CursorAdapter {
 
                     remindersAdapter = new RemindersAdapter(mContext, existedReminders);
 
-                    existedRemindersListView.setVisibility(View.GONE);
-//                    existedRemindersListView.setAdapter(remindersAdapter);
+                    existedRemindersListView.setVisibility(View.VISIBLE);
+                    existedRemindersListView.setAdapter(remindersAdapter);
                 } else {
                     lin_lv_dialog_layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                     test.invalidate();
@@ -195,68 +187,6 @@ public class EventCursorAdapter extends CursorAdapter {
         return view;
     }
 
-    private void startAlarm(int alarmId, Calendar c, String title, String comment) {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(mContext);
-        Cursor cursor = myDB.readAllData();
-        while (cursor.moveToNext()) {
-            if (cursor.getString(0).equals(String.valueOf(alarmId))) {
-                if (cursor.getString(6).equals("0")){
-                myDB.updateData(cursor.getString(0), cursor.getString(1), cursor.getString(2), LocalDate.parse(cursor.getString(3)),
-                        LocalTime.parse(cursor.getString(4)), "true","0");
-        }else if (cursor.getString(6).equals("1"))
-                {
-                    myDB.updateData(cursor.getString(0), cursor.getString(1), cursor.getString(2), LocalDate.parse(cursor.getString(3)),
-                            LocalTime.parse(cursor.getString(4)), "true","1");
-                }
-
-
-            }
-        }
-        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(mContext, AlarmReceiver.class);
-
-//        intent.putExtra("calendar", c.getTime());
-        intent.putExtra("title", title);
-        intent.putExtra("comment", comment);
-
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, alarmId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
-        notifyDataSetChanged();
-
-    }
-
-
-    private void cancelAlarmCursorAdapter(int alarmId) {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(mContext);
-        Cursor cursor = myDB.readAllData();
-        cursor.moveToPosition(-1);
-        Calendar DBdate;
-        while (cursor.moveToNext()) {
-            if (cursor.getString(0).equals(String.valueOf(alarmId))) {
-                if (cursor.getString(6).equals("0")){
-                    myDB.updateData(cursor.getString(0), cursor.getString(1), cursor.getString(2), LocalDate.parse(cursor.getString(3)),
-                            LocalTime.parse(cursor.getString(4)), "false","0");
-                }else if (cursor.getString(6).equals("1"))
-                {
-                    myDB.updateData(cursor.getString(0), cursor.getString(1), cursor.getString(2), LocalDate.parse(cursor.getString(3)),
-                            LocalTime.parse(cursor.getString(4)), "false","1");
-                }
-
-            }
-        }
-
-
-        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(mContext, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, alarmId, intent, 0);
-        Toast.makeText(mContext, "Alarm Cancelled", Toast.LENGTH_SHORT).show();
-
-
-        alarmManager.cancel(pendingIntent);
-        notifyDataSetChanged();
-    }
 
 
     @Override

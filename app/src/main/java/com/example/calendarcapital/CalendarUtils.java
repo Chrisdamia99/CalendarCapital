@@ -250,6 +250,8 @@ public class CalendarUtils {
         return date.format(formatter);
     }
 
+
+
     public static LocalDate stringToLocalDate(String date) {
         Locale locale = new Locale("el", "GR");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", locale);

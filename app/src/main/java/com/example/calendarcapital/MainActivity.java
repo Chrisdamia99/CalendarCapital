@@ -37,13 +37,10 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.TextStyle;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Locale;
-import java.util.Objects;
 
 
 //Implements calendaradapter onitemlistener
@@ -89,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         refreshMenuBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (stack.size() > 1) {
                     getSaveStack = stack.removeFirst();
                 }
@@ -141,7 +139,21 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
     }
 
+    private void initWidgets() {
+        calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
+        monthYearText = findViewById(R.id.monthYearTV);
+        floatAddBtnMonthAdd = findViewById(R.id.floatAddBtnMonthView);
+        monthListView = findViewById(R.id.monthListView);
+        nestedScrollView = findViewById(R.id.scrollView1);
+        daysOfWeekDaily = findViewById(R.id.daysOfWeekMain);
+        daysOfWeek = findViewById(R.id.daysOfWeek);
+        prevMonth = findViewById(R.id.prevMonthButton);
+        nextMonth = findViewById(R.id.nextMonthButton);
+        imageMenu = findViewById(R.id.imageMenu);
+        backMenuBtn = findViewById(R.id.BackMenuBtn);
+        refreshMenuBtn = findViewById(R.id.refreshMenuBtn);
 
+    }
     public void getIntentFromEventEdit() {
 
         b = getIntent().getExtras();
@@ -261,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     }
 
     private void DialogClickedItemAndDelete() {
-        EventCursorAdapter CA = new EventCursorAdapter(getApplicationContext(), myDB.readAllData());
+        EventCursorAdapter CA = new EventCursorAdapter(getApplicationContext(), myDB.readAllEvents());
 
         monthListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -309,238 +321,17 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                                 builderDel.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        String repeatValue = hourAdapter.getItem(position).getEvents().get(0).getRepeat();
-                                        if (repeatValue.equals("0"))
+                                        String parent_id_value = hourAdapter.getItem(position).getEvents().get(0).getParent_id();
+                                        if (parent_id_value==null)
                                         {
-                                            String id_row = hourAdapter.getItem(position).getEvents().get(0).getId();
-
-                                            Cursor remCursor = myDB.readAllReminder();
-                                            Cursor repeatCursor= myDB.readAllRepeat();
-                                            myDB.deleteOneRow(id_row);
-                                            remCursor.moveToPosition(-1);
-                                            while (remCursor.moveToNext()) {
-                                                if (remCursor.getString(1).equals(id_row)){
-                                                    myDB.deleteOneRowReminder(remCursor.getString(0));
-
-                                                    String alarmId = remCursor.getString(0);
-                                                    cancelAlarm(Integer.parseInt(alarmId));}
-                                                CA.notifyDataSetChanged();
-                                                hourAdapter.notifyDataSetChanged();
-                                            }
-
-                                            remCursor.close();
-                                            while (repeatCursor.moveToNext())
-                                            {   if (repeatCursor.getString(1).equals(id_row)){
-                                                myDB.deleteOneRowRepeat(repeatCursor.getString(0));
-                                                String alarmId = repeatCursor.getString(0);
-                                                cancelRepeat(Integer.parseInt(alarmId));
-                                                CA.notifyDataSetChanged();
-                                                hourAdapter.notifyDataSetChanged();
-
-                                            }
-                                                CA.notifyDataSetChanged();
-                                                hourAdapter.notifyDataSetChanged();
-                                            }
-                                            myDB.close();
-                                            repeatCursor.close();
-
-
-                                            String previousViewType = stack.peekFirst();
-                                            if (previousViewType.equals("all")) {
-                                                setAllEvents();
-                                            } else if (previousViewType.equals("double-click-week")) {
-                                                setDaily();
-                                            } else if (previousViewType.equals("month")) {
-                                                setDaily();
-                                            } else if (previousViewType.equals("double-click-month")) {
-                                                setDaily();
-                                            } else if (previousViewType.equals("week")) {
-                                                setWeek();
-                                            } else if (previousViewType.equals("daily")) {
-                                                setDaily();
-                                            } else {
-                                                onMyBackPressed();
-                                            }
+                                            deleteEventNotRepeating(position,CA);
                                         }else
                                         {
-                                            builderRepeating.setOnShowListener(new DialogInterface.OnShowListener() {
-                                                @Override
-                                                public void onShow(DialogInterface dialog) {
-                                                    deleteAll.setOnClickListener(new View.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(View v) {
-                                                            String id_row = hourAdapter.getItem(position).getEvents().get(0).getId();
-
-                                                            Cursor remCursor = myDB.readAllReminder();
-                                                            Cursor repeatCursor= myDB.readAllRepeat();
-                                                            Cursor repeatingEvents = myDB.readAllRepeatingEvents();
-
-                                                            repeatingEvents.moveToPosition(-1);
-                                                            while(repeatingEvents.moveToNext())
-                                                            {
-                                                                if (repeatingEvents.getString(0).equals(id_row))
-                                                            {
-                                                                id_row=repeatingEvents.getString(1);
-                                                                break;
-                                                            }
-
-                                                            }
-                                                            myDB.deleteOneRow(id_row);
-                                                            myDB.deleteAllRepeatsSpecificID(id_row);
-                                                            myDB.deleteAllRepeatingEventSpecificID(id_row);
-
-                                                            remCursor.moveToPosition(-1);
-                                                            while (remCursor.moveToNext()) {
-                                                                if (remCursor.getString(1).equals(id_row)){
-                                                                    myDB.deleteOneRowReminder(remCursor.getString(0));
-
-                                                                    String alarmId = remCursor.getString(0);
-                                                                    cancelAlarm(Integer.parseInt(alarmId));}
-                                                                CA.notifyDataSetChanged();
-                                                                hourAdapter.notifyDataSetChanged();
-                                                            }
-
-
-                                                            while (repeatCursor.moveToNext())
-                                                            {   if (repeatCursor.getString(1).equals(id_row)){
-                                                                String alarmId = repeatCursor.getString(0);
-
-                                                                cancelRepeat(Integer.parseInt(alarmId));
-                                                                CA.notifyDataSetChanged();
-                                                                hourAdapter.notifyDataSetChanged();
-
-                                                            }
-                                                                CA.notifyDataSetChanged();
-                                                                hourAdapter.notifyDataSetChanged();
-                                                            }
-
-
-                                                            myDB.close();
-                                                            remCursor.close();
-                                                            repeatCursor.close();
-                                                            repeatingEvents.close();
-
-
-                                                            String previousViewType = stack.peekFirst();
-                                                            if (previousViewType.equals("all")) {
-                                                                setAllEvents();
-                                                            } else if (previousViewType.equals("double-click-week")) {
-                                                                setDaily();
-                                                            } else if (previousViewType.equals("month")) {
-                                                                setDaily();
-                                                            } else if (previousViewType.equals("double-click-month")) {
-                                                                setDaily();
-                                                            } else if (previousViewType.equals("week")) {
-                                                                setWeek();
-                                                            } else if (previousViewType.equals("daily")) {
-                                                                setDaily();
-                                                            } else {
-                                                                onMyBackPressed();
-                                                            }
-                                                            dialog.dismiss();
-                                                        }
-                                                    });
-
-                                                    deleteOne.setOnClickListener(new View.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(View v) {
-//                                                            ArrayList<Event> test = hourAdapter.getItem(position).getEvents();
-//                                                            test.size();
-                                                            String event_repeating_id = hourAdapter.getItem(position).getEvents().get(0).getId();
-                                                            String unique_id = null;
-                                                            String repeating_events_date = null;
-                                                            String event_repeating_id_row=null;
-
-                                                            Cursor eventCursor = myDB.readAllData();
-                                                            Cursor remCursor = myDB.readAllReminder();
-                                                            Cursor repeatCursor= myDB.readAllRepeat();
-                                                            Cursor repeatingEvents = myDB.readAllRepeatingEvents();
-
-                                                            eventCursor.moveToPosition(-1);
-                                                            while(eventCursor.moveToNext())
-                                                            {
-                                                                if (eventCursor.getString(0).equals(event_repeating_id) && stringToLocalDate(eventCursor.getString(3)).equals(selectedDate))
-                                                                {
-                                                                    myDB.deleteOneRow(event_repeating_id);
-
-                                                                    CA.notifyDataSetChanged();
-                                                                    hourAdapter.notifyDataSetChanged();
-                                                                    break;
-                                                                }
-                                                            }
-
-                                                            repeatingEvents.moveToPosition(-1);
-                                                            while(repeatingEvents.moveToNext())
-                                                            {
-                                                                if(repeatingEvents.getString(0).equals(event_repeating_id) && CalendarUtils.stringToLocalDate(repeatingEvents.getString(4)).equals(selectedDate))
-                                                                {
-
-                                                                    unique_id= repeatingEvents.getString(1);
-                                                                    repeating_events_date = repeatingEvents.getString(4);
-                                                                    event_repeating_id_row = repeatingEvents.getString(0);
-                                                                    myDB.deleteOnewRowRepeatingEvent(event_repeating_id);
-
-                                                                    CA.notifyDataSetChanged();
-                                                                    hourAdapter.notifyDataSetChanged();
-                                                                    break;
-                                                                }
-                                                            }
-
-                                                            repeatCursor.moveToPosition(-1);
-                                                            while(repeatCursor.moveToNext())
-                                                            {
-                                                                if(repeatCursor.getString(1).equals(unique_id) && stringToLocalDate(repeatCursor.getString(2)).equals(stringToLocalDate(repeating_events_date)))
-                                                                {
-                                                                    myDB.deleteOneRowRepeat(repeatCursor.getString(0));
-                                                                    String alarmId = repeatCursor.getString(0);
-                                                                    cancelRepeat(Integer.parseInt(alarmId));
-                                                                    CA.notifyDataSetChanged();
-                                                                    hourAdapter.notifyDataSetChanged();
-                                                                    break;
-                                                                }
-
-                                                            }
-
-                                                            remCursor.moveToPosition(-1);
-                                                            while (remCursor.moveToNext()) {
-                                                                if (remCursor.getString(1).equals(event_repeating_id_row) || remCursor.getString(1).equals(unique_id)){
-                                                                    myDB.deleteOneRowReminder(remCursor.getString(0));
-
-                                                                    String alarmId = remCursor.getString(0);
-                                                                    cancelAlarm(Integer.parseInt(alarmId));}
-                                                                CA.notifyDataSetChanged();
-                                                                hourAdapter.notifyDataSetChanged();
-                                                            }
-//                                                                myDB.deleteOneSpecificRepeatingEvent(String.valueOf(selectedDate));
-                                                            eventCursor.close();
-                                                            remCursor.close();
-                                                            repeatCursor.close();
-                                                            repeatingEvents.close();
-
-                                                            String previousViewType = stack.peekFirst();
-                                                            if (previousViewType.equals("all")) {
-                                                                setAllEvents();
-                                                            } else if (previousViewType.equals("double-click-week")) {
-                                                                setDaily();
-                                                            } else if (previousViewType.equals("month")) {
-                                                                setDaily();
-                                                            } else if (previousViewType.equals("double-click-month")) {
-                                                                setDaily();
-                                                            } else if (previousViewType.equals("week")) {
-                                                                setWeek();
-                                                            } else if (previousViewType.equals("daily")) {
-                                                                setDaily();
-                                                            } else {
-                                                                onMyBackPressed();
-                                                            }
-                                                            dialog.dismiss();
-                                                        }
-                                                    });
-                                                }
-                                            });
+                                            deleteEventIfRepeating(builderRepeating,position,CA,deleteAll,deleteOne);
+                                            builderRepeating.show();
                                         }
 
-                                        builderRepeating.show();
+
 
 
                                     }
@@ -619,22 +410,188 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
     }
 
+    private void deleteEventIfRepeating(AlertDialog builderRepeating,int position,EventCursorAdapter CA,TextView deleteAll,TextView deleteOne)
+    {
 
-    private void initWidgets() {
-        calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
-        monthYearText = findViewById(R.id.monthYearTV);
-        floatAddBtnMonthAdd = findViewById(R.id.floatAddBtnMonthView);
-        monthListView = findViewById(R.id.monthListView);
-        nestedScrollView = findViewById(R.id.scrollView1);
-        daysOfWeekDaily = findViewById(R.id.daysOfWeekMain);
-        daysOfWeek = findViewById(R.id.daysOfWeek);
-        prevMonth = findViewById(R.id.prevMonthButton);
-        nextMonth = findViewById(R.id.nextMonthButton);
-        imageMenu = findViewById(R.id.imageMenu);
-        backMenuBtn = findViewById(R.id.BackMenuBtn);
-        refreshMenuBtn = findViewById(R.id.refreshMenuBtn);
+        builderRepeating.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                deleteAll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String parent_id = hourAdapter.getItem(position).getEvents().get(0).getParent_id();
+                        ArrayList<String> remIds = new ArrayList<>();
 
+                        Cursor cursorEvent = myDB.readAllEvents();
+                        Cursor remCursor = myDB.readAllReminder();
+
+                        while(cursorEvent.moveToNext())
+                        {
+                            if (cursorEvent.getString(7)==parent_id)
+                            {
+                                remIds.add(cursorEvent.getString(7));
+                            }
+                        }
+
+                        myDB.deleteOneRowReminder(parent_id);
+                        cancelAlarm(Integer.parseInt(parent_id));
+                        for (int i=0; i<remIds.size(); i++)
+                        {
+                            myDB.deleteOneRowReminder(remIds.get(i));
+                            cancelAlarm(Integer.parseInt(remIds.get(i)));
+                        }
+
+
+                        CA.notifyDataSetChanged();
+                        hourAdapter.notifyDataSetChanged();
+
+                        myDB.deleteAllEventsParentId(parent_id);
+                        myDB.deleteOneRow(parent_id);
+
+                        remCursor.close();
+                        myDB.close();
+
+
+
+
+                        String previousViewType = stack.peekFirst();
+                        if (previousViewType.equals("all")) {
+                            setAllEvents();
+                        } else if (previousViewType.equals("double-click-week")) {
+                            setDaily();
+                        } else if (previousViewType.equals("month")) {
+                            setDaily();
+                        } else if (previousViewType.equals("double-click-month")) {
+                            setDaily();
+                        } else if (previousViewType.equals("week")) {
+                            setWeek();
+                        } else if (previousViewType.equals("daily")) {
+                            setDaily();
+                        } else {
+                            onMyBackPressed();
+                        }
+                        dialog.dismiss();
+                    }
+                });
+
+                deleteOne.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        String event_repeating_id = hourAdapter.getItem(position).getEvents().get(0).getId();
+
+
+                        Cursor eventCursor = myDB.readAllEvents();
+                        Cursor remCursor = myDB.readAllReminder();
+
+                        myDB.deleteOneRow(event_repeating_id);
+
+                        remCursor.moveToPosition(-1);
+                        while (remCursor.moveToNext())
+                        {
+                            if (remCursor.getString(1).equals(event_repeating_id))
+                            {
+                                myDB.deleteOneRowReminder(remCursor.getString(0));
+                                cancelAlarm(Integer.parseInt(remCursor.getString(0)));
+                            }
+                        }
+
+
+
+                        CA.notifyDataSetChanged();
+                        hourAdapter.notifyDataSetChanged();
+
+                        eventCursor.close();
+                        remCursor.close();
+                        myDB.close();
+
+                        String previousViewType = stack.peekFirst();
+                        if (previousViewType.equals("all")) {
+                            setAllEvents();
+                        } else if (previousViewType.equals("double-click-week")) {
+                            setDaily();
+                        } else if (previousViewType.equals("month")) {
+                            setDaily();
+                        } else if (previousViewType.equals("double-click-month")) {
+                            setDaily();
+                        } else if (previousViewType.equals("week")) {
+                            setWeek();
+                        } else if (previousViewType.equals("daily")) {
+                            setDaily();
+                        } else {
+                            onMyBackPressed();
+                        }
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
     }
+
+    private void deleteEventNotRepeating(int position, EventCursorAdapter CA)
+    {
+        String id_row = hourAdapter.getItem(position).getEvents().get(0).getId();
+        String title_row=hourAdapter.getItem(position).getEvents().get(0).getName();
+        String comment_row=hourAdapter.getItem(position).getEvents().get(0).getComment();
+        LocalDate date_row = hourAdapter.getItem(position).getEvents().get(0).getDate();
+
+        Cursor remCursor = myDB.readAllReminder();
+
+        Cursor eventsCursor = myDB.readAllEvents();
+
+        eventsCursor.moveToPosition(-1);
+        while(eventsCursor.moveToNext())
+        {
+            String id_event = eventsCursor.getString(0);
+            String event_title = eventsCursor.getString(1);
+            String event_comment = eventsCursor.getString(2);
+            String event_date = eventsCursor.getString(3);
+
+            if (id_event.equals(id_row) && event_title.equals(title_row) && event_comment.equals(comment_row) &&
+                    date_row.equals(stringToLocalDate(event_date)))
+            {
+                myDB.deleteOneRow(id_row);
+                break;
+            }
+
+        }
+
+
+        remCursor.moveToPosition(-1);
+        while (remCursor.moveToNext()) {
+            if (remCursor.getString(1).equals(id_row)){
+                myDB.deleteOneRowReminder(remCursor.getString(0));
+
+                String alarmId = remCursor.getString(0);
+                cancelAlarm(Integer.parseInt(alarmId));}
+            CA.notifyDataSetChanged();
+            hourAdapter.notifyDataSetChanged();
+        }
+
+
+        eventsCursor.close();
+        remCursor.close();
+        myDB.close();
+
+        String previousViewType = stack.peekFirst();
+        if (previousViewType.equals("all")) {
+            setAllEvents();
+        } else if (previousViewType.equals("double-click-week")) {
+            setDaily();
+        } else if (previousViewType.equals("month")) {
+            setDaily();
+        } else if (previousViewType.equals("double-click-month")) {
+            setDaily();
+        } else if (previousViewType.equals("week")) {
+            setWeek();
+        } else if (previousViewType.equals("daily")) {
+            setDaily();
+        } else {
+            onMyBackPressed();
+        }
+    }
+
+
 
     public void cancelAlarm(int alarmId) {
 
@@ -649,16 +606,6 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
     }
 
-    public void cancelRepeat(int alarmId)
-    {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this,RepeatReceiver.class);
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,alarmId,intent,0);
-
-        alarmManager.cancel(pendingIntent);
-        Toast.makeText(this, "Repeat Cancelled", Toast.LENGTH_SHORT).show();
-    }
 
 
     public void previousMonthAction(View view) {

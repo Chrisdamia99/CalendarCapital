@@ -9,9 +9,9 @@ public class Repeat {
 
     private String id;
     private String event_id;
-    private Date repeatDate;
+    private LocalDate repeatDate;
 
-    public Repeat(String id, String event_id, Date repeatDate) {
+    public Repeat(String id, String event_id, LocalDate repeatDate) {
         this.id = id;
         this.event_id = event_id;
         this.repeatDate = repeatDate;
@@ -33,11 +33,11 @@ public class Repeat {
         this.event_id = event_id;
     }
 
-    public Date getRepeatDate() {
+    public LocalDate getRepeatDate() {
         return repeatDate;
     }
 
-    public void setRepeatDate(Date repeatDate) {
+    public void setRepeatDate(LocalDate repeatDate) {
         this.repeatDate = repeatDate;
     }
 }

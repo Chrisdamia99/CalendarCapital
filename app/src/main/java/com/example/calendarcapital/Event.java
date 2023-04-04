@@ -43,8 +43,9 @@ public class Event {
     private LocalTime time;
     private String alarm;
     private String repeat;
+    private String parent_id;
 
-    public Event(String id, String name, String comment, LocalDate date, LocalTime time, String alarm,String repeat) {
+    public Event(String id, String name, String comment, LocalDate date, LocalTime time, String alarm,String repeat,String parent_id) {
         this.id = id;
         this.comment = comment;
         this.name = name;
@@ -52,6 +53,7 @@ public class Event {
         this.time = time;
         this.alarm = alarm;
         this.repeat = repeat;
+        this.parent_id = parent_id;
 
 
     }
@@ -70,6 +72,13 @@ public class Event {
         return name + "\n" + comment + "\n" + date + "\n" + CalendarUtils.formattedShortTime(time);
     }
 
+    public String getParent_id() {
+        return parent_id;
+    }
+
+    public void setParent_id(String parent_id) {
+        this.parent_id = parent_id;
+    }
 
     public String getComment() {
         return comment;

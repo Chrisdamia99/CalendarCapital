@@ -5,26 +5,19 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class RemindersAdapter extends ArrayAdapter<Date> {
     LayoutInflater inflater;
@@ -56,7 +49,6 @@ public class RemindersAdapter extends ArrayAdapter<Date> {
         ImageButton cancelReminderImageView = convertView.findViewById(R.id.cancelReminderImageView);
         TextView reminderSetTV = convertView.findViewById(R.id.reminderSetTV);
 
-//        setReminders(myTest  ,reminderSetTV,cancelReminderImageView,remindersLay);
         setRemindersVol2(getDate, reminderSetTV, cancelReminderImageView,  position);
 
 
@@ -67,7 +59,7 @@ public class RemindersAdapter extends ArrayAdapter<Date> {
     public void setRemindersVol2(Date reminder, TextView reminderTV, ImageButton cancelBTN,  int position) {
         String testStr = CalendarUtils.dateForReminder(reminder);
         Cursor remCursor = myDB.readAllReminder();
-        Cursor secMyDbCursor = myDB.readAllData();
+        Cursor secMyDbCursor = myDB.readAllEvents();
         Cursor secMyRemCursor = myDB.readAllReminder();
         reminderTV.setText(testStr);
 
@@ -113,7 +105,7 @@ public class RemindersAdapter extends ArrayAdapter<Date> {
 
 
 
-
+                notifyDataSetChanged();
                 RemindersAdapter.this.notifyDataSetChanged();
                 secMyDbCursor.close();
                 secMyRemCursor.close();

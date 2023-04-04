@@ -4,7 +4,6 @@ import static com.example.calendarcapital.CalendarUtils.selectedDate;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +14,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.sql.Array;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public class HourAdapter extends ArrayAdapter<HourEvent> {
@@ -58,7 +52,7 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
 
 
     private void compareAndGetValuesFromDBWithId(View convertView, String id, LocalTime time) {
-        Cursor cursor = myDB.readAllData();
+        Cursor cursor = myDB.readAllEvents();
 
 
         if (cursor.getCount() == 0) {
@@ -75,7 +69,7 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
                 if (cursor.getString(0).equals(id)) {
                     Event eventDB = new Event(cursor.getString(0), cursor.getString(1), cursor.getString(2),
                             CalendarUtils.stringToLocalDate(cursor.getString(3)), LocalTime.parse(cursor.getString(4)),
-                            cursor.getString(5), cursor.getString(6));
+                            cursor.getString(5), cursor.getString(6),cursor.getString(7));
                     ArrayList<Event> eventArrayDB = new ArrayList<>();
 
 

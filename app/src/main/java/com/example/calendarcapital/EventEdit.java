@@ -30,7 +30,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -608,61 +607,7 @@ public class EventEdit extends AppCompatActivity {
 
     }
 
-    public void startRepeatingAlarm(int alarmId, Calendar cc, int repeatState) {
 
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-
-        Intent intent = new Intent(EventEdit.this, RepeatReceiver.class);
-
-        intent.removeExtra("title");
-        intent.removeExtra("comment");
-
-
-        String strTitle = eventNameET.getText().toString();
-        String strComment = eventCommentET.getText().toString();
-
-        intent.putExtra("title", strTitle);
-        intent.putExtra("comment", strComment);
-        intent.putExtra("repeats",repeatCounterInt);
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(EventEdit.this, alarmId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        long startTime = cc.getTimeInMillis();
-
-        if (repeatState == 1) {
-
-            for (int i = 0; i < repeatCounterInt; i++) {
-                cc.add(Calendar.DAY_OF_YEAR,1);
-                    repeats_list.add(cc.getTime());
-
-            }
-        } else if (repeatState == 2) {
-
-                for (int i = 0; i < repeatCounterInt; i++) {
-
-                    cc.add(Calendar.DAY_OF_YEAR,7);
-                    repeats_list.add(cc.getTime());
-                }
-
-
-        } else if (repeatState == 3) {
-            for (int i = 0; i < repeatCounterInt; i++) {
-
-                cc.add(Calendar.MONTH,1);
-                repeats_list.add(cc.getTime());
-            }
-
-        } else if (repeatState == 4) {
-
-            for (int i = 0; i < repeatCounterInt; i++) {
-
-                cc.add(Calendar.YEAR,1);
-                repeats_list.add(cc.getTime());
-            }
-        } else if (repeatState == 5) {
-        }
-
-
-    }
 
 
     public void addAlarm() {
@@ -918,7 +863,7 @@ public class EventEdit extends AppCompatActivity {
         MyDatabaseHelper myDB = new MyDatabaseHelper(EventEdit.this);
         String eventName = eventNameET.getText().toString();
         String eventComment = eventCommentET.getText().toString();
-        myDB.addEvent(eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState));
+        myDB.addEvent(eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState),null);
 
     }
 
@@ -927,7 +872,7 @@ public class EventEdit extends AppCompatActivity {
         MyDatabaseHelper myDB = new MyDatabaseHelper(EventEdit.this);
         String idForReminder = "";
         reminders_list.sort((o1, o2) -> o1.compareTo(o2));
-        Cursor cursor = myDB.readAllData();
+        Cursor cursor = myDB.readAllEvents();
         Cursor cursorRem = myDB.readAllReminder();
         if (reminders_list.size() > 0) {
 
@@ -970,46 +915,34 @@ public class EventEdit extends AppCompatActivity {
     private void makeAndSaveRepeat()
     {        MyDatabaseHelper myDB = new MyDatabaseHelper(EventEdit.this);
 
-        Cursor cursor = myDB.readAllData();
-        Cursor cursorRepeat = myDB.readAllRepeat();
+        Cursor cursor = myDB.readAllEvents();
 
-        String idForReminder = "";
+        String idForRepeat = "";
         repeats_list.sort((o1, o2) -> o1.compareTo(o2));
 
         if (repeats_list.size()>0)
         {
             while (cursor.moveToNext())
             {
-                cursor.moveToLast();
-                for (int i = 0; i < repeats_list.size(); i++) {
-                    idForReminder = cursor.getString(0);
-                    LocalDate dateDB = CalendarUtils.dateToLocalDate(repeats_list.get(i));
-                    LocalTime timeDB = CalendarUtils.dateToLocalTime(repeats_list.get(i));
-                    myDB.addRepeat(idForReminder, dateDB);
+                if (cursor.moveToLast()) {
+                    for (int i = 0; i < repeats_list.size(); i++) {
+                        idForRepeat = cursor.getString(0);
+                        LocalDate dateDB = CalendarUtils.dateToLocalDate(repeats_list.get(i));
+                        LocalTime timeDB = CalendarUtils.dateToLocalTime(repeats_list.get(i));
+
+                        myDB.addEvent(cursor.getString(1),cursor.getString(2),dateDB,timeDB,cursor.getString(5),
+                                cursor.getString(6),idForRepeat);
+
+                        list_repeat_for_db.add(cursor.getString(0));
 
 
-                    myDB.addRepeatingEvent(idForReminder,cursor.getString(1),cursor.getString(2),dateDB,
-                            CalendarUtils.dateToLocalTimeFormatted(timeDB),"0",cursor.getString(6));
-
+                    }
                 }
             }
         }
 
-        cursorRepeat.moveToPosition(-1);
-        cursor.moveToPosition(-1);
-        while (cursor.moveToNext()) {
-            while (cursorRepeat.moveToNext()) {
-                if (cursorRepeat.getString(1).equals(idForReminder)) {
-                    list_repeat_for_db.add(cursorRepeat.getString(0));
-
-                }
-
-
-            }
-
-        }
         cursor.close();
-        cursorRepeat.close();
+
         for (int i = 0; i < list_repeat_for_db.size(); i++) {
             startAlarm(Integer.parseInt(list_repeat_for_db.get(i)), CalendarUtils.dateToCalendar(repeats_list.get(i)));
         }
@@ -1024,8 +957,6 @@ public class EventEdit extends AppCompatActivity {
         makeAndSaveEvent();
         makeAndSaveReminders();
         makeAndSaveRepeat();
-
-
 
         Intent i1 = new Intent(EventEdit.this, MainActivity.class);
 

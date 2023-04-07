@@ -1,6 +1,6 @@
 package com.example.calendarcapital;
 
-import android.app.Notification;
+
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,7 +10,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
@@ -23,16 +22,18 @@ public class AlarmReceiver extends BroadcastReceiver {
     private String event;
     private String comment;
     private String text;
-    private Ringtone r;
+    public static Ringtone r;
     private Vibrator vibrator;
-    private boolean isNotificationDeleted;
+    public static final String ACTION_STOP_RINGTONE = "com.example.app.ACTION_STOP_RINGTONE";
+
+    public static final int NOTIFICATION_ID = 123;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle b = intent.getExtras();
         event = "";
         comment = "";
-        isNotificationDeleted = false;
+
 
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         if (vibrator != null && vibrator.hasVibrator()) {
@@ -55,6 +56,15 @@ public class AlarmReceiver extends BroadcastReceiver {
         Intent stopRingtoneIntent = new Intent(context, StopRingtoneReceiver.class);
         PendingIntent pendingStopRingtoneIntent = PendingIntent.getBroadcast(context, 0, stopRingtoneIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         Log.d("AlarmReceiver", "pendingStopRingtoneIntent created");
+        Intent stopRingtoneButtonIntent = new Intent(ACTION_STOP_RINGTONE);
+        PendingIntent pendingStopRingtoneButtonIntent = PendingIntent.getBroadcast(context, 0, stopRingtoneButtonIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        // Create the notification action button to stop the ringtone
+        NotificationCompat.Action stopRingtoneAction = new NotificationCompat.Action.Builder(
+                R.drawable.cancel_reminder,
+                "Stop Ringtone",
+                pendingStopRingtoneButtonIntent)
+                .build();
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "myandroid")
                 .setSmallIcon(R.drawable.alarm)
@@ -65,39 +75,19 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
                 .setContentIntent(pendingIntent)
                 .setDeleteIntent(pendingStopRingtoneIntent)
+                .addAction(stopRingtoneAction)
                 .setDefaults(NotificationCompat.DEFAULT_ALL);
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-        notificationManagerCompat.notify(123, builder.build());
+        notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
 
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         r = RingtoneManager.getRingtone(context, notification);
         r.play();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!isNotificationDeleted) {
-                    stopRingtone();
-                }
-            }
-        }, 1000);
+
     }
 
-    public void stopRingtone() {
-        if (r != null && r.isPlaying()) {
-            r.stop();
-        }
-        if (vibrator != null) {
-            vibrator.cancel();
-        }
-    }
-
-
-    public void onNotificationDeleted(Context context, int notificationId, int reason) {
-        isNotificationDeleted = true;
-        stopRingtone();
-    }
 }
 
 

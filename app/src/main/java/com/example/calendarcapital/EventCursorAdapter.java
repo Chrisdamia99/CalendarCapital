@@ -1,9 +1,7 @@
 package com.example.calendarcapital;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
+
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,12 +10,7 @@ import android.widget.CursorAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 
@@ -82,7 +75,7 @@ public class EventCursorAdapter extends CursorAdapter {
         TextView time_lv_tv = view.findViewById(R.id.time_lv_tv);
         LinearLayout lin_lv_dialog_layout = view.findViewById(R.id.lin_lv_dialog_layout);
         ListView existedRemindersListView = view.findViewById(R.id.existedRemindersListView);
-        View test = LayoutInflater.from(mContext).inflate(R.layout.show_event_from_listview,null);
+        View viewInvalidation = LayoutInflater.from(mContext).inflate(R.layout.show_event_from_listview,null);
 
 
 
@@ -107,7 +100,7 @@ public class EventCursorAdapter extends CursorAdapter {
                 if (alarmDate.equals("1") && existedReminders.isEmpty()) {
                     lin_lv_dialog_layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                     existedRemindersListView.setVisibility(View.GONE);
-                    test.invalidate();
+                    viewInvalidation.invalidate();
 
 
                     cursorRem.moveToPosition(-1);
@@ -155,9 +148,9 @@ public class EventCursorAdapter extends CursorAdapter {
 
                     existedRemindersListView.setVisibility(View.VISIBLE);
                     existedRemindersListView.setAdapter(remindersAdapter);
-                } else if (!existedReminders.isEmpty()) {
+                } else if (alarmDate.equals("1") && !existedReminders.isEmpty()) {
                     lin_lv_dialog_layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                    test.invalidate();
+                    viewInvalidation.invalidate();
 
                     remindersAdapter = new RemindersAdapter(mContext, existedReminders);
 
@@ -165,7 +158,7 @@ public class EventCursorAdapter extends CursorAdapter {
                     existedRemindersListView.setAdapter(remindersAdapter);
                 } else {
                     lin_lv_dialog_layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                    test.invalidate();
+                    viewInvalidation.invalidate();
                     existedRemindersListView.setVisibility(View.GONE);
                     break;
                 }

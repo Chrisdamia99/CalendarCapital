@@ -1,17 +1,18 @@
 package com.example.calendarcapital;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class MyDatabaseHelper extends SQLiteOpenHelper {
     private Context context;
@@ -208,6 +209,43 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 //----------------------------------------------------------------------------------------------------------
 
 //------------------------------------------DELETE------------------------------------------------------------
+
+    public void deleteRemindersWithAlarmAndEventId(int eventId) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        database.delete(TABLE_NAME_REMINDER,
+                COLUMN_EVENT_ID + " = ? AND " + COLUMN_EVENT_ID + " IN (SELECT " + COLUMN_ID + " FROM " + TABLE_NAME + " WHERE " + COLUMN_ALARM + " = ?)",
+                new String[]{String.valueOf(eventId), "1"});
+
+    }
+
+    public List<Integer> getReminderIdsWithAlarmAndEventId(int eventId) {
+        List<Integer> reminderIds = new ArrayList<>();
+        SQLiteDatabase database = this.getReadableDatabase();
+        Cursor cursor = database.query(TABLE_NAME_REMINDER, new String[]{COLUMN_ID_REMINDER},
+                COLUMN_EVENT_ID + " = ? AND " + COLUMN_EVENT_ID + " IN (SELECT " + COLUMN_ID + " FROM " + TABLE_NAME + " WHERE " + COLUMN_ALARM + " = ?)",
+                new String[]{String.valueOf(eventId), "1"}, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                @SuppressLint("Range") int reminderId = cursor.getInt(cursor.getColumnIndex(COLUMN_ID_REMINDER));
+                reminderIds.add(reminderId);
+            }
+            cursor.close();
+        }
+
+        return reminderIds;
+    }
+
+
+    public boolean checkNextRowHasParentId(long rowId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] projection = {COLUMN_ID};
+        String selection = COLUMN_ID + " = ? AND EXISTS (SELECT 1 FROM " + TABLE_NAME + " WHERE " + COLUMN_PARENT_ID + " = ?)";
+        String[] selectionArgs = {String.valueOf(rowId), String.valueOf(rowId)};
+        Cursor cursor = db.query(TABLE_NAME, projection, selection, selectionArgs, null, null, null);
+        boolean hasParentId = cursor.moveToFirst();
+        cursor.close();
+        return hasParentId;
+    }
 
     void deleteOneRow(String row_id) {
         SQLiteDatabase db = this.getWritableDatabase();

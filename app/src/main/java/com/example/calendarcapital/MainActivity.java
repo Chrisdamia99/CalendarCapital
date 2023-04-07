@@ -5,7 +5,6 @@ import static com.example.calendarcapital.CalendarUtils.daysInWeekArray;
 import static com.example.calendarcapital.CalendarUtils.monthYearFromDate;
 import static com.example.calendarcapital.CalendarUtils.selectedDate;
 import static com.example.calendarcapital.CalendarUtils.stringToLocalDate;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -154,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         refreshMenuBtn = findViewById(R.id.refreshMenuBtn);
 
     }
-    public void getIntentFromEventEdit() {
+    private void getIntentFromEventEdit() {
 
         b = getIntent().getExtras();
         if (stack.size() > 1) {
@@ -183,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
     }
 
-    public void getStackFromSave() {
+    private void getStackFromSave() {
 
         if (getSaveStack == null) {
             setMonthView();
@@ -204,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
     }
 
-    public void dublicatesInStack() {
+    private void dublicatesInStack() {
         if (stack.size() > 1) {
             stack.removeFirst();
         }
@@ -220,8 +219,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         }
     }
 
-
-    public void onMyBackPressed() {
+    private void onMyBackPressed() {
 
         String previousViewType = stack.peekFirst();
 
@@ -300,6 +298,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                 String time_upd = String.valueOf(hourAdapter.getItem(position).getEvents().get(0).getTime());
                 String alarmState = hourAdapter.getItem(position).getEvents().get(0).getAlarm();
                 String repeatState = hourAdapter.getItem(position).getEvents().get(0).getRepeat();
+                String parent_id = hourAdapter.getItem(position).getEvents().get(0).getParent_id();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 AlertDialog builderRepeating = new AlertDialog.Builder(MainActivity.this).setView(rowView).setTitle("Διαγραφή συμβάντος").create();
@@ -322,7 +321,10 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         String parent_id_value = hourAdapter.getItem(position).getEvents().get(0).getParent_id();
-                                        if (parent_id_value==null)
+                                        String row_id = hourAdapter.getItem(position).getEvents().get(0).getId();
+
+
+                                        if (parent_id_value==null && !myDB.checkNextRowHasParentId(Long.parseLong(row_id)))
                                         {
                                             deleteEventNotRepeating(position,CA);
                                         }else
@@ -372,6 +374,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent i = new Intent(MainActivity.this, Edit_Update_Activity.class);
+
                                 i.putExtra("id", id_row);
                                 i.putExtra("title", title_upd);
                                 i.putExtra("comment", comment_upd);
@@ -379,6 +382,8 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                                 i.putExtra("time", time_upd);
                                 i.putExtra("alarm", alarmState);
                                 i.putExtra("repeat",repeatState);
+                                i.putExtra("parent_id",parent_id);
+
                                 startActivity(i);
                             }
                         }).setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -420,34 +425,104 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                     @Override
                     public void onClick(View v) {
                         String parent_id = hourAdapter.getItem(position).getEvents().get(0).getParent_id();
-                        ArrayList<String> remIds = new ArrayList<>();
+                        String row_id = hourAdapter.getItem(position).getEvents().get(0).getId();
 
                         Cursor cursorEvent = myDB.readAllEvents();
                         Cursor remCursor = myDB.readAllReminder();
 
-                        while(cursorEvent.moveToNext())
+
+                        if (parent_id==null)
                         {
-                            if (cursorEvent.getString(7)==parent_id)
+                            cursorEvent.moveToPosition(-1);
+                            while (cursorEvent.moveToNext())
                             {
-                                remIds.add(cursorEvent.getString(7));
+                                remCursor.moveToPosition(-1);
+                                while (remCursor.moveToNext())
+                                {
+
+                                    if (cursorEvent.getString(0).equals(row_id) &&
+                                            cursorEvent.getString(5).equals("1"))
+                                    {
+
+                                        if (remCursor.getString(1).equals(row_id))
+                                        {
+
+                                            myDB.deleteOneRowReminder(remCursor.getString(0));
+                                            cancelAlarm(Integer.parseInt(remCursor.getString(0)));
+                                        }
+
+                                    }
+
+
+                                    if (!(cursorEvent.getString(7) == null) &&
+                                            cursorEvent.getString(7).equals(row_id) &&
+                                            cursorEvent.getString(5).equals("1"))
+                                    {
+
+                                        if (remCursor.getString(1).equals(cursorEvent.getString(0)))
+                                        {
+
+                                            myDB.deleteOneRowReminder(remCursor.getString(0));
+                                            cancelAlarm(Integer.parseInt(remCursor.getString(0)));
+                                        }
+                                    }
+
+
+                                }
+
                             }
+
+
+
+                        }else
+                        {
+
+                        cursorEvent.moveToPosition(-1);
+                        while (cursorEvent.moveToNext())
+                        {
+                            remCursor.moveToPosition(-1);
+                            while (remCursor.moveToNext())
+                            {
+                                if (!(cursorEvent.getString(7)==null) && cursorEvent.getString(7).equals(parent_id) &&
+                                        cursorEvent.getString(5).equals("1"))
+                                {
+                                    if (remCursor.getString(1).equals(cursorEvent.getString(0)))
+                                    {
+                                        myDB.deleteOneRowReminder(remCursor.getString(0));
+                                        cancelAlarm(Integer.parseInt(remCursor.getString(0)));
+                                    }
+                                }else if (cursorEvent.getString(7) == null &&
+                                        cursorEvent.getString(0).equals(parent_id) && cursorEvent.getString(5).equals("1"))
+                                {
+                                    if (remCursor.getString(1).equals(cursorEvent.getString(0)))
+                                    {
+                                        myDB.deleteOneRowReminder(remCursor.getString(0));
+                                        cancelAlarm(Integer.parseInt(remCursor.getString(0)));
+                                    }
+                                }
+
+                            }
+
                         }
 
-                        myDB.deleteOneRowReminder(parent_id);
-                        cancelAlarm(Integer.parseInt(parent_id));
-                        for (int i=0; i<remIds.size(); i++)
-                        {
-                            myDB.deleteOneRowReminder(remIds.get(i));
-                            cancelAlarm(Integer.parseInt(remIds.get(i)));
+
                         }
+
 
 
                         CA.notifyDataSetChanged();
                         hourAdapter.notifyDataSetChanged();
 
-                        myDB.deleteAllEventsParentId(parent_id);
-                        myDB.deleteOneRow(parent_id);
+                        if (parent_id==null)
+                        {
+                            myDB.deleteAllEventsParentId(row_id);
+                            myDB.deleteOneRow(row_id);
+                        }else {
+                            myDB.deleteAllEventsParentId(parent_id);
+                            myDB.deleteOneRow(parent_id);
+                        }
 
+                        cursorEvent.close();
                         remCursor.close();
                         myDB.close();
 
@@ -593,7 +668,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
 
 
-    public void cancelAlarm(int alarmId) {
+    private void cancelAlarm(int alarmId) {
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, AlarmReceiver.class);
@@ -887,7 +962,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     }
 
 
-    public void newEventAction() {
+    private void newEventAction() {
         Intent saveIntent = new Intent(this, EventEdit.class);
         String stackNow = stack.peekFirst();
         changeEventEdit = false;

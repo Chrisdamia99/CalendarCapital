@@ -1,11 +1,7 @@
 package com.example.calendarcapital;
 
 
-import android.icu.text.DateFormat;
-import android.util.Log;
 
-import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.Instant;
@@ -16,7 +12,6 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -170,13 +165,7 @@ public class CalendarUtils {
     }
     public static Date stringToDateFormat(String myDate) {
 
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         Locale locale = new Locale("el", "GR");
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss a", locale);
-
-
-//        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy",locale);
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzzz yyyy", locale);
 
 
         SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy", locale);
@@ -190,7 +179,6 @@ public class CalendarUtils {
     }
 
     public static String dateToStringFormat(Date myDate) {
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         Locale locale = new Locale("el", "GR");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yyyy", locale);
 
@@ -238,9 +226,15 @@ public class CalendarUtils {
     }
     public static LocalTime dateToLocalTime(Date date)
     {   LocalTime localTime;
+        Locale locale = new Locale("el", "GR");
+        String pattern = "HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern, locale);
         Instant instant = date.toInstant();
         localTime = instant.atZone(ZoneId.systemDefault()).toLocalTime();
-        return localTime ;
+        String formattedDate = localTime.format(formatter);
+
+        return LocalTime.parse(formattedDate,formatter);
+//        return localTime ;
     }
 
 

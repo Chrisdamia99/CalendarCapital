@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 
 class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends the recyclerview that
@@ -69,10 +68,6 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
 
-//        while (calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)) {
-//            daysForRepeat.add(calendar.getTime());
-//            calendar.add(Calendar.DAY_OF_YEAR, 1);
-//        }
 
 
         if (days.size() > 15) //month view
@@ -113,7 +108,6 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
             daysForRepeat.add(date2);
         }
 
-        final Date myRepeatDate = daysForRepeat.get(position);
 
 
         holder.dayOfMonth.setText(String.valueOf(date.getDayOfMonth()));
@@ -125,7 +119,6 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
         else
             holder.dayOfMonth.setTextColor(Color.LTGRAY);
         ArrayList<Event> myEvents = new ArrayList<>();
-//        ArrayList<Event> myRepeatingEvents = new ArrayList<>();
 
 
         cursor.moveToPosition(-1);
@@ -139,7 +132,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
 
         }
 
-        myEvents.size();
+
 
         myEvents.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
 

@@ -47,7 +47,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
     private TextView eventDateTV, eventTimeTV, changeTimeTV, changeDateTV, addAlarmButtonUPD, addRepeatButtonUPD,repeatCountTvUPD;
     private TextView oneDayBefore, oneHourMinBefore, halfHourMinBefore, fifteenMinBefore, tenMinBefore, fiveMinBefore, customChoice;
     private TextView everyDay, everyWeek, everyMonth, everyYear, customRepeat;
-    public String new_event_exRepeating_ID;
     private View oneDayView, oneHourView, halfMinView, fifteenMinView, tenMinView, fiveMinView, aboveAlarmButtonUPD;
     Button btnUpdate;
     RemindersAdapter remindersAdapter;
@@ -59,6 +58,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
     private static LocalDate events_date;
     private static LocalTime time;
     int alarmState, repeatState;
+    String parent_id;
     public Date oneDayBeforeDate, oneHourBeforeDate, halfHourBeforeDate, fifteenMinBeforeDate, tenMinBeforeDate, fiveMinBeforeDate;
     private Activity mCurrentActivity;
     private ScheduledExecutorService executorService;
@@ -71,7 +71,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
     String id_row, title, comment;
     ArrayList<Date> repeats_listUPD = new ArrayList<>();
     ArrayList<String> list_repeat_for_dbUPD = new ArrayList<>();
-
     ArrayList<Date> reminders_upd_list = new ArrayList<>();
     ArrayList<String> idsOfNewReminders = new ArrayList<>();
 
@@ -159,7 +158,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
     }
 
-    void getSetIntentData() {
+    private void getSetIntentData() {
         if (getIntent().hasExtra("id") && getIntent().hasExtra("title") && getIntent().hasExtra("comment") && getIntent().hasExtra("date") && getIntent().hasExtra("time")) {
             id_row = getIntent().getStringExtra("id");
             title = getIntent().getStringExtra("title");
@@ -168,6 +167,12 @@ public class Edit_Update_Activity extends AppCompatActivity {
             time = LocalTime.parse(getIntent().getStringExtra("time"));
             alarmState = Integer.parseInt(getIntent().getStringExtra("alarm"));
             repeatState = Integer.parseInt(getIntent().getStringExtra("repeat"));
+            if (getIntent().getStringExtra("parent_id") == null)
+            {
+                parent_id = null;
+            }else {
+                parent_id = getIntent().getStringExtra("parent_id");
+            }
             setRepeatFromIntent();
 
             eventNameETUPD.setText(title);
@@ -458,14 +463,56 @@ public class Edit_Update_Activity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 repeatCountTvUPD.setVisibility(View.GONE);
-
+                addRepeatButtonUPD.setText("Επανάληψη");
+                cancelRepeatUPD.setVisibility(View.GONE);
                 addRepeat();
             }
         }).setTitle("Προσθέστε το πλήθος επαναλήψεων.");
         builderCountRepeat.show();
     }
 
-    public void showChangeDate(int year, int month, int dayofmonth) {
+    private void alertDialogCountRepeatIfDateChange(LocalDate date)
+    {
+        cRepeat.clear();
+        cRepeat.set(date.getYear(),date.getMonthValue() - 1, date.getDayOfMonth());
+        cRepeat.set(Calendar.HOUR_OF_DAY, 8);
+        cRepeat.set(Calendar.MINUTE, 0);
+        cRepeat.set(Calendar.SECOND, 0);
+        repeats_listUPD.clear();
+        if (repeatState == 1) {
+
+            for (int i = 0; i < repeatCounterInt; i++) {
+                cRepeat.add(Calendar.DAY_OF_YEAR,1);
+                repeats_listUPD.add(cRepeat.getTime());
+
+            }
+        } else if (repeatState == 2) {
+
+            for (int i = 0; i < repeatCounterInt; i++) {
+
+                cRepeat.add(Calendar.DAY_OF_YEAR,7);
+                repeats_listUPD.add(cRepeat.getTime());
+            }
+
+
+        } else if (repeatState == 3) {
+            for (int i = 0; i < repeatCounterInt; i++) {
+
+                cRepeat.add(Calendar.MONTH,1);
+                repeats_listUPD.add(cRepeat.getTime());
+            }
+
+        } else if (repeatState == 4) {
+
+            for (int i = 0; i < repeatCounterInt; i++) {
+
+                cRepeat.add(Calendar.YEAR,1);
+                repeats_listUPD.add(cRepeat.getTime());
+            }
+        } else if (repeatState == 5) {
+        }
+    }
+    private void showChangeDate(int year, int month, int dayofmonth) {
         final DatePickerDialog StartTime = new DatePickerDialog(this, R.style.TimePickerTheme, new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 int trueMonth = monthOfYear + 1;
@@ -509,7 +556,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
     }
 
 
-    public void showChangeTime(int hours, int minute) {
+    private void showChangeTime(int hours, int minute) {
         TimePickerDialog timePickerDialog;
         timePickerDialog = new TimePickerDialog(Edit_Update_Activity.this, R.style.TimePickerTheme, new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -559,7 +606,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
     }
 
-    public void showChangeTimeForReminder(int hours, int minute) {
+    private void showChangeTimeForReminder(int hours, int minute) {
 
         TimePickerDialog timePickerDialog;
         timePickerDialog = new TimePickerDialog(Edit_Update_Activity.this, R.style.TimePickerTheme, new TimePickerDialog.OnTimeSetListener() {
@@ -649,7 +696,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
         timePickerDialog.show();
     }
 
-    public void startAlarm(int alarmId, Calendar cc) {
+    private void startAlarm(int alarmId, Calendar cc) {
 
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -658,7 +705,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
         intent.removeExtra("title");
         intent.removeExtra("comment");
-//        intent.removeExtra("calendar");
 
 
         String strTitle = eventNameETUPD.getText().toString();
@@ -666,7 +712,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
         intent.putExtra("title", strTitle);
         intent.putExtra("comment", strComment);
-//        intent.putExtra("calendar", myTime);
 
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(Edit_Update_Activity.this, alarmId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -678,57 +723,11 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
     }
 
-//    public void startRepeatingAlarm(int alarmId, Calendar cc, int repeatState) {
-//
-//        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//
-//        Intent intent = new Intent(Edit_Update_Activity.this, AlarmReceiver.class);
-//
-//        intent.removeExtra("title");
-//        intent.removeExtra("comment");
-////        intent.removeExtra("calendar");
-//
-//
-//        String strTitle = eventNameETUPD.getText().toString();
-//        String strComment = eventCommentETUPD.getText().toString();
-//
-//        intent.putExtra("title", strTitle);
-//        intent.putExtra("comment", strComment);
-////        intent.putExtra("calendar", myTime);
-//
-//
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(Edit_Update_Activity.this, alarmId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-////        alarmManager.setExact(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(), pendingIntent);
-//        if (repeatState == 1) {
-//            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-//        } else if (repeatState == 2) {
-//            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 7, pendingIntent);
-//        } else if (repeatState == 3) {
-//            if (date.getMonthValue() != 2) {
-//                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 30, pendingIntent);
-//            } else if (date.getMonthValue() == 2 && date.isLeapYear()) {
-//                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 29, pendingIntent);
-//            } else if (date.getMonthValue() == 2 && !date.isLeapYear()) {
-//                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 28, pendingIntent);
-//            }
-//        } else if (repeatState == 4) {
-//            if (date.isLeapYear()) {
-//                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 365, pendingIntent);
-//            } else {
-//                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 366, pendingIntent);
-//            }
-//        } else if (repeatState == 5) {
-////            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(), , pendingIntent);
-//        }
-//
-//
-//        Toast.makeText(Edit_Update_Activity.this, "Alarm set at: " + cc.getTime().toString(), Toast.LENGTH_SHORT).show();
-//    }
 
 
 
 
-    public void addAlarm() {
+    private void addAlarm() {
 
         LayoutInflater lf = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View rowView = lf.inflate(R.layout.activity_radio_button_for_reminder, null);
@@ -899,7 +898,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
     }
 
-    public void addRepeat() {
+    private void addRepeat() {
 
         cRepeat.set(Calendar.YEAR, date.getYear());
         cRepeat.set(Calendar.MONTH, date.getMonth().getValue() - 1);
@@ -1026,8 +1025,13 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
         if (reminders_upd_list.size() > 0) {
             alarmState = 1;
-//            myDB.updateData(id_row, eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState));
+            if (repeatState==0) {
+                myDB.updateData(id_row, eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState), parent_id);
+            }else
+            {
+                myDB.updateData(id_row, eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState), null);
 
+            }
             cursorRem.moveToPosition(-1);
 
 
@@ -1055,8 +1059,13 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
         } else {
             alarmState = 0;
-//            myDB.updateData(id_row, eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState));
+            if (repeatState==0) {
+                myDB.updateData(id_row, eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState), parent_id);
+            }else
+            {
+                myDB.updateData(id_row, eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState), null);
 
+            }
         }
 
 
@@ -1064,7 +1073,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
         myDB.close();
     }
 
-    private void giveIdToStartAlarmsRepeatingEvent()
+    private void giveIdToStartAlarmsEvent()
     {        MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
 
         Cursor secondRem = myDB.readAllReminder();
@@ -1098,11 +1107,48 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
     }
 
+    private void makeAndSaveRepeatUPD()
+    {        MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
 
+        Cursor cursor = myDB.readAllEvents();
+
+
+        repeats_listUPD.sort((o1, o2) -> o1.compareTo(o2));
+
+        if (repeats_listUPD.size()>0)
+        {
+            while (cursor.moveToNext())
+            {
+                if (cursor.getString(0).equals(id_row)) {
+                    for (int i = 0; i < repeats_listUPD.size(); i++) {
+
+                        LocalDate dateDB = CalendarUtils.dateToLocalDate(repeats_listUPD.get(i));
+                        LocalTime timeDB = CalendarUtils.dateToLocalTime(repeats_listUPD.get(i));
+
+                        myDB.addEvent(cursor.getString(1),cursor.getString(2),dateDB,timeDB,"0",
+                                "0",id_row);
+
+                        list_repeat_for_dbUPD.add(cursor.getString(0));
+
+
+                    }
+                }
+            }
+        }
+
+        cursor.close();
+
+        for (int i = 0; i < list_repeat_for_dbUPD.size(); i++) {
+            startAlarm(Integer.parseInt(list_repeat_for_dbUPD.get(i)), CalendarUtils.dateToCalendar(repeats_listUPD.get(i)));
+        }
+
+        myDB.close();
+
+    }
 //----------------------------------------------------------------------
 
 
-    public void updEventAction() {
+    private void updEventAction() {
         MyDatabaseHelper myDB = new MyDatabaseHelper(getApplicationContext());
 
 
@@ -1115,7 +1161,16 @@ public class Edit_Update_Activity extends AppCompatActivity {
                     events_date.equals(CalendarUtils.stringToLocalDate(eventCursor.getString(3))))
             {
                 updateAndSaveEvent();
-                giveIdToStartAlarmsRepeatingEvent();
+                giveIdToStartAlarmsEvent();
+                if (date.equals(CalendarUtils.selectedDate) )
+                {
+                    makeAndSaveRepeatUPD();
+                }else
+                {
+                    alertDialogCountRepeatIfDateChange(date);
+                    makeAndSaveRepeatUPD();
+                }
+
 
                 break;
             }
@@ -1126,11 +1181,11 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
         eventCursor.close();
         myDB.close();
+
         Intent i1 = new Intent(Edit_Update_Activity.this, MainActivity.class);
         Boolean myBool = true;
+
         i1.putExtra("date", date);
-
-
         i1.putExtra("bool", myBool);
 
 

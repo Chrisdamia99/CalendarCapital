@@ -178,3 +178,30 @@
 //        alarmManager.cancel(pendingIntent);
 //        notifyDataSetChanged();
 //    }
+
+//------------------------------------ALARM RECEIVER HANDLER TO STOP AFTER 10SEC---------------------------
+
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (!isNotificationDeleted) {
+//                    stopRingtone();
+//                }
+//            }
+//        }, 1000);
+
+
+//    public void stopRingtone() {
+//        if (r != null && r.isPlaying()) {
+//            r.stop();
+//        }
+//        if (vibrator != null) {
+//            vibrator.cancel();
+//        }
+//    }
+//
+//
+//    public void onNotificationDeleted(Context context, int notificationId, int reason) {
+//        isNotificationDeleted = true;
+//        stopRingtone();
+//    }

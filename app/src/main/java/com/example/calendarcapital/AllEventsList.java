@@ -31,7 +31,6 @@ public class AllEventsList {
         ArrayList<HourEvent> eventsDB = new ArrayList<>();
 
         Cursor cursor = myDB.readAllEvents();
-//        Cursor cursorRepeatingEvents = myDB.readAllRepeatingEvents();
 
         SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
 
@@ -67,37 +66,7 @@ public class AllEventsList {
 
         }
 
-//        while (cursorRepeatingEvents.moveToNext())
-//        {
-//            String myDateTest = cursorRepeatingEvents.getString(4);
-//            LocalDate dateDB = CalendarUtils.stringToLocalDate(myDateTest);
-//            LocalTime timeDB = LocalTime.parse(cursorRepeatingEvents.getString(5));
-//            String titleDB = cursorRepeatingEvents.getString(2);
-//            String commentDB = cursorRepeatingEvents.getString(3);
-//            String id_event = cursorRepeatingEvents.getString(0);
-//            String alarm = cursorRepeatingEvents.getString(6);
-//            String repeat = cursorRepeatingEvents.getString(7);
-//            Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB, alarm,repeat);
-//
-//            if (CalendarUtils.formattedDate(selectedDate).equals(CalendarUtils.formattedDate(dateDB)) ) {
-//                ArrayList<Event> eventRepeatingDB = Event.eventsForDateAndTime(selectedDate, timeDB);
-//
-//                eventRepeatingDB.add(eventDB);
-//                HourEvent hourEventDB = new HourEvent(timeDB, eventRepeatingDB,id_event);
-//
-//                eventsDB.add(hourEventDB);
-//
-//                Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
-//                eventRepeatingDB.size();
-//
-//            }
-//
-//            Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
-//
-//        }
 
-
-//        cursorRepeatingEvents.close();
     cursor.close();
         myDB.close();
 

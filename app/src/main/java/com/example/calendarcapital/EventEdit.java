@@ -3,7 +3,6 @@ package com.example.calendarcapital;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
@@ -29,7 +28,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -58,7 +56,7 @@ public class EventEdit extends AppCompatActivity {
     int hour, min;
     private static LocalDate date;
     private static LocalTime time;
-    public Date oneDayBeforeDate, oneHourBeforeDate, halfHourBeforeDate, fifteenMinBeforeDate, tenMinBeforeDate, fiveMinBeforeDate;
+    private Date oneDayBeforeDate, oneHourBeforeDate, halfHourBeforeDate, fifteenMinBeforeDate, tenMinBeforeDate, fiveMinBeforeDate;
     int alarmState, repeatState;
     Calendar cReminder = Calendar.getInstance();
     Calendar cRepeat = Calendar.getInstance();
@@ -235,7 +233,7 @@ public class EventEdit extends AppCompatActivity {
 
     }
 
-    public void updateIfEmptyListView() {
+    private void updateIfEmptyListView() {
         if (mCurrentActivity instanceof EventEdit) {
             ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
             scheduler.scheduleAtFixedRate(new Runnable() {
@@ -276,7 +274,7 @@ public class EventEdit extends AppCompatActivity {
     }
 
 
-    public void showChangeDate(int year, int month, int dayofmonth) {
+    private void showChangeDate(int year, int month, int dayofmonth) {
         final DatePickerDialog StartTime = new DatePickerDialog(this, R.style.TimePickerTheme, new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 int trueMonth = monthOfYear + 1;
@@ -376,7 +374,7 @@ public class EventEdit extends AppCompatActivity {
 
     }
 
-    public void showChangeTimeForReminder(int hours, int minute) {
+    private void showChangeTimeForReminder(int hours, int minute) {
 
         TimePickerDialog timePickerDialog;
         timePickerDialog = new TimePickerDialog(EventEdit.this, R.style.TimePickerTheme, new TimePickerDialog.OnTimeSetListener() {
@@ -478,7 +476,7 @@ public class EventEdit extends AppCompatActivity {
     }
 
 
-    public void startAlarm(int alarmId, Calendar cc) {
+    private void startAlarm(int alarmId, Calendar cc) {
 
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -508,7 +506,7 @@ public class EventEdit extends AppCompatActivity {
 
 
 
-    public void addRepeat() {
+    private void addRepeat() {
 
 
         cRepeat.set(Calendar.YEAR, date.getYear());
@@ -610,7 +608,7 @@ public class EventEdit extends AppCompatActivity {
 
 
 
-    public void addAlarm() {
+    private void addAlarm() {
 
 
         LayoutInflater lf = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -838,7 +836,8 @@ public class EventEdit extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 repeatCountTv.setVisibility(View.GONE);
-
+                addRepeatButton.setText("Επανάληψη");
+                cancelRepeat.setVisibility(View.GONE);
                 addRepeat();
             }
         }).setTitle("Προσθέστε το πλήθος επαναλήψεων.");
@@ -857,6 +856,8 @@ public class EventEdit extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
         }
     }
+
+
 
     private void makeAndSaveEvent()
     {
@@ -930,8 +931,8 @@ public class EventEdit extends AppCompatActivity {
                         LocalDate dateDB = CalendarUtils.dateToLocalDate(repeats_list.get(i));
                         LocalTime timeDB = CalendarUtils.dateToLocalTime(repeats_list.get(i));
 
-                        myDB.addEvent(cursor.getString(1),cursor.getString(2),dateDB,timeDB,cursor.getString(5),
-                                cursor.getString(6),idForRepeat);
+                        myDB.addEvent(cursor.getString(1),cursor.getString(2),dateDB,timeDB,"0",
+                                "0",idForRepeat);
 
                         list_repeat_for_db.add(cursor.getString(0));
 

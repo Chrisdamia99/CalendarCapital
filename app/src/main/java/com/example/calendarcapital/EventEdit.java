@@ -60,6 +60,7 @@ public class EventEdit extends AppCompatActivity {
     int alarmState, repeatState;
     Calendar cReminder = Calendar.getInstance();
     Calendar cRepeat = Calendar.getInstance();
+    Calendar cDatePicker = Calendar.getInstance();
     ArrayList<Date> reminders_list = new ArrayList<>();
     ArrayList<Date> repeats_list = new ArrayList<>();
     ArrayList<String> list_reminders_for_db = new ArrayList<>();
@@ -106,7 +107,8 @@ public class EventEdit extends AppCompatActivity {
         changeDateTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showChangeDate(LocalDate.now().getYear(), LocalDate.now().getMonth().getValue(), LocalDate.now().getDayOfMonth());
+                showChangeDate(cDatePicker.get(Calendar.YEAR), cDatePicker.get(Calendar.MONTH), cDatePicker.get(Calendar.DAY_OF_MONTH));
+
             }
         });
         eventEditBackButton.setOnClickListener(new View.OnClickListener() {
@@ -275,26 +277,25 @@ public class EventEdit extends AppCompatActivity {
 
 
     private void showChangeDate(int year, int month, int dayofmonth) {
+
+
         final DatePickerDialog StartTime = new DatePickerDialog(this, R.style.TimePickerTheme, new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 int trueMonth = monthOfYear + 1;
 
                 if (trueMonth < 10 && dayOfMonth >= 10) {
-                    String str = String.format("%02d", trueMonth);
+
 
                     LocalDate myDD = LocalDate.of(year, trueMonth, dayOfMonth);
-
                     eventDateTV.setText(CalendarUtils.formattedDateEventEdit(myDD));
 
 
                 } else if (dayOfMonth < 10 && trueMonth < 10) {
-                    String strMonth = String.format("%02d", trueMonth);
-                    String strDay = String.format("%02d", dayOfMonth);
+
 
                     LocalDate myDD = LocalDate.of(year, trueMonth, dayOfMonth);
                     eventDateTV.setText(CalendarUtils.formattedDateEventEdit(myDD));
                 } else if (dayOfMonth < 10 && trueMonth >= 10) {
-                    String strDay = String.format("%02d", dayOfMonth);
 
                     LocalDate myDD = LocalDate.of(year, trueMonth, dayOfMonth);
 

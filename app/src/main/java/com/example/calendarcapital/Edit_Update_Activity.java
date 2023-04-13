@@ -67,7 +67,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
     Calendar cReminder = Calendar.getInstance();
     Calendar cRepeat = Calendar.getInstance();
-
+    Calendar cDatePicker = Calendar.getInstance();
     String id_row, title, comment;
     ArrayList<Date> repeats_listUPD = new ArrayList<>();
     ArrayList<String> list_repeat_for_dbUPD = new ArrayList<>();
@@ -104,7 +104,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
         changeDateTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showChangeDate(LocalDate.now().getYear(), LocalDate.now().getMonth().getValue(), LocalDate.now().getDayOfMonth());
+                showChangeDate(cDatePicker.get(Calendar.YEAR), cDatePicker.get(Calendar.MONTH), cDatePicker.get(Calendar.DAY_OF_MONTH));
             }
         });
 

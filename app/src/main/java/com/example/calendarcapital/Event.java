@@ -6,12 +6,16 @@ import androidx.annotation.NonNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class Event {
 
 
     public static ArrayList<Event> eventsList = new ArrayList<>();
+    Map<Event, List<Event>> eventData = new LinkedHashMap<>();
 
     public static ArrayList<Event> eventsForDate(LocalDate date) {
         ArrayList<Event> events = new ArrayList<>();
@@ -23,6 +27,7 @@ public class Event {
         }
         return events;
     }
+
 
 
     public static ArrayList<Event> eventsForDateAndTime(LocalDate date, LocalTime time) {
@@ -58,6 +63,16 @@ public class Event {
 
     }
 
+    public Event(String id, String name, String comment, LocalDate date, LocalTime time, String alarm, String parent_id) {
+        this.id = id;
+        this.name = name;
+        this.comment = comment;
+        this.date = date;
+        this.time = time;
+        this.alarm = alarm;
+        this.parent_id = parent_id;
+    }
+
     public Event(String name, String comment, LocalDate date, LocalTime time) {
         this.comment = comment;
         this.name = name;
@@ -65,6 +80,7 @@ public class Event {
         this.time = time;
 
     }
+
 
     @NonNull
     @Override

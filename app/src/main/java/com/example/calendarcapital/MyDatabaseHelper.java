@@ -20,15 +20,15 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "CalendarCapital.db";
     private static final int DATABASE_VERSION = 1;
 
-    private static final String TABLE_NAME = "my_events_db";
+    public static final String TABLE_NAME = "my_events_db";
     public static final String COLUMN_ID = "_id";
-    private static final String COLUMN_TITLE = "event_title";
-    private static final String COLUMN_COMMENT = "event_comment";
-    private static final String COLUMN_DATE = "event_date";
-    private static final String COLUMN_TIME = "event_time";
-    private static final String COLUMN_ALARM = "event_alarm";
-    private static final String COLUMN_REPEAT_ALARM = "event_repeat";
-    private static final String COLUMN_PARENT_ID = "event_parent_id";
+    public static final String COLUMN_TITLE = "event_title";
+    public static final String COLUMN_COMMENT = "event_comment";
+    public static final String COLUMN_DATE = "event_date";
+    public static final String COLUMN_TIME = "event_time";
+    public static final String COLUMN_ALARM = "event_alarm";
+    public static final String COLUMN_REPEAT_ALARM = "event_repeat";
+    public static final String COLUMN_PARENT_ID = "event_parent_id";
 
 
     private static final String TABLE_NAME_REMINDER = "my_reminders_db";

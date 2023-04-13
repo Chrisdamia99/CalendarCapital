@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -134,11 +135,11 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
 
 
 
-        myEvents.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
+//        myEvents.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
+//
+//        myEvents.sort((o1, o2) -> o2.getTime().compareTo(o1.getTime()));
 
-        myEvents.sort((o1, o2) -> o2.getTime().compareTo(o1.getTime()));
-
-
+//        myEvents.sort((o1, o2) -> o2.getName().compareTo(o1.getName()));
         cursor.moveToPosition(-1);
         for (int i=0; i<days.size(); i++)
         {
@@ -152,6 +153,8 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
 
                 }
             }
+
+            Collections.sort(eventNames);
 
             int numEvents = eventNames.size();
             if (numEvents >= 1) {
@@ -178,8 +181,10 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
 
 
         }
-
-
+//        myEvents.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
+//
+//        myEvents.sort((o1, o2) -> o2.getTime().compareTo(o1.getTime()));
+//        myEvents.sort((o1, o2) -> o2.getName().compareTo(o1.getName()));
         cursor.moveToPosition(-1);
         for (int i=0; i<days.size(); i++) {
 
@@ -189,6 +194,8 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                         eventNamesRepeating.add(event.getName());
                     }
                 }
+
+            Collections.sort(eventNamesRepeating);
 
                 int numEvents = eventNamesRepeating.size();
                 if (numEvents >= 1) {

@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -19,6 +18,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CalendarCapital"
         tools:targetApi="31">
+        <activity
+            android:name=".AllEventsExListView"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -51,24 +57,16 @@
             android:name=".AlarmReceiver"
             android:enabled="true"
             android:exported="true"
-            android:label="AlarmReceiver"/>
-
+            android:label="AlarmReceiver" />
         <receiver
             android:name=".RepeatReceiver"
             android:enabled="true"
             android:exported="true"
-            android:label="RepeatReceiver"/>
-
-        <receiver android:name=".StopRingtoneReceiver"
+            android:label="RepeatReceiver" />
+        <receiver
+            android:name=".StopRingtoneReceiver"
             android:enabled="true"
-            android:exported="false">
-
-        </receiver>
-
-
-
-
-
+            android:exported="true" />
     </application>
 
 </manifest>

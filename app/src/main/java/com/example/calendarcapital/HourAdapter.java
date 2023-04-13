@@ -40,7 +40,7 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.hour_cell, parent, false);
 
 
-        compareAndGetValuesFromDBWithId(convertView, event.getId(), event.getTime());
+        compareAndGetValuesFromDBWithId(event.getId());
 
 
         setHour(convertView,event.time,selectedDate);
@@ -51,7 +51,7 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
 
 
 
-    private void compareAndGetValuesFromDBWithId(View convertView, String id, LocalTime time) {
+    private void compareAndGetValuesFromDBWithId(String id) {
         Cursor cursor = myDB.readAllEvents();
 
 
@@ -92,8 +92,6 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
         cursor.close();
         myDB.close();
     }
-
-
 
 
 

@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="20dp"
+    android:padding="16dp"
+    >
+
+
+<LinearLayout
     android:layout_width="match_parent"
     android:orientation="horizontal"
     android:layout_height="130dp"
+    android:background="@drawable/hour_cell_shape"
     >
 
     <TextView
@@ -25,7 +37,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/lightgray"
+        android:background="@drawable/hour_cell_shape"
         android:padding="5dp">
 
         <TextView
@@ -127,4 +139,5 @@
 
 
 
+</LinearLayout>
 </LinearLayout>

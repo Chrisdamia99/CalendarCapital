@@ -31,9 +31,8 @@
             android:padding="5dp"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:textColor="@color/blakcgray"
+            android:textColor="@color/blakcgray"/>
 
-            />
                 <LinearLayout
                     android:id="@+id/eventsForBlock"
                     android:layout_width="match_parent"
@@ -46,7 +45,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:gravity="center"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="1dp"
             android:text="Event"
             android:singleLine="true"
             android:textColor="@color/black"
@@ -68,7 +67,7 @@
             android:text="Event"
             android:gravity="center"
 
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="1dp"
                 android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="10sp"
@@ -90,7 +89,7 @@
                             android:text="Event"
                             android:gravity="center"
 
-                            android:layout_marginTop="3dp"
+                            android:layout_marginTop="1dp"
                             android:singleLine="true"
                             android:textColor="@color/black"
                             android:textSize="10sp"
@@ -109,7 +108,7 @@
                             android:layout_height="wrap_content"
                             android:padding="5dp"
                             android:gravity="center"
-                            android:layout_marginTop="3dp"
+                            android:layout_marginTop="1dp"
                             android:text="Event"
                             android:singleLine="true"
                             android:textColor="@color/black"
@@ -131,7 +130,7 @@
                             android:text="Event"
                             android:gravity="center"
 
-                            android:layout_marginTop="3dp"
+                            android:layout_marginTop="1dp"
                             android:singleLine="true"
                             android:textColor="@color/black"
                             android:textSize="10sp"
@@ -153,7 +152,7 @@
                             android:text="Event"
                             android:gravity="center"
 
-                            android:layout_marginTop="3dp"
+                            android:layout_marginTop="1dp"
                             android:singleLine="true"
                             android:textColor="@color/black"
                             android:textSize="10sp"
@@ -166,6 +165,30 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/eventDayText"
                             app:layout_constraintVertical_bias="0.0" />
+
+
+                    <TextView
+                        android:id="@+id/eventsMore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="1dp"
+                        android:text="@string/more_events_dots"
+                        android:gravity="center|top"
+                        android:layout_gravity="top|center"
+
+                        android:layout_marginTop="1dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="8sp"
+                        android:textStyle="bold"
+
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/eventDayText"
+                        app:layout_constraintVertical_bias="0.0" />
 
                 </LinearLayout>
 

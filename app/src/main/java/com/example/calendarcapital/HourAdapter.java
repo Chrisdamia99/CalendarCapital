@@ -4,6 +4,7 @@ import static com.example.calendarcapital.CalendarUtils.selectedDate;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -39,6 +41,8 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
         if (convertView == null)
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.hour_cell, parent, false);
 
+//        Drawable roundedBg = ContextCompat.getDrawable(getContext(), R.drawable.hour_cell_shape);
+//        convertView.setBackground(roundedBg);
 
         compareAndGetValuesFromDBWithId(event.getId());
 

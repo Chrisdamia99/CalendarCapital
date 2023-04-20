@@ -17,6 +17,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +30,8 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
     Calendar calendar = Calendar.getInstance();
     private final OnItemListener onItemListener;
     private MyDatabaseHelper myDB;
+    static int numEvents;
+    static  int numRepeatingEvents;
     Context context;
 
 
@@ -94,6 +97,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
         holder.eventRepeatText1.setVisibility(View.GONE);
         holder.eventRepeatText2.setVisibility(View.GONE);
         holder.eventRepeatText3.setVisibility(View.GONE);
+        holder.eventsMore.setVisibility(View.GONE);
 
 
         final LocalDate date = days.get(position);
@@ -138,8 +142,10 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
 //        myEvents.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
 //
 //        myEvents.sort((o1, o2) -> o2.getTime().compareTo(o1.getTime()));
-
-//        myEvents.sort((o1, o2) -> o2.getName().compareTo(o1.getName()));
+//
+        numEvents=0;
+        numRepeatingEvents=0;
+        myEvents.sort((o1, o2) -> o2.getName().compareTo(o1.getName()));
         cursor.moveToPosition(-1);
         for (int i=0; i<days.size(); i++)
         {
@@ -156,7 +162,8 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
 
             Collections.sort(eventNames);
 
-            int numEvents = eventNames.size();
+             numEvents = eventNames.size();
+
             if (numEvents >= 1) {
                 holder.eventDayText.setVisibility(View.VISIBLE);
                 holder.eventDayText.setText(eventNames.get(0));
@@ -178,13 +185,19 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                 holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner);
             }
 
-
+            if (date.toString().equals("2023-05-11"))
+            {
+                System.out.println();
+            }
+            checkForMore( holder);
 
         }
 //        myEvents.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
 //
 //        myEvents.sort((o1, o2) -> o2.getTime().compareTo(o1.getTime()));
 //        myEvents.sort((o1, o2) -> o2.getName().compareTo(o1.getName()));
+
+
         cursor.moveToPosition(-1);
         for (int i=0; i<days.size(); i++) {
 
@@ -197,31 +210,38 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
 
             Collections.sort(eventNamesRepeating);
 
-                int numEvents = eventNamesRepeating.size();
-                if (numEvents >= 1) {
+
+                 numRepeatingEvents = eventNamesRepeating.size();
+                if (numRepeatingEvents >= 1 ) {
                     holder.eventRepeatText1.setVisibility(View.VISIBLE);
                     holder.eventRepeatText1.setText(eventNamesRepeating.get(0));
                     holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
                     holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
                 }
 
-                if (numEvents >= 2) {
+                if (numRepeatingEvents >= 2) {
                     holder.eventRepeatText2.setVisibility(View.VISIBLE);
                     holder.eventRepeatText2.setText(eventNamesRepeating.get(1));
                     holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
                     holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
                 }
 
-                if (numEvents >= 3) {
+                if (numRepeatingEvents >= 3) {
                     holder.eventRepeatText3.setVisibility(View.VISIBLE);
                     holder.eventRepeatText3.setText(eventNamesRepeating.get(2));
                     holder.eventRepeatText3.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
                     holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner);
                 }
 
-
-
+if (date.toString().equals("2023-05-11"))
+{
+    System.out.println();
+}
+            checkForMore( holder);
         }
+
+
+
 
         cursor.close();
         myDB.close();
@@ -229,7 +249,83 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
 
     }
 
+public void checkForMore(@NonNull CalendarViewHolder holder)
+{
+    if (numEvents>=3 && numRepeatingEvents>=1)
+    {
+        holder.eventRepeatText1.setVisibility(View.GONE);
+        holder.eventRepeatText2.setVisibility(View.GONE);
+        holder.eventRepeatText3.setVisibility(View.GONE);
+        holder.eventsMore.setVisibility(View.VISIBLE);
+        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner);
 
+    }
+
+    if (numRepeatingEvents>=3 && numEvents>1)
+    {
+        holder.eventDayText.setVisibility(View.GONE);
+        holder.eventDayText2.setVisibility(View.GONE);
+        holder.eventDayText3.setVisibility(View.GONE);
+        holder.eventsMore.setVisibility(View.VISIBLE);
+        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner);
+    }
+
+    if (numRepeatingEvents==2 && numEvents>1)
+    {
+        holder.eventDayText2.setVisibility(View.GONE);
+        holder.eventDayText3.setVisibility(View.GONE);
+        holder.eventRepeatText3.setVisibility(View.GONE);
+        holder.eventsMore.setVisibility(View.VISIBLE);
+        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner);
+    }
+
+    if (numEvents==2 && numRepeatingEvents>1)
+    {
+        holder.eventRepeatText2.setVisibility(View.GONE);
+        holder.eventRepeatText3.setVisibility(View.GONE);
+        holder.eventDayText3.setVisibility(View.GONE);
+        holder.eventsMore.setVisibility(View.VISIBLE);
+        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner);
+
+    }
+
+    if (numEvents>3 && numRepeatingEvents==0)
+    {
+        holder.eventsMore.setVisibility(View.VISIBLE);
+        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner);
+    }
+
+    if (numRepeatingEvents>3 && numEvents==0)
+    {
+        holder.eventsMore.setVisibility(View.VISIBLE);
+        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner);
+    }
+    if (numEvents>=3 && numRepeatingEvents>0)
+    {
+        holder.eventRepeatText1.setVisibility(View.GONE);
+        holder.eventRepeatText2.setVisibility(View.GONE);
+        holder.eventRepeatText3.setVisibility(View.GONE);
+        holder.eventsMore.setVisibility(View.VISIBLE);
+        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner);
+    }
+
+    if (numRepeatingEvents>=3 && numEvents>0)
+    {
+        holder.eventDayText.setVisibility(View.GONE);
+        holder.eventDayText2.setVisibility(View.GONE);
+        holder.eventDayText3.setVisibility(View.GONE);
+        holder.eventsMore.setVisibility(View.VISIBLE);
+        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
+        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner);
+    }
+}
     @Override
     public int getItemCount() {
         return days.size();

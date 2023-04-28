@@ -47,4 +47,26 @@
     <string name="custom_gr">Επεξεργασία</string>
     <string name="repeat_gr">Επανάληψη</string>
     <string name="more_events_dots">...</string>
+    <string name="calendar_gr">Ημερολόγιο</string>
+    <string name="event_title_gr">Τίτλος συμβάντος</string>
+    <string name="event_comment_gr">Σχόλια συμβάντος</string>
+
+    <string-array name="custom_repeat_spinner_less">
+        <item>ημέρα</item>
+        <item>εβδομάδα</item>
+        <item>μήνας</item>
+        <item>χρόνος</item>
+    </string-array>
+
+    <string-array name="custom_repeat_spinner_more">
+        <item>ημέρες</item>
+        <item>βδομάδες</item>
+        <item>μήνες</item>
+        <item>χρόνια</item>
+    </string-array>
+    <string-array name="custom_monthly_repeat_spinner">
+        <item>Μηνιαία την ημέρα</item>
+        <item>Μηνιαία την ημέρα της βδομάδας </item>
+        <item>Μηνιαία κάθε τελευταία μέρα βδομάδας</item>
+    </string-array>
 </resources>

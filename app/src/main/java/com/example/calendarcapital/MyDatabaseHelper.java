@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -204,8 +205,105 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    void updateEventTitleComment(String row_id,String title,String comments)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_TITLE, title);
+        cv.put(COLUMN_COMMENT, comments);
 
 
+        long result = db.update(TABLE_NAME, cv, "_id=?", new String[]{row_id});
+
+        if (result == -1) {
+            Toast.makeText(context, "Failed to Update", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Successfully Update", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void updateEventDate(String row_id, LocalDate date)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+
+        cv.put(COLUMN_DATE, String.valueOf(date));
+
+
+        long result = db.update(TABLE_NAME, cv, "_id=?", new String[]{row_id});
+
+        if (result == -1) {
+            Toast.makeText(context, "Failed to Update", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Successfully Update", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void updateEventTime(String row_id,LocalTime time)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_TIME, String.valueOf(time));
+
+        long result = db.update(TABLE_NAME, cv, "_id=?", new String[]{row_id});
+
+        if (result == -1) {
+            Toast.makeText(context, "Failed to Update", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Successfully Update", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void updateEventAlarm(String row_id, String alarm)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_ALARM, alarm);
+
+        long result = db.update(TABLE_NAME, cv, "_id=?", new String[]{row_id});
+
+        if (result == -1) {
+            Toast.makeText(context, "Failed to Update", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Successfully Update", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void  updateEventRepeat(String row_id, String repeat)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_REPEAT_ALARM, repeat);
+
+        long result = db.update(TABLE_NAME, cv, "_id=?", new String[]{row_id});
+
+        if (result == -1) {
+            Toast.makeText(context, "Failed to Update", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Successfully Update", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void updateEventParentId(String row_id,String parent_id)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_PARENT_ID, parent_id);
+
+        long result = db.update(TABLE_NAME, cv, "_id=?", new String[]{row_id});
+
+        if (result == -1) {
+            Toast.makeText(context, "Failed to Update", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Successfully Update", Toast.LENGTH_SHORT).show();
+        }
+    }
 //----------------------------------------------------------------------------------------------------------
 
 //------------------------------------------DELETE------------------------------------------------------------
@@ -290,5 +388,28 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     }
 
     //------------------------------------------------------------------------------------------------------
+    public void removeDuplicateReminders() {
+        SQLiteDatabase db = getWritableDatabase();
+        String query = "DELETE FROM " + TABLE_NAME_REMINDER +
+                " WHERE " + COLUMN_REMINDER + " IN (" +
+                " SELECT " + COLUMN_REMINDER +
+                " FROM " + TABLE_NAME_REMINDER +
+                " GROUP BY " + COLUMN_REMINDER +
+                " HAVING COUNT(*) > 1)";
+        db.execSQL(query);
+        db.close();
+    }
+
+    public void updateAlarmValueIfIdNotExists() {
+        SQLiteDatabase db = getWritableDatabase();
+        String updateQuery = "UPDATE " + TABLE_NAME +
+                " SET " + COLUMN_ALARM + " = '0'" +
+                " WHERE " + COLUMN_ID + " NOT IN (SELECT " + COLUMN_EVENT_ID + " FROM " + TABLE_NAME_REMINDER + ");";
+        db.execSQL(updateQuery);
+        db.close();
+    }
+
+
+
 
 }

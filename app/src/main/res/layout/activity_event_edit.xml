@@ -24,29 +24,48 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:gravity="end"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        >
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="end"
-            android:orientation="horizontal">
+            android:textSize="20sp"
+            android:textColor="@color/primaryLightTirquiso"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:ellipsize="end"
+            android:layout_marginRight="20dp"
+            android:maxLines="1"
+            android:background="@color/white"
+            android:layout_gravity="center"
+            android:text="Δημιουργία συμβάντος"
 
-            <ImageButton
-                android:id="@+id/eventEditBackButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:backgroundTint="@color/lightgray"
-                android:src="@drawable/back_to_activity_blue" />
+            />
+        <ImageButton
+            android:id="@+id/eventEditBackButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:backgroundTint="@color/white"
+            android:src="@drawable/back_to_activity_blue" />
 
-            <ImageButton
-                android:id="@+id/eventEditRefreshButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="10dp"
-                android:backgroundTint="@color/lightgray"
-                android:src="@drawable/refresh" />
-        </LinearLayout>
+        <ImageButton
+            android:id="@+id/eventEditRefreshButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:backgroundTint="@color/white"
+            android:src="@drawable/refresh" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="40dp">
+
+
 
 
         <TextView
@@ -65,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:ems="10"
-            android:hint="@string/event_title_hint"
+            android:hint="@string/event_title_gr"
             android:importantForAutofill="no"
             android:inputType="textCapSentences|textMultiLine"
             android:maxLength="2000"
@@ -87,7 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:ems="10"
-            android:hint="@string/event_comment_hint"
+            android:hint="@string/event_comment_gr"
             android:importantForAutofill="no"
             android:inputType="textCapSentences|textMultiLine"
             android:maxLength="2000"
@@ -105,7 +124,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-
                 android:orientation="vertical">
 
                 <View
@@ -282,6 +300,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:layout_gravity="bottom"
+        android:background="@color/lightdarkgrey"
         android:gravity="bottom|center"
         android:orientation="vertical">
 

@@ -20,32 +20,50 @@
         android:layout_weight="1"
 
         android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="end"
-            android:orientation="horizontal">
+            android:layout_marginTop="10dp"
 
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/primaryLightTirquiso"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:ellipsize="end"
+                android:layout_marginRight="13dp"
+                android:maxLines="1"
+                android:background="@color/white"
+                android:layout_gravity="center"
+                android:text="Επεξεργασία συμβάντος"
+
+                />
             <ImageButton
                 android:id="@+id/eventEditBackButtonUPD"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:backgroundTint="@color/lightgray"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:backgroundTint="@color/white"
                 android:src="@drawable/back_to_activity_blue" />
 
             <ImageButton
                 android:id="@+id/eventEditRefreshButtonUPD"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginLeft="10dp"
-                android:backgroundTint="@color/lightgray"
+                android:backgroundTint="@color/white"
                 android:src="@drawable/refresh" />
         </LinearLayout>
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+        android:orientation="vertical">
+
 
 
         <TextView
@@ -271,6 +289,8 @@
         android:layout_weight="0"
         android:layout_gravity="bottom"
         android:gravity="bottom|center"
+        android:background="@color/lightdarkgrey"
+
         android:orientation="vertical">
 
         <Button

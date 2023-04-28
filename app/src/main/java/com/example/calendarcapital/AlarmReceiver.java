@@ -51,13 +51,13 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
 
         Intent activityIntent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, activityIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, activityIntent, PendingIntent.FLAG_IMMUTABLE);
 
         Intent stopRingtoneIntent = new Intent(context, StopRingtoneReceiver.class);
-        PendingIntent pendingStopRingtoneIntent = PendingIntent.getBroadcast(context, 0, stopRingtoneIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingStopRingtoneIntent = PendingIntent.getBroadcast(context, 0, stopRingtoneIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         Log.d("AlarmReceiver", "pendingStopRingtoneIntent created");
         Intent stopRingtoneButtonIntent = new Intent(ACTION_STOP_RINGTONE);
-        PendingIntent pendingStopRingtoneButtonIntent = PendingIntent.getBroadcast(context, 0, stopRingtoneButtonIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingStopRingtoneButtonIntent = PendingIntent.getBroadcast(context, 0, stopRingtoneButtonIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         // Create the notification action button to stop the ringtone
         NotificationCompat.Action stopRingtoneAction = new NotificationCompat.Action.Builder(

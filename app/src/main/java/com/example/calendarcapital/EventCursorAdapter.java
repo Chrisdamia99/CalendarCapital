@@ -78,7 +78,7 @@ public class EventCursorAdapter extends CursorAdapter {
         View viewInvalidation = LayoutInflater.from(mContext).inflate(R.layout.show_event_from_listview,null);
 
 
-
+        EventCursorAdapter.this.notifyDataSetChanged();
         id_lv_tv.setText(id);
         title_lv_tv.setText(title);
         comment_lv_tv.setText(comment);
@@ -101,6 +101,7 @@ public class EventCursorAdapter extends CursorAdapter {
                     lin_lv_dialog_layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                     existedRemindersListView.setVisibility(View.GONE);
                     viewInvalidation.invalidate();
+                    EventCursorAdapter.this.notifyDataSetChanged();
 
 
                     cursorRem.moveToPosition(-1);
@@ -145,15 +146,32 @@ public class EventCursorAdapter extends CursorAdapter {
                         }
                     }
                     remindersAdapter = new RemindersAdapter(mContext, existedReminders);
-
+                    remindersAdapter.notifyDataSetChanged();
+                    EventCursorAdapter.this.notifyDataSetChanged();
                     existedRemindersListView.setVisibility(View.VISIBLE);
                     existedRemindersListView.setAdapter(remindersAdapter);
                 } else if (alarmDate.equals("1") && !existedReminders.isEmpty()) {
                     lin_lv_dialog_layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                     viewInvalidation.invalidate();
+                    existedReminders.clear();
+                    cursorRem.moveToPosition(-1);
+                    //----Problem here maybe--------//
+                    while (cursorRem.moveToNext()) {
+
+                        if (cursorRem.getString(1).equals(id)) {
+
+                            long mytestLong = Date.parse(cursorRem.getString(2));
+                            Date lastDate = new Date(mytestLong);
+
+                            existedReminders.add(lastDate);
+
+
+                        }
+                    }
 
                     remindersAdapter = new RemindersAdapter(mContext, existedReminders);
-
+                    remindersAdapter.notifyDataSetChanged();
+                    EventCursorAdapter.this.notifyDataSetChanged();
                     existedRemindersListView.setVisibility(View.VISIBLE);
                     existedRemindersListView.setAdapter(remindersAdapter);
                 } else {

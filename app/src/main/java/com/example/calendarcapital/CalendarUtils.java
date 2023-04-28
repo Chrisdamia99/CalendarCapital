@@ -2,6 +2,26 @@ package com.example.calendarcapital;
 
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+
+
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.Instant;
@@ -52,17 +72,17 @@ public class CalendarUtils {
         return calendar;
     }
     public static Calendar LocalDateToLocalDateTimeToCalendar(LocalDate date,LocalTime time) {
-                Calendar calendar=Calendar.getInstance();
+        Calendar calendar=Calendar.getInstance();
 
-            // Combine LocalDate and LocalTime to create a LocalDateTime
-            LocalDateTime localDateTime = date.atTime(time);
+        // Combine LocalDate and LocalTime to create a LocalDateTime
+        LocalDateTime localDateTime = date.atTime(time);
 
-            // Convert LocalDateTime to a ZonedDateTime
-            ZoneId zoneId = ZoneId.systemDefault(); // Get the system default time zone
-            ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
+        // Convert LocalDateTime to a ZonedDateTime
+        ZoneId zoneId = ZoneId.systemDefault(); // Get the system default time zone
+        ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
 
-            // Convert ZonedDateTime to a Calendar
-           return  calendar = GregorianCalendar.from(zonedDateTime);
+        // Convert ZonedDateTime to a Calendar
+        return  calendar = GregorianCalendar.from(zonedDateTime);
 
 
     }
@@ -165,16 +185,20 @@ public class CalendarUtils {
     }
     public static Date stringToDateFormat(String myDate) {
 
+
         Locale locale = new Locale("el", "GR");
 
 
-        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy", locale);
-        Date convertedDate = null;
-        long testLong;
-        testLong = Date.parse(myDate);
-        convertedDate = new Date(testLong);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",locale);
+        try {
+            Date date = dateFormat.parse(myDate);
+            return date;
+        } catch (ParseException e) {
+            e.printStackTrace();
 
-        return convertedDate;
+            return null;
+        }
+
 
     }
 
@@ -301,38 +325,42 @@ public class CalendarUtils {
 
                 daysInMonthArray.add(LocalDate.of(nextMonth.getYear(), nextMonth.getMonth(), i - dayOfWeek - daysInMonth));
 
-                if (dayOfWeek < 6 && daysInMonthArray.size() == 41) {
+//                if (dayOfWeek < 6 && daysInMonthArray.size() == 41) {
+//
+//                    daysInMonthArray.remove(40);
+//                    daysInMonthArray.remove(39);
+//                    daysInMonthArray.remove(38);
+//                    daysInMonthArray.remove(37);
+//                    daysInMonthArray.remove(36);
+//                    daysInMonthArray.remove(35);
+//                    daysInMonthArray.remove(34);
+//
+//
+//                }
+//                else if (dayOfWeek < 6 && daysInMonthArray.size() == 42) {
+//
+//                    daysInMonthArray.remove(41);
+//                    daysInMonthArray.remove(40);
+//                    daysInMonthArray.remove(39);
+//                    daysInMonthArray.remove(38);
+//                    daysInMonthArray.remove(37);
+//                    daysInMonthArray.remove(36);
+//                    daysInMonthArray.remove(35);
+//
+//
+//                }
+//                else if (daysInMonthArray.size() == 35) {
+//                    daysInMonthArray.remove(34);
+//                    daysInMonthArray.add(daysInMonthArray.get(33).plusDays(1));
+//                }
 
-                    daysInMonthArray.remove(40);
-                    daysInMonthArray.remove(39);
-                    daysInMonthArray.remove(38);
-                    daysInMonthArray.remove(37);
-                    daysInMonthArray.remove(36);
-                    daysInMonthArray.remove(35);
-                    daysInMonthArray.remove(34);
 
-
-                } else if (dayOfWeek < 6 && daysInMonthArray.size() == 42) {
-
-                    daysInMonthArray.remove(41);
-                    daysInMonthArray.remove(40);
-                    daysInMonthArray.remove(39);
-                    daysInMonthArray.remove(38);
-                    daysInMonthArray.remove(37);
-                    daysInMonthArray.remove(36);
-                    daysInMonthArray.remove(35);
-
-
-                } else if (daysInMonthArray.size() == 35) {
-                    daysInMonthArray.remove(34);
-                    daysInMonthArray.add(daysInMonthArray.get(33).plusDays(1));
-                }
-
-
-            } else {
+            }
+            else {
                 daysInMonthArray.add(LocalDate.of(selectedDate.getYear(), selectedDate.getMonth(), i - dayOfWeek));
 
             }
+
         }
 
 

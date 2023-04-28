@@ -3,6 +3,7 @@ package com.example.calendarcapital;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
@@ -28,6 +29,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -43,10 +45,10 @@ import java.util.concurrent.TimeUnit;
 
 public class EventEdit extends AppCompatActivity {
 
-    private EditText eventNameET, eventCommentET,repeatCounter;
+    private EditText eventNameET, eventCommentET, repeatCounter;
     private TextView eventDateTV, eventTimeTV, changeTimeTV, changeDateTV, addAlarmButton, addRepeatButton;
     private TextView oneDayBefore, oneHourMinBefore, halfHourMinBefore, fifteenMinBefore, tenMinBefore, fiveMinBefore, customChoice;
-    private TextView everyDay, everyWeek, everyMonth, everyYear, customRepeat,repeatCountTv;
+    private TextView everyDay, everyWeek, everyMonth, everyYear, customRepeat, repeatCountTv;
     Button btnSave;
     private View oneDayView, oneHourView, halfMinView, fifteenMinView, tenMinView, fiveMinView, aboveAlarmButton;
     RemindersAdapter remindersAdapter;
@@ -71,7 +73,6 @@ public class EventEdit extends AppCompatActivity {
     int repeatCounterInt;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +81,8 @@ public class EventEdit extends AppCompatActivity {
         time = LocalTime.parse(CalendarUtils.formattedShortTime(LocalTime.now()));
         eventTimeTV.setText(CalendarUtils.formattedShortTime(time));
         date = CalendarUtils.selectedDate;
-        eventDateTV.setText(CalendarUtils.formattedDateEventEdit(date));
+//        eventDateTV.setText(CalendarUtils.formattedDateEventEdit(date));
+        eventDateTV.setText(date.toString().trim());
         btnSave = findViewById(R.id.btnSave);
         alarmState = 0;
         repeatState = 0;
@@ -93,7 +95,7 @@ public class EventEdit extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveEventAction(v);
+                saveEventAction();
             }
         });
 
@@ -179,7 +181,6 @@ public class EventEdit extends AppCompatActivity {
         addRepeatButton = findViewById(R.id.addRepeatButton);
         cancelRepeat = findViewById(R.id.cancelRepeat);
         repeatCountTv = findViewById(R.id.repeatCountTv);
-
 
 
     }
@@ -300,7 +301,6 @@ public class EventEdit extends AppCompatActivity {
                     LocalDate myDD = LocalDate.of(year, trueMonth, dayOfMonth);
 
                     eventDateTV.setText(CalendarUtils.formattedDateEventEdit(myDD));
-
 
 
                 } else {
@@ -426,8 +426,6 @@ public class EventEdit extends AppCompatActivity {
                     reminders_list.add(fixedFromChangeTime.getTime());
 
 
-
-
                 } else {
                     String allTime = hour + ":" + min;
 
@@ -438,8 +436,6 @@ public class EventEdit extends AppCompatActivity {
                     fixedFromChangeTime = cReminder;
 
                     reminders_list.add(fixedFromChangeTime.getTime());
-
-
 
 
                 }
@@ -495,8 +491,7 @@ public class EventEdit extends AppCompatActivity {
         intent.putExtra("comment", strComment);
 
 
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(EventEdit.this, alarmId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(EventEdit.this, alarmId, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(), pendingIntent);
 
 
@@ -504,7 +499,6 @@ public class EventEdit extends AppCompatActivity {
 
 
     }
-
 
 
     private void addRepeat() {
@@ -528,7 +522,6 @@ public class EventEdit extends AppCompatActivity {
         everyMonth = rowView.findViewById(R.id.everyMonth);
         everyYear = rowView.findViewById(R.id.everyYear);
         customRepeat = rowView.findViewById(R.id.customRepeat);
-
 
 
         final AlertDialog dialog = new AlertDialog.Builder(this).setView(rowView)
@@ -591,8 +584,13 @@ public class EventEdit extends AppCompatActivity {
                 customRepeat.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        alertDialogCountRepeat();
+
                         repeatState = 5;
+                        Intent iCustomRepeat = new Intent(EventEdit.this, CustomRepeatActivity.class);
+                        String flagForEventEdit = "0";
+                        iCustomRepeat.putExtra("flagBack",flagForEventEdit);
+                        iCustomRepeat.putExtra("date",date.toString());
+                        startActivity(iCustomRepeat);
                         dialog.dismiss();
                     }
                 });
@@ -605,8 +603,6 @@ public class EventEdit extends AppCompatActivity {
 
 
     }
-
-
 
 
     private void addAlarm() {
@@ -781,9 +777,8 @@ public class EventEdit extends AppCompatActivity {
 
     }
 
-    private void alertDialogCountRepeat()
-    {
-        final  View viewCountRepeat = getLayoutInflater().inflate(R.layout.repeat_counter, null);
+    private void alertDialogCountRepeat() {
+        final View viewCountRepeat = getLayoutInflater().inflate(R.layout.repeat_counter, null);
 
         repeatCounter = viewCountRepeat.findViewById(R.id.repeatCounter);
 
@@ -800,7 +795,7 @@ public class EventEdit extends AppCompatActivity {
                 if (repeatState == 1) {
 
                     for (int i = 0; i < repeatCounterInt; i++) {
-                        cRepeat.add(Calendar.DAY_OF_YEAR,1);
+                        cRepeat.add(Calendar.DAY_OF_YEAR, 1);
                         repeats_list.add(cRepeat.getTime());
 
                     }
@@ -808,7 +803,7 @@ public class EventEdit extends AppCompatActivity {
 
                     for (int i = 0; i < repeatCounterInt; i++) {
 
-                        cRepeat.add(Calendar.DAY_OF_YEAR,7);
+                        cRepeat.add(Calendar.DAY_OF_YEAR, 7);
                         repeats_list.add(cRepeat.getTime());
                     }
 
@@ -816,7 +811,7 @@ public class EventEdit extends AppCompatActivity {
                 } else if (repeatState == 3) {
                     for (int i = 0; i < repeatCounterInt; i++) {
 
-                        cRepeat.add(Calendar.MONTH,1);
+                        cRepeat.add(Calendar.MONTH, 1);
                         repeats_list.add(cRepeat.getTime());
                     }
 
@@ -824,10 +819,11 @@ public class EventEdit extends AppCompatActivity {
 
                     for (int i = 0; i < repeatCounterInt; i++) {
 
-                        cRepeat.add(Calendar.YEAR,1);
+                        cRepeat.add(Calendar.YEAR, 1);
                         repeats_list.add(cRepeat.getTime());
                     }
                 } else if (repeatState == 5) {
+
                 }
 
 
@@ -859,18 +855,15 @@ public class EventEdit extends AppCompatActivity {
     }
 
 
-
-    private void makeAndSaveEvent()
-    {
+    private void makeAndSaveEvent() {
         MyDatabaseHelper myDB = new MyDatabaseHelper(EventEdit.this);
         String eventName = eventNameET.getText().toString();
         String eventComment = eventCommentET.getText().toString();
-        myDB.addEvent(eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState),null);
+        myDB.addEvent(eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState), null);
 
     }
 
-    private void makeAndSaveReminders()
-    {
+    private void makeAndSaveReminders() {
         MyDatabaseHelper myDB = new MyDatabaseHelper(EventEdit.this);
         String idForReminder = "";
         reminders_list.sort((o1, o2) -> o1.compareTo(o2));
@@ -911,29 +904,26 @@ public class EventEdit extends AppCompatActivity {
         }
 
         myDB.close();
-
     }
 
-    private void makeAndSaveRepeat()
-    {        MyDatabaseHelper myDB = new MyDatabaseHelper(EventEdit.this);
+    private void makeAndSaveRepeat() {
+        MyDatabaseHelper myDB = new MyDatabaseHelper(EventEdit.this);
 
         Cursor cursor = myDB.readAllEvents();
 
         String idForRepeat = "";
         repeats_list.sort((o1, o2) -> o1.compareTo(o2));
 
-        if (repeats_list.size()>0)
-        {
-            while (cursor.moveToNext())
-            {
+        if (repeats_list.size() > 0) {
+            while (cursor.moveToNext()) {
                 if (cursor.moveToLast()) {
                     for (int i = 0; i < repeats_list.size(); i++) {
                         idForRepeat = cursor.getString(0);
                         LocalDate dateDB = CalendarUtils.dateToLocalDate(repeats_list.get(i));
                         LocalTime timeDB = CalendarUtils.dateToLocalTime(repeats_list.get(i));
 
-                        myDB.addEvent(cursor.getString(1),cursor.getString(2),dateDB,timeDB,"0",
-                                "0",idForRepeat);
+                        myDB.addEvent(cursor.getString(1), cursor.getString(2), dateDB, timeDB, "0",
+                                "0", idForRepeat);
 
                         list_repeat_for_db.add(cursor.getString(0));
 
@@ -952,8 +942,9 @@ public class EventEdit extends AppCompatActivity {
         myDB.close();
 
     }
-    public void saveEventAction(View view) {
 
+    public void saveEventAction() {
+        MyDatabaseHelper myDB = new MyDatabaseHelper(getApplicationContext());
 
 
         makeAndSaveEvent();
@@ -964,18 +955,16 @@ public class EventEdit extends AppCompatActivity {
 
 
         Boolean myBool = true;
+
         i1.putExtra("date", date);
-
-
         i1.putExtra("bool", myBool);
 
+        myDB.removeDuplicateReminders();
         overridePendingTransition(0, 0);
         startActivity(i1);
-
         overridePendingTransition(0, 0);
 
 
     }
-
 
 }

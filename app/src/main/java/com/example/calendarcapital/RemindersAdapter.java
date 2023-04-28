@@ -58,9 +58,14 @@ public class RemindersAdapter extends ArrayAdapter<Date> {
 
     public void setRemindersVol2(Date reminder, TextView reminderTV, ImageButton cancelBTN,  int position) {
         String testStr = CalendarUtils.dateForReminder(reminder);
+
         Cursor remCursor = myDB.readAllReminder();
+
         Cursor secMyDbCursor = myDB.readAllEvents();
         Cursor secMyRemCursor = myDB.readAllReminder();
+
+        Cursor thirdCursorEvents = myDB.readAllEvents();
+        Cursor thirdCursorReminders = myDB.readAllReminder();
         reminderTV.setText(testStr);
 
         cancelBTN.setOnClickListener(new View.OnClickListener() {
@@ -77,6 +82,7 @@ public class RemindersAdapter extends ArrayAdapter<Date> {
                         cancelAlarm(Integer.parseInt(alarmId));
                         RemindersAdapter.this.notifyDataSetChanged();
                     }
+                    RemindersAdapter.this.notifyDataSetChanged();
                 }
                 remCursor.close();
                 myTest.remove(position);
@@ -99,16 +105,42 @@ public class RemindersAdapter extends ArrayAdapter<Date> {
                             if (!secMyDbCursor.getString(0).equals(secMyRemCursor.getString(1)) || secMyRemCursor.getCount() == 0) {
                                 myDB.updateAlarmNum(secMyDbCursor.getString(0), "0");
                             }
+                            RemindersAdapter.this.notifyDataSetChanged();
                         }
+                    }
+                    RemindersAdapter.this.notifyDataSetChanged();
+                }
+                secMyDbCursor.close();
+                secMyRemCursor.close();
+
+                while (thirdCursorEvents.moveToNext())
+                {
+                    String cursor_event_id = thirdCursorEvents.getString(0);
+                    thirdCursorReminders.moveToPosition(-1);
+                    while(thirdCursorReminders.moveToNext())
+                    {
+                        if (cursor_event_id.equals(thirdCursorReminders.getString(1)))
+                        {
+                            myDB.updateEventAlarm(cursor_event_id,"1");
+                            break;
+                        }else
+                        {
+                            myDB.updateEventAlarm(cursor_event_id,"0");
+
+                        }
+
+
+
                     }
                 }
 
+                thirdCursorEvents.close();
+                thirdCursorReminders.close();
 
 
                 notifyDataSetChanged();
                 RemindersAdapter.this.notifyDataSetChanged();
-                secMyDbCursor.close();
-                secMyRemCursor.close();
+
                 myDB.close();
 
 
@@ -122,7 +154,7 @@ public class RemindersAdapter extends ArrayAdapter<Date> {
         AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(getContext(), AlarmReceiver.class);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), alarmId, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), alarmId, intent, PendingIntent.FLAG_IMMUTABLE);
 
         alarmManager.cancel(pendingIntent);
         Toast.makeText(getContext(), "Alarm Cancelled", Toast.LENGTH_SHORT).show();

@@ -31,6 +31,7 @@
         android:id="@+id/repeatCounter"
         android:layout_width="40dp"
         android:gravity="center"
+        android:inputType="number"
         android:layout_height="wrap_content"
         android:text="1"
         android:maxLines="1"

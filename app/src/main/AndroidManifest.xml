@@ -19,6 +19,9 @@
         android:theme="@style/Theme.CalendarCapital"
         tools:targetApi="31">
         <activity
+            android:name=".CustomRepeatActivity"
+            android:exported="false" />
+        <activity
             android:name=".AllEventsExListView"
             android:exported="false">
             <meta-data

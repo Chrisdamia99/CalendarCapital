@@ -81,12 +81,18 @@ public class EventEdit extends AppCompatActivity {
         time = LocalTime.parse(CalendarUtils.formattedShortTime(LocalTime.now()));
         eventTimeTV.setText(CalendarUtils.formattedShortTime(time));
         date = CalendarUtils.selectedDate;
+
 //        eventDateTV.setText(CalendarUtils.formattedDateEventEdit(date));
-        eventDateTV.setText(date.toString().trim());
+        if (!(date ==null))
+        {
+            eventDateTV.setText(date.toString().trim());
+        }
+
         btnSave = findViewById(R.id.btnSave);
         alarmState = 0;
         repeatState = 0;
         mCurrentActivity = this;
+        setIntentsFromCustomRepeat();
         updateIfEmptyListView();
 
         createNotificationChannel();
@@ -157,8 +163,10 @@ public class EventEdit extends AppCompatActivity {
                 cancelRepeat.setVisibility(View.GONE);
                 repeatCountTv.setVisibility(View.GONE);
                 addRepeatButton.setText(R.string.repeat_gr);
+                CustomRepeatActivity.customDatesToSaveLocalDate.clear();
             }
         });
+
 
 
     }
@@ -183,8 +191,27 @@ public class EventEdit extends AppCompatActivity {
         repeatCountTv = findViewById(R.id.repeatCountTv);
 
 
+
+    }
+private void setIntentsFromCustomRepeat()
+{
+    if (getIntent().hasExtra("5"))
+    {
+        repeatState=5;
+        addRepeatButton.setText(CustomRepeatActivity.textForEventEdit);
+        cancelRepeat.setVisibility(View.VISIBLE);
     }
 
+    if (getIntent().hasExtra("tittle"))
+    {
+        eventNameET.setText(getIntent().getStringExtra("tittle"));
+    }
+
+    if (getIntent().hasExtra("comment"))
+    {
+        eventCommentET.setText(getIntent().getStringExtra("comment"));
+    }
+}
     private void hideAdReminderDynamically() {
         if (mCurrentActivity instanceof EventEdit) {
             executorService = Executors.newSingleThreadScheduledExecutor();
@@ -586,10 +613,13 @@ public class EventEdit extends AppCompatActivity {
                     public void onClick(View v) {
 
                         repeatState = 5;
+
                         Intent iCustomRepeat = new Intent(EventEdit.this, CustomRepeatActivity.class);
                         String flagForEventEdit = "0";
                         iCustomRepeat.putExtra("flagBack",flagForEventEdit);
                         iCustomRepeat.putExtra("date",date.toString());
+                        iCustomRepeat.putExtra("tittle",eventNameET.getText().toString());
+                        iCustomRepeat.putExtra("comment",eventCommentET.getText().toString());
                         startActivity(iCustomRepeat);
                         dialog.dismiss();
                     }
@@ -822,7 +852,6 @@ public class EventEdit extends AppCompatActivity {
                         cRepeat.add(Calendar.YEAR, 1);
                         repeats_list.add(cRepeat.getTime());
                     }
-                } else if (repeatState == 5) {
 
                 }
 
@@ -913,6 +942,32 @@ public class EventEdit extends AppCompatActivity {
 
         String idForRepeat = "";
         repeats_list.sort((o1, o2) -> o1.compareTo(o2));
+        if (repeatState==5)
+        {
+            for (LocalDate localDate : CustomRepeatActivity.customDatesToSaveLocalDate)
+            {
+                Calendar test = Calendar.getInstance();
+                test.set(Calendar.YEAR, localDate.getYear());
+                test.set(Calendar.MONTH, localDate.getMonth().getValue() - 1);
+                test.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
+
+
+                test.set(Calendar.HOUR_OF_DAY, 8);
+                test.set(Calendar.MINUTE, 0);
+                test.set(Calendar.SECOND, 0);
+                Date dateFromCustomRepeat = test.getTime();
+
+//                Date dateFromCustomRepeat = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+                repeats_list.add(dateFromCustomRepeat);
+                if (localDate.equals(date))
+                {
+                    repeats_list.remove(dateFromCustomRepeat);
+                }
+            }
+
+
+        }
 
         if (repeats_list.size() > 0) {
             while (cursor.moveToNext()) {

@@ -94,3 +94,30 @@
 
 </LinearLayout>
 //--------------------------------------------------------------------------------------------------------------------
+
+//----------------------------First method for untilDate, DAY---------------------------------------------------------
+        if (untilRepeatDate.compareTo(dateToCustom) > 0) {
+            flagDate = dateToCustom;
+            do {
+                customDatesToSaveLocalDate.add(flagDate);
+                flagDate = flagDate.plusDays(repeatSeperateCounterInt);
+            }
+            while (untilRepeatDate.compareTo(flagDate) > 0);
+//        customDatesToSaveLocalDate.add(untilRepeatDate);
+            if (flagDate.equals(untilRepeatDate)) {
+                customDatesToSaveLocalDate.add(flagDate);
+
+            }
+            customDatesToSaveLocalDate.size();
+
+        } else if (untilRepeatDate.compareTo(dateToCustom) == 0) {
+            customDatesToSaveLocalDate.add(flagDate);
+
+
+        } else if (untilRepeatDate.compareTo(dateToCustom) < 0) {
+            Toast.makeText(this, "Η ημερομηνία λήξης δε μπορεί να είναι μικρότερητου συμβάντος.", Toast.LENGTH_SHORT).show();
+
+        } else {
+            Toast.makeText(this, "dayChoice error", Toast.LENGTH_SHORT).show();
+
+        }

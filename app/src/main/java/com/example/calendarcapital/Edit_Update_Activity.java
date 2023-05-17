@@ -3,9 +3,10 @@ package com.example.calendarcapital;
 import static com.example.calendarcapital.CalendarUtils.selectedDate;
 import static com.example.calendarcapital.CalendarUtils.stringToLocalDate;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
@@ -23,16 +24,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
-
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -60,7 +57,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
     LinearLayout reminderLayoutUPD;
     ListView remindersListViewUPD;
     int hour, min;
-    private static LocalDate date;
+    private static LocalDate date,myDD;
     private static LocalDate events_date;
     private static LocalTime time;
     static int alarmState, repeatState;
@@ -87,6 +84,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
     static ArrayList<String> editAllArray = new ArrayList<>();
     static ArrayList<String> editFutureArray = new ArrayList<>();
+    String stackNow;
 
 
     @Override
@@ -100,199 +98,84 @@ public class Edit_Update_Activity extends AppCompatActivity {
         btnUpdate = findViewById(R.id.btnUpdate);
         createNotificationChannel();
         updateIfEmptyListView();
+        setIntentsFromCustomRepeat();
+        if(getIntent().hasExtra("stack"))
+        {
+            stackNow = getIntent().getStringExtra("stack");
+        }
+        btnUpdate.setOnClickListener(v -> {
+            MyDatabaseHelper myDB = new MyDatabaseHelper(getApplicationContext());
 
 
-        btnUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MyDatabaseHelper myDB = new MyDatabaseHelper(getApplicationContext());
+            if (parent_id == null && !myDB.checkNextRowHasParentId(Long.parseLong(id_row))) {
+                editAllArray.clear();
+                editFutureArray.clear();
+                updEventAction();
 
-
-                if (parent_id == null && !myDB.checkNextRowHasParentId(Long.parseLong(id_row))) {
+            } else {
+                if (!(editAllArray.isEmpty())) {
                     editAllArray.clear();
-                    editFutureArray.clear();
-                    updEventAction();
-
-                } else {
-                    if (!(editAllArray.isEmpty())) {
-                        editAllArray.clear();
-
-                    }
-                    if (!(editFutureArray.isEmpty())) {
-                        editFutureArray.clear();
-
-                    }
-                    LayoutInflater lf = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    final View editView = lf.inflate(R.layout.repeating_events_edit_alert_dialog, null);
-                    TextView editAll = editView.findViewById(R.id.editAll);
-                    TextView editOne = editView.findViewById(R.id.editOne);
-                    TextView editFuture = editView.findViewById(R.id.editFuture);
-                    AlertDialog builderRepeatingEdit = new AlertDialog.Builder(Edit_Update_Activity.this).setView(editView).setTitle("Επεξεργασία συμβάντος").create();
-
-                    if (!date.equals(selectedDate) || (!(repeatState == 0) && !(parent_id==null))) {
-                        editAll.setVisibility(View.GONE);
-                    } else {
-                        editAll.setVisibility(View.VISIBLE);
-                    }
-
-
-                    editIfRepeating(builderRepeatingEdit, editAll, editOne, editFuture);
-                    builderRepeatingEdit.show();
-
 
                 }
+                if (!(editFutureArray.isEmpty())) {
+                    editFutureArray.clear();
+
+                }
+                LayoutInflater lf = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                final View editView = lf.inflate(R.layout.repeating_events_edit_alert_dialog, null);
+                TextView editAll = editView.findViewById(R.id.editAll);
+                TextView editOne = editView.findViewById(R.id.editOne);
+                TextView editFuture = editView.findViewById(R.id.editFuture);
+                AlertDialog builderRepeatingEdit = new AlertDialog.Builder(Edit_Update_Activity.this).setView(editView).setTitle("Επεξεργασία συμβάντος").create();
+
+                if (!date.equals(selectedDate) || (!(repeatState == 0) && !(parent_id==null))) {
+                    editAll.setVisibility(View.GONE);
+                } else {
+                    editAll.setVisibility(View.VISIBLE);
+                }
+
+
+                editIfRepeating(builderRepeatingEdit, editAll, editOne, editFuture);
+                builderRepeatingEdit.show();
+
+
             }
         });
-        changeTimeTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        changeTimeTV.setOnClickListener(v -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 showChangeTime(LocalTime.now().getHour(), LocalTime.now().getMinute());
             }
         });
 
-        changeDateTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showChangeDate(cDatePicker.get(Calendar.YEAR), cDatePicker.get(Calendar.MONTH), cDatePicker.get(Calendar.DAY_OF_MONTH));
-            }
+        changeDateTV.setOnClickListener(v -> showChangeDate(cDatePicker.get(Calendar.YEAR), cDatePicker.get(Calendar.MONTH), cDatePicker.get(Calendar.DAY_OF_MONTH)));
+
+        eventEditBackButtonUPD.setOnClickListener(v -> {
+
+            Intent i = new Intent(Edit_Update_Activity.this, MainActivity.class);
+            i.putExtra("stack",stackNow);
+
+            String myTemp = CalendarUtils.selectedDate.toString();
+            i.putExtra("tempDate",myTemp);
+            startActivity(i);
         });
 
-        eventEditBackButtonUPD.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent i = new Intent(Edit_Update_Activity.this, MainActivity.class);
-                Boolean myBool = true;
-                i.putExtra("bool", myBool);
-
-                startActivity(i);
-            }
-        });
-
-        eventEditRefreshButtonUPD.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                AllEventsList.reloadActivity(Edit_Update_Activity.this);
-
-            }
-        });
+        eventEditRefreshButtonUPD.setOnClickListener(v -> AllEventsList.reloadActivity(Edit_Update_Activity.this));
 
 
-        addAlarmButtonUPD.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addAlarm();
+        addAlarmButtonUPD.setOnClickListener(v -> addAlarm());
 
-            }
-        });
+        addRepeatButtonUPD.setOnClickListener(v -> addRepeat());
 
-        addRepeatButtonUPD.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addRepeat();
-            }
-        });
-
-        cancelRepeatUPD.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                repeatState = 0;
-                cancelRepeatUPD.setVisibility(View.GONE);
-                repeatCountTvUPD.setVisibility(View.GONE);
-                addRepeatButtonUPD.setText(R.string.repeat_gr);
-            }
+        cancelRepeatUPD.setOnClickListener(v -> {
+            repeatState = 0;
+            cancelRepeatUPD.setVisibility(View.GONE);
+            repeatCountTvUPD.setVisibility(View.GONE);
+            addRepeatButtonUPD.setText(R.string.repeat_gr);
+            CustomRepeatActivity.customDatesToSaveLocalDate.clear();
         });
 
 
     }
-
-    private void editIfRepeating(AlertDialog builderRepeating, TextView editAll, TextView editOne, TextView editFuture) {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(getApplicationContext());
-
-        builderRepeating.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                editAll.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        editAllArray = UniStatic.getAllEventsArray(myDB,parent_id,id_row);
-                        editAllArray.size();
-                        updEventAction();
-                        dialog.dismiss();
-                    }
-                });
-
-                editFuture.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-
-
-
-                        editFutureArray = UniStatic.getFutureEventsArray(myDB,parent_id,id_row,selectedDate);
-                        editFutureArray.size();
-                        updEventAction();
-
-                        dialog.dismiss();
-                    }
-                });
-
-                editOne.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        updEventAction();
-
-                        dialog.dismiss();
-                    }
-                });
-            }
-        });
-
-    }
-
-    private void getSetIntentData() {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(getApplicationContext());
-
-
-        Cursor eventCursor = myDB.readAllEvents();
-
-        if (getIntent().hasExtra("id") && !getIntent().hasExtra("edit_array")) {
-            id_row = getIntent().getStringExtra("id");
-
-            eventCursor.moveToPosition(-1);
-            while (eventCursor.moveToNext()) {
-                if (eventCursor.getString(0).equals(id_row)) {
-                    title = eventCursor.getString(1);
-                    comment = eventCursor.getString(2);
-                    date = CalendarUtils.stringToLocalDate(eventCursor.getString(3));
-                    time = LocalTime.parse(eventCursor.getString(4));
-                    alarmState = Integer.parseInt(eventCursor.getString(5));
-                    repeatState = Integer.parseInt(eventCursor.getString(6));
-                    if (eventCursor.getString(7) == null) {
-                        parent_id = null;
-                    } else {
-                        parent_id = eventCursor.getString(7);
-                    }
-                }
-            }
-
-        }
-
-        setRepeatFromIntent();
-
-        eventNameETUPD.setText(title);
-        eventCommentETUPD.setText(comment);
-//        eventDateTV.setText(CalendarUtils.formattedDateEventEdit(date));
-        eventDateTV.setText(date.toString().trim());
-
-        eventTimeTV.setText(CalendarUtils.formattedShortTime(time));
-        events_date = date;
-
-    }
-
     private void initWidgets() {
         eventNameETUPD = findViewById(R.id.eventNameETupd);
         eventCommentETUPD = findViewById(R.id.eventCommentETupd);
@@ -312,6 +195,96 @@ public class Edit_Update_Activity extends AppCompatActivity {
         repeatCountTvUPD = findViewById(R.id.repeatCountTvUPD);
 
     }
+    private void setIntentsFromCustomRepeat() {
+        if (getIntent().hasExtra("5")) {
+            repeatState = 5;
+            addRepeatButtonUPD.setText(CustomRepeatActivity.textForEventEdit);
+            cancelRepeatUPD.setVisibility(View.VISIBLE);
+        }
+
+        if (getIntent().hasExtra("tittle")) {
+            eventNameETUPD.setText(getIntent().getStringExtra("tittle"));
+        }
+
+        if (getIntent().hasExtra("comment")) {
+            eventCommentETUPD.setText(getIntent().getStringExtra("comment"));
+        }
+    }
+    private void editIfRepeating(AlertDialog builderRepeating, TextView editAll, TextView editOne, TextView editFuture) {
+        MyDatabaseHelper myDB = new MyDatabaseHelper(getApplicationContext());
+
+        builderRepeating.setOnShowListener(dialog -> {
+            editAll.setOnClickListener(v -> {
+
+                editAllArray = UniStatic.getAllEventsArray(myDB,parent_id,id_row);
+                editAllArray.size();
+                updEventAction();
+                dialog.dismiss();
+            });
+
+            editFuture.setOnClickListener(v -> {
+
+
+
+
+                editFutureArray = UniStatic.getFutureEventsArray(myDB,parent_id,id_row,selectedDate);
+                editFutureArray.size();
+                updEventAction();
+
+                dialog.dismiss();
+            });
+
+            editOne.setOnClickListener(v -> {
+
+                updEventAction();
+
+                dialog.dismiss();
+            });
+        });
+
+    }
+
+    private void getSetIntentData() {
+        MyDatabaseHelper myDB = new MyDatabaseHelper(getApplicationContext());
+
+
+        Cursor eventCursor = myDB.readAllEvents();
+
+        if (getIntent().hasExtra("id") && !getIntent().hasExtra("edit_array")) {
+            id_row = getIntent().getStringExtra("id");
+
+            eventCursor.moveToPosition(-1);
+            while (eventCursor.moveToNext()) {
+                if (eventCursor.getString(0).equals(id_row)) {
+                    title = eventCursor.getString(1);
+                    comment = eventCursor.getString(2);
+                    date = stringToLocalDate(eventCursor.getString(3));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        time = LocalTime.parse(eventCursor.getString(4));
+                    }
+                    alarmState = Integer.parseInt(eventCursor.getString(5));
+                    repeatState = Integer.parseInt(eventCursor.getString(6));
+                    if (eventCursor.getString(7) == null) {
+                        parent_id = null;
+                    } else {
+                        parent_id = eventCursor.getString(7);
+                    }
+                }
+            }
+
+        }
+
+        setRepeatFromIntent();
+
+        eventNameETUPD.setText(title);
+        eventCommentETUPD.setText(comment);
+        eventDateTV.setText(date.toString().trim());
+
+        eventTimeTV.setText(CalendarUtils.formattedShortTime(time));
+        events_date = date;
+
+    }
+
 
     private void setRepeatFromIntent() {
         if (repeatState == 1) {
@@ -349,49 +322,41 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
         if (mCurrentActivity instanceof Edit_Update_Activity) {
             executorService = Executors.newSingleThreadScheduledExecutor();
-            scheduledFuture = executorService.scheduleAtFixedRate(new Runnable() {
-                @Override
-                public void run() {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            // update ui here
-                            setRemindersForListViaDate();
-                            for (int i = 0; i < reminders_upd_list.size(); i++) {
-                                if (reminders_upd_list.get(i).equals(oneDayBeforeDate)) {
-                                    oneDayBefore.setVisibility(View.GONE);
-                                    oneDayView.setVisibility(View.GONE);
-                                }
+            scheduledFuture = executorService.scheduleAtFixedRate(() -> runOnUiThread(() -> {
+                // update ui here
+                setRemindersForListViaDate();
+                for (int i = 0; i < reminders_upd_list.size(); i++) {
+                    if (reminders_upd_list.get(i).equals(oneDayBeforeDate)) {
+                        oneDayBefore.setVisibility(View.GONE);
+                        oneDayView.setVisibility(View.GONE);
+                    }
 
-                                if (reminders_upd_list.get(i).equals(oneHourBeforeDate)) {
-                                    oneHourMinBefore.setVisibility(View.GONE);
-                                    oneHourView.setVisibility(View.GONE);
-                                }
+                    if (reminders_upd_list.get(i).equals(oneHourBeforeDate)) {
+                        oneHourMinBefore.setVisibility(View.GONE);
+                        oneHourView.setVisibility(View.GONE);
+                    }
 
-                                if (reminders_upd_list.get(i).equals(halfHourBeforeDate)) {
-                                    halfHourMinBefore.setVisibility(View.GONE);
-                                    halfMinView.setVisibility(View.GONE);
-                                }
+                    if (reminders_upd_list.get(i).equals(halfHourBeforeDate)) {
+                        halfHourMinBefore.setVisibility(View.GONE);
+                        halfMinView.setVisibility(View.GONE);
+                    }
 
-                                if (reminders_upd_list.get(i).equals(fifteenMinBeforeDate)) {
-                                    fifteenMinBefore.setVisibility(View.GONE);
-                                    fifteenMinView.setVisibility(View.GONE);
-                                }
+                    if (reminders_upd_list.get(i).equals(fifteenMinBeforeDate)) {
+                        fifteenMinBefore.setVisibility(View.GONE);
+                        fifteenMinView.setVisibility(View.GONE);
+                    }
 
-                                if (reminders_upd_list.get(i).equals(tenMinBeforeDate)) {
-                                    tenMinBefore.setVisibility(View.GONE);
-                                    tenMinView.setVisibility(View.GONE);
-                                }
+                    if (reminders_upd_list.get(i).equals(tenMinBeforeDate)) {
+                        tenMinBefore.setVisibility(View.GONE);
+                        tenMinView.setVisibility(View.GONE);
+                    }
 
-                                if (reminders_upd_list.get(i).equals(fiveMinBeforeDate)) {
-                                    fiveMinBefore.setVisibility(View.GONE);
-                                    fiveMinView.setVisibility(View.GONE);
-                                }
-                            }
-                        }
-                    });
+                    if (reminders_upd_list.get(i).equals(fiveMinBeforeDate)) {
+                        fiveMinBefore.setVisibility(View.GONE);
+                        fiveMinView.setVisibility(View.GONE);
+                    }
                 }
-            }, 0, 100, TimeUnit.MILLISECONDS); // runs every 100 milliseconds
+            }), 0, 100, TimeUnit.MILLISECONDS); // runs every 100 milliseconds
         }
     }
 
@@ -424,35 +389,30 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
                         }
                     }
-                    reminders_upd_list.sort((o1, o2) -> o1.compareTo(o2));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        reminders_upd_list.sort(Date::compareTo);
+                    }
+
+
 
                     for (int i = 0; i < reminders_upd_list.size(); i++) {
                         for (int j = i + 1; j < reminders_upd_list.size(); j++) {
-                            if (reminders_upd_list.get(i).getMonth() == reminders_upd_list.get(j).getMonth() &&
-                                    reminders_upd_list.get(i).getYear() == reminders_upd_list.get(j).getYear() &&
-                                    reminders_upd_list.get(i).getDay() == reminders_upd_list.get(j).getDay() &&
-                                    reminders_upd_list.get(i).getHours() == reminders_upd_list.get(j).getHours() &&
-                                    reminders_upd_list.get(i).getMinutes() == reminders_upd_list.get(j).getMinutes()) {
+                            Calendar calendar1 = Calendar.getInstance();
+                            calendar1.setTime(reminders_upd_list.get(i));
+
+                            Calendar calendar2 = Calendar.getInstance();
+                            calendar2.setTime(reminders_upd_list.get(j));
+
+                            if (isSameDateTime(calendar1, calendar2)) {
                                 reminders_upd_list.remove(i);
 
                             }
                         }
                     }
 
-                    for (int i = 0; i < reminders_upd_list.size(); i++) {
-                        for (int j = i + 1; j < reminders_upd_list.size(); j++) {
-                            if (reminders_upd_list.get(i).getMonth() == reminders_upd_list.get(j).getMonth() &&
-                                    reminders_upd_list.get(i).getYear() == reminders_upd_list.get(j).getYear() &&
-                                    reminders_upd_list.get(i).getDay() == reminders_upd_list.get(j).getDay() &&
-                                    reminders_upd_list.get(i).getHours() == reminders_upd_list.get(j).getHours() &&
-                                    reminders_upd_list.get(i).getMinutes() == reminders_upd_list.get(j).getMinutes()) {
-                                reminders_upd_list.remove(i);
-
-                            }
-                        }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        reminders_upd_list.sort(Date::compareTo);
                     }
-
-                    reminders_upd_list.sort((o1, o2) -> o1.compareTo(o2));
                     remindersAdapter = new RemindersAdapter(Edit_Update_Activity.this, reminders_upd_list);
 
                     remindersListViewUPD.setVisibility(View.VISIBLE);
@@ -475,44 +435,47 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
 
     }
+    private boolean isSameDateTime(@NonNull Calendar calendar1, @NonNull Calendar calendar2) {
+        return calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) &&
+                calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH) &&
+                calendar1.get(Calendar.DAY_OF_MONTH) == calendar2.get(Calendar.DAY_OF_MONTH) &&
+                calendar1.get(Calendar.HOUR_OF_DAY) == calendar2.get(Calendar.HOUR_OF_DAY) &&
+                calendar1.get(Calendar.MINUTE) == calendar2.get(Calendar.MINUTE);
+    }
 
     public void updateIfEmptyListView() {
         if (mCurrentActivity instanceof Edit_Update_Activity) {
             ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-            scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
-                @Override
-                public void run() {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            // update ui here
-                            if (reminders_upd_list.size() == 5) {
-                                addAlarmButtonUPD.setVisibility(View.GONE);
-                                aboveAlarmButtonUPD.setVisibility(View.GONE);
-                            } else {
-                                addAlarmButtonUPD.setVisibility(View.VISIBLE);
-                                aboveAlarmButtonUPD.setVisibility(View.VISIBLE);
-                            }
+            scheduledExecutorService.scheduleAtFixedRate(() -> runOnUiThread(() -> {
+                // update ui here
+                if (reminders_upd_list.size() == 5) {
+                    addAlarmButtonUPD.setVisibility(View.GONE);
+                    aboveAlarmButtonUPD.setVisibility(View.GONE);
+                } else {
+                    addAlarmButtonUPD.setVisibility(View.VISIBLE);
+                    aboveAlarmButtonUPD.setVisibility(View.VISIBLE);
+                }
 
-                            if (reminders_upd_list.isEmpty()) {
+                if (reminders_upd_list.isEmpty()) {
 //                            remindersAdapter = new RemindersAdapter(EventEdit.this, ok);
 //                            remindersAdapter.notifyDataSetChanged();
-                                remindersListViewUPD.setVisibility(View.GONE);
-                            } else if (reminders_upd_list.size() == 1) {
-                                reminders_upd_list.sort((o1, o2) -> o1.compareTo(o2));
-                                ViewGroup.LayoutParams paramsListView = remindersListViewUPD.getLayoutParams();
-                                paramsListView.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                                remindersListViewUPD.setLayoutParams(paramsListView);
-                            } else {
-                                reminders_upd_list.sort((o1, o2) -> o1.compareTo(o2));
-                                ViewGroup.LayoutParams paramsListView = remindersListViewUPD.getLayoutParams();
-                                paramsListView.height = 500;
-                                remindersListViewUPD.setLayoutParams(paramsListView);
-                            }
-                        }
-                    });
+                    remindersListViewUPD.setVisibility(View.GONE);
+                } else if (reminders_upd_list.size() == 1) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        reminders_upd_list.sort(Date::compareTo);
+                    }
+                    ViewGroup.LayoutParams paramsListView = remindersListViewUPD.getLayoutParams();
+                    paramsListView.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    remindersListViewUPD.setLayoutParams(paramsListView);
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        reminders_upd_list.sort(Date::compareTo);
+                    }
+                    ViewGroup.LayoutParams paramsListView = remindersListViewUPD.getLayoutParams();
+                    paramsListView.height = 500;
+                    remindersListViewUPD.setLayoutParams(paramsListView);
                 }
-            }, 0, 100, TimeUnit.MILLISECONDS); // runs every 100 milliseconds
+            }), 0, 100, TimeUnit.MILLISECONDS); // runs every 100 milliseconds
         }
     }
 
@@ -523,65 +486,60 @@ public class Edit_Update_Activity extends AppCompatActivity {
         repeatCounter = viewCountRepeat.findViewById(R.id.repeatCounter);
 
         AlertDialog.Builder builderCountRepeat = new AlertDialog.Builder(Edit_Update_Activity.this);
-        builderCountRepeat.setView(viewCountRepeat).setPositiveButton("Ναι", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                repeatCounterInt = Integer.parseInt(repeatCounter.getText().toString());
-                String strCount = "Ο αριθμός επαναλήψεων είναι: " + repeatCounterInt;
-                repeatCountTvUPD.setVisibility(View.VISIBLE);
-                repeatCountTvUPD.setText(strCount);
+        builderCountRepeat.setView(viewCountRepeat).setPositiveButton("Ναι", (dialog, which) -> {
+            repeatCounterInt = Integer.parseInt(repeatCounter.getText().toString());
+            String strCount = "Ο αριθμός επαναλήψεων είναι: " + repeatCounterInt;
+            repeatCountTvUPD.setVisibility(View.VISIBLE);
+            repeatCountTvUPD.setText(strCount);
 
-                if (repeatState == 1) {
+            if (repeatState == 1) {
 
-                    for (int i = 0; i < repeatCounterInt; i++) {
-                        cRepeat.add(Calendar.DAY_OF_YEAR, 1);
-                        repeats_listUPD.add(cRepeat.getTime());
+                for (int i = 0; i < repeatCounterInt; i++) {
+                    cRepeat.add(Calendar.DAY_OF_YEAR, 1);
+                    repeats_listUPD.add(cRepeat.getTime());
 
-                    }
-                } else if (repeatState == 2) {
+                }
+            } else if (repeatState == 2) {
 
-                    for (int i = 0; i < repeatCounterInt; i++) {
+                for (int i = 0; i < repeatCounterInt; i++) {
 
-                        cRepeat.add(Calendar.DAY_OF_YEAR, 7);
-                        repeats_listUPD.add(cRepeat.getTime());
-                    }
-
-
-                } else if (repeatState == 3) {
-                    for (int i = 0; i < repeatCounterInt; i++) {
-
-                        cRepeat.add(Calendar.MONTH, 1);
-                        repeats_listUPD.add(cRepeat.getTime());
-                    }
-
-                } else if (repeatState == 4) {
-
-                    for (int i = 0; i < repeatCounterInt; i++) {
-
-                        cRepeat.add(Calendar.YEAR, 1);
-                        repeats_listUPD.add(cRepeat.getTime());
-                    }
-                } else if (repeatState == 5) {
+                    cRepeat.add(Calendar.DAY_OF_YEAR, 7);
+                    repeats_listUPD.add(cRepeat.getTime());
                 }
 
 
-                dialog.dismiss();
+            } else if (repeatState == 3) {
+                for (int i = 0; i < repeatCounterInt; i++) {
+
+                    cRepeat.add(Calendar.MONTH, 1);
+                    repeats_listUPD.add(cRepeat.getTime());
+                }
+
+            } else if (repeatState == 4) {
+
+                for (int i = 0; i < repeatCounterInt; i++) {
+
+                    cRepeat.add(Calendar.YEAR, 1);
+                    repeats_listUPD.add(cRepeat.getTime());
+                }
             }
-        }).setNegativeButton("Άκυρο", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                repeatCountTvUPD.setVisibility(View.GONE);
-                addRepeatButtonUPD.setText("Επανάληψη");
-                cancelRepeatUPD.setVisibility(View.GONE);
-                addRepeat();
-            }
+
+
+            dialog.dismiss();
+        }).setNegativeButton("Άκυρο", (dialog, which) -> {
+            repeatCountTvUPD.setVisibility(View.GONE);
+            addRepeatButtonUPD.setText("Επανάληψη");
+            cancelRepeatUPD.setVisibility(View.GONE);
+            addRepeat();
         }).setTitle("Προσθέστε το πλήθος επαναλήψεων.");
         builderCountRepeat.show();
     }
 
     private void alertDialogCountRepeatIfDateChange(LocalDate date) {
         cRepeat.clear();
-        cRepeat.set(date.getYear(), date.getMonthValue() - 1, date.getDayOfMonth());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            cRepeat.set(date.getYear(), date.getMonthValue() - 1, date.getDayOfMonth());
+        }
         cRepeat.set(Calendar.HOUR_OF_DAY, 8);
         cRepeat.set(Calendar.MINUTE, 0);
         cRepeat.set(Calendar.SECOND, 0);
@@ -616,42 +574,64 @@ public class Edit_Update_Activity extends AppCompatActivity {
                 cRepeat.add(Calendar.YEAR, 1);
                 repeats_listUPD.add(cRepeat.getTime());
             }
-        } else if (repeatState == 5) {
         }
     }
 
     private void showChangeDate(int year, int month, int dayofmonth) {
-        final DatePickerDialog StartTime = new DatePickerDialog(this, R.style.TimePickerTheme, new DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                int trueMonth = monthOfYear + 1;
-
-                if (trueMonth < 10 && dayOfMonth >= 10) {
+        ArrayList<Date> reminder_list_date_changed = new ArrayList<>();
+        final DatePickerDialog StartTime = new DatePickerDialog(this, R.style.TimePickerTheme, (view, year1, monthOfYear, dayOfMonth) -> {
+            int trueMonth = monthOfYear + 1;
 
 
-                    LocalDate myDD = LocalDate.of(year, trueMonth, dayOfMonth);
-
-                    eventDateTV.setText(CalendarUtils.formattedDateEventEdit(myDD));
-
-                } else if (dayOfMonth < 10 && trueMonth < 10) {
 
 
-                    LocalDate myDD = LocalDate.of(year, trueMonth, dayOfMonth);
-                    eventDateTV.setText(CalendarUtils.formattedDateEventEdit(myDD));
-                } else if (dayOfMonth < 10 && trueMonth >= 10) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                myDD = LocalDate.of(year1, trueMonth, dayOfMonth);
 
-                    LocalDate myDD = LocalDate.of(year, trueMonth, dayOfMonth);
+            }
 
-                    eventDateTV.setText(CalendarUtils.formattedDateEventEdit(myDD));
+            eventDateTV.setText(CalendarUtils.formattedDateEventEdit(myDD));
 
-                } else {
 
-                    LocalDate myDD = LocalDate.of(year, trueMonth, dayOfMonth);
-                    eventDateTV.setText(CalendarUtils.formattedDateEventEdit(myDD));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                date = LocalDate.of(year1, trueMonth, dayOfMonth);
+            }
+
+            if (!(myDD == null))
+            {
+                if (!reminders_upd_list.isEmpty()) {
+
+                    for (int i = 0; i < reminders_upd_list.size(); i++) {
+                        Calendar cRemChanged = Calendar.getInstance();
+                        cRemChanged.clear();
+                        Date cRemBefore = reminders_upd_list.get(i);
+                        int yearTEST = myDD.getYear();
+                        int monthTEST = myDD.getMonth().getValue()-1;
+                        int dayTest = myDD.getDayOfMonth();
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            cRemChanged.set(Calendar.YEAR, yearTEST);
+                            cRemChanged.set(Calendar.MONTH, monthTEST);
+                            cRemChanged.set(Calendar.DAY_OF_MONTH, dayTest);
+                            cRemChanged.set(Calendar.HOUR, cRemBefore.getHours());
+                            cRemChanged.set(Calendar.MINUTE, cRemBefore.getMinutes());
+                            cRemChanged.set(Calendar.SECOND, 0);
+                            cRemChanged.set(Calendar.MILLISECOND, 0);
+                            Date testD = cRemChanged.getTime();
+                            reminder_list_date_changed.add(testD);
+                        }
+
+
+                    }
+                    reminders_upd_list.clear();
+                    reminders_upd_list.addAll(reminder_list_date_changed);
+                    remindersAdapter.notifyDataSetChanged();
 
                 }
-                date = LocalDate.of(year, trueMonth, dayOfMonth);
 
-
+            }else
+            {
+                Toast.makeText(mCurrentActivity, "problem showChangeDate_eventEdit_UPDATE", Toast.LENGTH_SHORT).show();
             }
 
 
@@ -664,48 +644,54 @@ public class Edit_Update_Activity extends AppCompatActivity {
     }
 
 
+    @SuppressLint("SetTextI18n")
     private void showChangeTime(int hours, int minute) {
         TimePickerDialog timePickerDialog;
-        timePickerDialog = new TimePickerDialog(Edit_Update_Activity.this, R.style.TimePickerTheme, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                hour = selectedHour;
-                min = selectedMinute;
+        timePickerDialog = new TimePickerDialog(Edit_Update_Activity.this, R.style.TimePickerTheme, (timePicker, selectedHour, selectedMinute) -> {
+            hour = selectedHour;
+            min = selectedMinute;
 
-                if (hour < 10 && min < 10) {
-                    String hourStr = String.format("%02d", hour);
-                    String minStr = String.format("%02d", min);
-                    String allTime = hourStr + ":" + minStr;
+            if (hour < 10 && min < 10) {
+                @SuppressLint("DefaultLocale") String hourStr = String.format("%02d", hour);
+                @SuppressLint("DefaultLocale") String minStr = String.format("%02d", min);
+                String allTime = hourStr + ":" + minStr;
 
-                    eventTimeTV.setText(hourStr + ":" + minStr);
+                eventTimeTV.setText(hourStr + ":" + minStr);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     time = LocalTime.parse(allTime, DateTimeFormatter.ISO_TIME);
-
-
-                } else if (hour < 10 && min >= 10) {
-                    String hourStr = String.format("%02d", hour);
-                    String allTime = hourStr + ":" + min;
-
-                    eventTimeTV.setText(hourStr + ":" + min);
-                    time = LocalTime.parse(allTime, DateTimeFormatter.ISO_TIME);
-                } else if (hour >= 10 && min < 10) {
-                    String minStr = String.format("%02d", min);
-
-                    String allTime = hour + ":" + minStr;
-
-                    eventTimeTV.setText(hour + ":" + minStr);
-                    time = LocalTime.parse(allTime, DateTimeFormatter.ISO_TIME);
-
-
-                } else {
-                    String allTime = hour + ":" + min;
-
-                    eventTimeTV.setText(hour + ":" + min);
-                    time = LocalTime.parse(allTime, DateTimeFormatter.ISO_TIME);
-
                 }
 
 
+            } else if (hour < 10 && min >= 10) {
+                @SuppressLint("DefaultLocale") String hourStr = String.format("%02d", hour);
+                String allTime = hourStr + ":" + min;
+
+                eventTimeTV.setText(hourStr + ":" + min);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    time = LocalTime.parse(allTime, DateTimeFormatter.ISO_TIME);
+                }
+            } else if (hour >= 10 && min < 10) {
+                @SuppressLint("DefaultLocale") String minStr = String.format("%02d", min);
+
+                String allTime = hour + ":" + minStr;
+
+                eventTimeTV.setText(hour + ":" + minStr);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    time = LocalTime.parse(allTime, DateTimeFormatter.ISO_TIME);
+                }
+
+
+            } else {
+                String allTime = hour + ":" + min;
+
+                eventTimeTV.setText(hour + ":" + min);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    time = LocalTime.parse(allTime, DateTimeFormatter.ISO_TIME);
+                }
+
             }
+
+
         }, hours, minute, true);//Yes 24 hour time
 
 
@@ -717,89 +703,86 @@ public class Edit_Update_Activity extends AppCompatActivity {
     private void showChangeTimeForReminder(int hours, int minute) {
 
         TimePickerDialog timePickerDialog;
-        timePickerDialog = new TimePickerDialog(Edit_Update_Activity.this, R.style.TimePickerTheme, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                hour = selectedHour;
-                min = selectedMinute;
+        timePickerDialog = new TimePickerDialog(Edit_Update_Activity.this, R.style.TimePickerTheme, (timePicker, selectedHour, selectedMinute) -> {
+            hour = selectedHour;
+            min = selectedMinute;
 
-                Calendar fixedFromChangeTime;
+            Calendar fixedFromChangeTime;
 
-                if (hour < 10 && min < 10) {
+            if (hour < 10 && min < 10) {
 
 
-                    cReminder.set(Calendar.HOUR_OF_DAY, hour);
-                    cReminder.set(Calendar.MINUTE, min);
-                    cReminder.set(Calendar.SECOND, 0);
-                    cReminder.set(Calendar.MILLISECOND, 0);
-                    fixedFromChangeTime = cReminder;
+                cReminder.set(Calendar.HOUR_OF_DAY, hour);
+                cReminder.set(Calendar.MINUTE, min);
+                cReminder.set(Calendar.SECOND, 0);
+                cReminder.set(Calendar.MILLISECOND, 0);
+                fixedFromChangeTime = cReminder;
 
-                    reminders_upd_list.add(fixedFromChangeTime.getTime());
-
-
-                } else if (hour < 10 && min >= 10) {
+                reminders_upd_list.add(fixedFromChangeTime.getTime());
 
 
-                    cReminder.set(Calendar.HOUR_OF_DAY, hour);
-                    cReminder.set(Calendar.MINUTE, min);
-                    cReminder.set(Calendar.SECOND, 0);
-                    cReminder.set(Calendar.MILLISECOND, 0);
-                    fixedFromChangeTime = cReminder;
-
-                    reminders_upd_list.add(fixedFromChangeTime.getTime());
-
-                } else if (hour >= 10 && min < 10) {
+            } else if (hour < 10 && min >= 10) {
 
 
-                    cReminder.set(Calendar.HOUR_OF_DAY, hour);
-                    cReminder.set(Calendar.MINUTE, min);
-                    cReminder.set(Calendar.SECOND, 0);
-                    cReminder.set(Calendar.MILLISECOND, 0);
-                    fixedFromChangeTime = cReminder;
-                    reminders_upd_list.add(fixedFromChangeTime.getTime());
+                cReminder.set(Calendar.HOUR_OF_DAY, hour);
+                cReminder.set(Calendar.MINUTE, min);
+                cReminder.set(Calendar.SECOND, 0);
+                cReminder.set(Calendar.MILLISECOND, 0);
+                fixedFromChangeTime = cReminder;
+
+                reminders_upd_list.add(fixedFromChangeTime.getTime());
+
+            } else if (hour >= 10 && min < 10) {
 
 
-                } else {
-
-                    cReminder.set(Calendar.HOUR_OF_DAY, hour);
-                    cReminder.set(Calendar.MINUTE, min);
-                    cReminder.set(Calendar.SECOND, 0);
-                    cReminder.set(Calendar.MILLISECOND, 0);
-                    fixedFromChangeTime = cReminder;
-
-                    reminders_upd_list.add(fixedFromChangeTime.getTime());
+                cReminder.set(Calendar.HOUR_OF_DAY, hour);
+                cReminder.set(Calendar.MINUTE, min);
+                cReminder.set(Calendar.SECOND, 0);
+                cReminder.set(Calendar.MILLISECOND, 0);
+                fixedFromChangeTime = cReminder;
+                reminders_upd_list.add(fixedFromChangeTime.getTime());
 
 
-                }
+            } else {
+
+                cReminder.set(Calendar.HOUR_OF_DAY, hour);
+                cReminder.set(Calendar.MINUTE, min);
+                cReminder.set(Calendar.SECOND, 0);
+                cReminder.set(Calendar.MILLISECOND, 0);
+                fixedFromChangeTime = cReminder;
+
+                reminders_upd_list.add(fixedFromChangeTime.getTime());
 
 
             }
+
+
         }, hours, minute, true);//Yes 24 hour time
 
 
         timePickerDialog.setTitle("Select Time");
-        timePickerDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
+        timePickerDialog.setOnDismissListener(dialog -> {
 
-                for (int i = 0; i < reminders_upd_list.size(); i++) {
-                    for (int j = i + 1; j < reminders_upd_list.size(); j++) {
-                        if (reminders_upd_list.get(i).getMonth() == reminders_upd_list.get(j).getMonth() &&
-                                reminders_upd_list.get(i).getYear() == reminders_upd_list.get(j).getYear() &&
-                                reminders_upd_list.get(i).getDay() == reminders_upd_list.get(j).getDay() &&
-                                reminders_upd_list.get(i).getHours() == reminders_upd_list.get(j).getHours() &&
-                                reminders_upd_list.get(i).getMinutes() == reminders_upd_list.get(j).getMinutes()) {
-                            reminders_upd_list.remove(i);
 
-                            Toast.makeText(Edit_Update_Activity.this, "Σφάλμα, η υπενθύμιση υπάρχει.", Toast.LENGTH_SHORT).show();
-                        }
+            for (int i = 0; i < reminders_upd_list.size(); i++) {
+                for (int j = i + 1; j < reminders_upd_list.size(); j++) {
+                    Calendar calendar1 = Calendar.getInstance();
+                    calendar1.setTime(reminders_upd_list.get(i));
+
+                    Calendar calendar2 = Calendar.getInstance();
+                    calendar2.setTime(reminders_upd_list.get(j));
+
+                    if (isSameDateTime(calendar1, calendar2)) {
+                        reminders_upd_list.remove(i);
+                        Toast.makeText(Edit_Update_Activity.this, "Σφάλμα, η υπενθύμιση υπάρχει.", Toast.LENGTH_SHORT).show();
+
                     }
                 }
-                remindersAdapter = new RemindersAdapter(getApplicationContext(), reminders_upd_list);
-
-                remindersListViewUPD.setVisibility(View.VISIBLE);
-                remindersListViewUPD.setAdapter(remindersAdapter);
             }
+            remindersAdapter = new RemindersAdapter(getApplicationContext(), reminders_upd_list);
+
+            remindersListViewUPD.setVisibility(View.VISIBLE);
+            remindersListViewUPD.setAdapter(remindersAdapter);
         });
         timePickerDialog.show();
     }
@@ -826,7 +809,9 @@ public class Edit_Update_Activity extends AppCompatActivity {
         cc.set(Calendar.MILLISECOND, 0);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(Edit_Update_Activity.this, alarmId, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(), pendingIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(), pendingIntent);
+        }
 
 
         Toast.makeText(Edit_Update_Activity.this, "Alarm set at: " + cc.getTime().toString(), Toast.LENGTH_SHORT).show();
@@ -855,150 +840,140 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
         hideAdReminderDynamically();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
         cReminder.set(Calendar.YEAR, date.getYear());
-        cReminder.set(Calendar.MONTH, date.getMonth().getValue() - 1);
+            cReminder.set(Calendar.MONTH, date.getMonth().getValue() - 1);
         cReminder.set(Calendar.DAY_OF_MONTH, date.getDayOfMonth());
+        }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
         cReminder.set(Calendar.HOUR_OF_DAY, time.getHour());
         cReminder.set(Calendar.MINUTE, time.getMinute());
         cReminder.set(Calendar.SECOND, time.getSecond());
+    }
 
 
         final AlertDialog dialog = new AlertDialog.Builder(this).setView(rowView)
                 .setTitle("Επιλογή Υπενθύμισης")
                 .create();
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
+        dialog.setOnShowListener(dialog1 -> {
 
-                oneDayBefore.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alarmState = 1;
-                        date.minusDays(1);
-                        cReminder.setTime(Date.from(date.minusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()));
-                        cReminder.set(Calendar.HOUR_OF_DAY, time.getHour());
-                        cReminder.set(Calendar.MINUTE, time.getMinute());
-                        cReminder.set(Calendar.MILLISECOND, 0);
-                        oneDayBeforeDate = cReminder.getTime();
-                        reminders_upd_list.add(oneDayBeforeDate);
-                        dialog.dismiss();
+            oneDayBefore.setOnClickListener(v -> {
+                alarmState = 1;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-                    }
-                });
+                    date.minusDays(1);
+                    cReminder.setTime(Date.from(date.minusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                    cReminder.set(Calendar.HOUR_OF_DAY, time.getHour());
+                    cReminder.set(Calendar.MINUTE, time.getMinute());
+                }
+                cReminder.set(Calendar.MILLISECOND, 0);
+                oneDayBeforeDate = cReminder.getTime();
+                reminders_upd_list.add(oneDayBeforeDate);
+                dialog1.dismiss();
 
-                oneHourMinBefore.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alarmState = 1;
-                        cReminder.set(Calendar.HOUR_OF_DAY, time.getHour() - 1);
-                        cReminder.set(Calendar.MILLISECOND, 0);
-                        oneHourBeforeDate = cReminder.getTime();
-                        reminders_upd_list.add(oneHourBeforeDate);
+            });
 
-                        dialog.dismiss();
-                    }
-                });
+            oneHourMinBefore.setOnClickListener(v -> {
+                alarmState = 1;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    cReminder.set(Calendar.HOUR_OF_DAY, time.getHour() - 1);
+                }
+                cReminder.set(Calendar.MILLISECOND, 0);
+                oneHourBeforeDate = cReminder.getTime();
+                reminders_upd_list.add(oneHourBeforeDate);
 
-                halfHourMinBefore.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alarmState = 1;
-                        cReminder.set(Calendar.MINUTE, time.getMinute() - 30);
-                        cReminder.set(Calendar.MILLISECOND, 0);
-                        halfHourBeforeDate = cReminder.getTime();
-                        reminders_upd_list.add(halfHourBeforeDate);
+                dialog1.dismiss();
+            });
+
+            halfHourMinBefore.setOnClickListener(v -> {
+                alarmState = 1;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    cReminder.set(Calendar.MINUTE, time.getMinute() - 30);
+                }
+                cReminder.set(Calendar.MILLISECOND, 0);
+                halfHourBeforeDate = cReminder.getTime();
+                reminders_upd_list.add(halfHourBeforeDate);
 
 
-                        dialog.dismiss();
-                    }
-                });
+                dialog1.dismiss();
+            });
 
-                fifteenMinBefore.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alarmState = 1;
-                        cReminder.set(Calendar.MINUTE, time.getMinute() - 15);
-                        cReminder.set(Calendar.MILLISECOND, 0);
-                        fifteenMinBeforeDate = cReminder.getTime();
-                        reminders_upd_list.add(fifteenMinBeforeDate);
-
-
-                        dialog.dismiss();
-                    }
-                });
-                tenMinBefore.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+            fifteenMinBefore.setOnClickListener(v -> {
+                alarmState = 1;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    cReminder.set(Calendar.MINUTE, time.getMinute() - 15);
+                }
+                cReminder.set(Calendar.MILLISECOND, 0);
+                fifteenMinBeforeDate = cReminder.getTime();
+                reminders_upd_list.add(fifteenMinBeforeDate);
 
 
-                        alarmState = 1;
-                        cReminder.set(Calendar.MINUTE, time.getMinute() - 10);
-                        cReminder.set(Calendar.MILLISECOND, 0);
-
-                        tenMinBeforeDate = cReminder.getTime();
-                        reminders_upd_list.add(tenMinBeforeDate);
-
-                        dialog.dismiss();
-                    }
-                });
-
-                fiveMinBefore.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                dialog1.dismiss();
+            });
+            tenMinBefore.setOnClickListener(v -> {
 
 
-                        alarmState = 1;
-                        cReminder.set(Calendar.MINUTE, time.getMinute() - 5);
-                        cReminder.set(Calendar.MILLISECOND, 0);
-                        fiveMinBeforeDate = cReminder.getTime();
-                        reminders_upd_list.add(fiveMinBeforeDate);
+                alarmState = 1;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    cReminder.set(Calendar.MINUTE, time.getMinute() - 10);
+                }
+                cReminder.set(Calendar.MILLISECOND, 0);
+
+                tenMinBeforeDate = cReminder.getTime();
+                reminders_upd_list.add(tenMinBeforeDate);
+
+                dialog1.dismiss();
+            });
+
+            fiveMinBefore.setOnClickListener(v -> {
 
 
-                        dialog.dismiss();
-                    }
-                });
+                alarmState = 1;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    cReminder.set(Calendar.MINUTE, time.getMinute() - 5);
+                }
+                cReminder.set(Calendar.MILLISECOND, 0);
+                fiveMinBeforeDate = cReminder.getTime();
+                reminders_upd_list.add(fiveMinBeforeDate);
 
 
-                customChoice.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alarmState = 1;
-                        showChangeTimeForReminder(cReminder.get(Calendar.HOUR_OF_DAY), cReminder.get(Calendar.MINUTE));
+                dialog1.dismiss();
+            });
 
-                        dialog.dismiss();
-                    }
-                });
 
-            }
+            customChoice.setOnClickListener(v -> {
+                alarmState = 1;
+                showChangeTimeForReminder(cReminder.get(Calendar.HOUR_OF_DAY), cReminder.get(Calendar.MINUTE));
+
+                dialog1.dismiss();
+            });
+
         });
 
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                for (int i = 0; i < reminders_upd_list.size(); i++) {
-                    for (int j = i + 1; j < reminders_upd_list.size(); j++) {
-                        if (reminders_upd_list.get(i).getMonth() == reminders_upd_list.get(j).getMonth() &&
-                                reminders_upd_list.get(i).getYear() == reminders_upd_list.get(j).getYear() &&
-                                reminders_upd_list.get(i).getDay() == reminders_upd_list.get(j).getDay() &&
-                                reminders_upd_list.get(i).getHours() == reminders_upd_list.get(j).getHours() &&
-                                reminders_upd_list.get(i).getMinutes() == reminders_upd_list.get(j).getMinutes()) {
-                            reminders_upd_list.remove(i);
+        dialog.setOnDismissListener(dialog12 -> {
+            for (int i = 0; i < reminders_upd_list.size(); i++) {
+                for (int j = i + 1; j < reminders_upd_list.size(); j++) {
+                    if (reminders_upd_list.get(i).getMonth() == reminders_upd_list.get(j).getMonth() &&
+                            reminders_upd_list.get(i).getYear() == reminders_upd_list.get(j).getYear() &&
+                            reminders_upd_list.get(i).getDay() == reminders_upd_list.get(j).getDay() &&
+                            reminders_upd_list.get(i).getHours() == reminders_upd_list.get(j).getHours() &&
+                            reminders_upd_list.get(i).getMinutes() == reminders_upd_list.get(j).getMinutes()) {
+                        reminders_upd_list.remove(i);
 
-                            Toast.makeText(Edit_Update_Activity.this, "Σφάλμα, η υπενθύμιση υπάρχει.", Toast.LENGTH_SHORT).show();
-                        }
+                        Toast.makeText(Edit_Update_Activity.this, "Σφάλμα, η υπενθύμιση υπάρχει.", Toast.LENGTH_SHORT).show();
                     }
                 }
-
-                remindersAdapter = new RemindersAdapter(getApplicationContext(), reminders_upd_list);
-
-                remindersListViewUPD.setVisibility(View.VISIBLE);
-                remindersListViewUPD.setAdapter(remindersAdapter);
-
-
             }
+
+            remindersAdapter = new RemindersAdapter(getApplicationContext(), reminders_upd_list);
+
+            remindersListViewUPD.setVisibility(View.VISIBLE);
+            remindersListViewUPD.setAdapter(remindersAdapter);
+
+
         });
 
         dialog.show();
@@ -1008,11 +983,13 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
     private void addRepeat() {
 
-        cRepeat.set(Calendar.YEAR, date.getYear());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            cRepeat.set(Calendar.YEAR, date.getYear());
+
         cRepeat.set(Calendar.MONTH, date.getMonth().getValue() - 1);
         cRepeat.set(Calendar.DAY_OF_MONTH, date.getDayOfMonth());
 
-
+        }
         cRepeat.set(Calendar.HOUR_OF_DAY, 8);
         cRepeat.set(Calendar.MINUTE, 0);
         cRepeat.set(Calendar.SECOND, 0);
@@ -1034,68 +1011,56 @@ public class Edit_Update_Activity extends AppCompatActivity {
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
-                everyDay.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertDialogCountRepeat();
-                        repeatState = 1;
-                        cancelRepeatUPD.setVisibility(View.VISIBLE);
-                        addRepeatButtonUPD.setText(R.string.every_day_gr);
+                everyDay.setOnClickListener(v -> {
+                    alertDialogCountRepeat();
+                    repeatState = 1;
+                    cancelRepeatUPD.setVisibility(View.VISIBLE);
+                    addRepeatButtonUPD.setText(R.string.every_day_gr);
 
 
-                        dialog.dismiss();
-                    }
+                    dialog.dismiss();
                 });
 
-                everyWeek.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertDialogCountRepeat();
-                        repeatState = 2;
-                        cancelRepeatUPD.setVisibility(View.VISIBLE);
-                        addRepeatButtonUPD.setText(R.string.every_week_gr);
+                everyWeek.setOnClickListener(v -> {
+                    alertDialogCountRepeat();
+                    repeatState = 2;
+                    cancelRepeatUPD.setVisibility(View.VISIBLE);
+                    addRepeatButtonUPD.setText(R.string.every_week_gr);
 
-                        dialog.dismiss();
-                    }
+                    dialog.dismiss();
                 });
 
-                everyMonth.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertDialogCountRepeat();
-                        repeatState = 3;
-                        cancelRepeatUPD.setVisibility(View.VISIBLE);
-                        addRepeatButtonUPD.setText(R.string.every_month_gr);
+                everyMonth.setOnClickListener(v -> {
+                    alertDialogCountRepeat();
+                    repeatState = 3;
+                    cancelRepeatUPD.setVisibility(View.VISIBLE);
+                    addRepeatButtonUPD.setText(R.string.every_month_gr);
 
 
-                        dialog.dismiss();
-                    }
+                    dialog.dismiss();
                 });
 
-                everyYear.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertDialogCountRepeat();
-                        repeatState = 4;
-                        cancelRepeatUPD.setVisibility(View.VISIBLE);
-                        addRepeatButtonUPD.setText(R.string.every_year_gr);
+                everyYear.setOnClickListener(v -> {
+                    alertDialogCountRepeat();
+                    repeatState = 4;
+                    cancelRepeatUPD.setVisibility(View.VISIBLE);
+                    addRepeatButtonUPD.setText(R.string.every_year_gr);
 
-                        dialog.dismiss();
-                    }
+                    dialog.dismiss();
                 });
 
-                customRepeat.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                customRepeat.setOnClickListener(v -> {
 
-                        repeatState = 5;
-                        Intent iCustomRepeat = new Intent(Edit_Update_Activity.this, CustomRepeatActivity.class);
-                        String flagForEditUpdate = "1";
-                        iCustomRepeat.putExtra("flagBack",flagForEditUpdate);
-                        iCustomRepeat.putExtra("date",date.toString());
-                        startActivity(iCustomRepeat);
-                        dialog.dismiss();
-                    }
+                    repeatState = 5;
+                    Intent iCustomRepeat = new Intent(Edit_Update_Activity.this, CustomRepeatActivity.class);
+                    String flagForEditUpdate = "1";
+                    iCustomRepeat.putExtra("flagBack",flagForEditUpdate);
+                    iCustomRepeat.putExtra("date",date.toString());
+                    iCustomRepeat.putExtra("tittle", eventNameETUPD.getText().toString());
+                    iCustomRepeat.putExtra("comment", eventCommentETUPD.getText().toString());
+                    iCustomRepeat.putExtra("stack",stackNow);
+                    startActivity(iCustomRepeat);
+                    dialog.dismiss();
                 });
 
 
@@ -1131,7 +1096,9 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
 
         Cursor cursorRem = myDB.readAllReminder();
-        reminders_upd_list.sort((o1, o2) -> o1.compareTo(o2));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            reminders_upd_list.sort(Date::compareTo);
+        }
 
 
         if (reminders_upd_list.size() > 0) {
@@ -1222,7 +1189,32 @@ public class Edit_Update_Activity extends AppCompatActivity {
         Cursor cursor = myDB.readAllEvents();
 
 
-        repeats_listUPD.sort((o1, o2) -> o1.compareTo(o2));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            repeats_listUPD.sort(Date::compareTo);
+        }
+
+        if (repeatState == 5) {
+            for (LocalDate localDate : CustomRepeatActivity.customDatesToSaveLocalDate) {
+                Calendar cForCustom = Calendar.getInstance();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                    cForCustom.set(Calendar.YEAR, localDate.getYear());
+                    cForCustom.set(Calendar.MONTH, localDate.getMonth().getValue() - 1);
+                    cForCustom.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
+                }
+
+                cForCustom.set(Calendar.HOUR_OF_DAY, 8);
+                cForCustom.set(Calendar.MINUTE, 0);
+                cForCustom.set(Calendar.SECOND, 0);
+                Date dateFromCustomRepeat = cForCustom.getTime();
+                repeats_listUPD.add(dateFromCustomRepeat);
+                if (localDate.equals(date)) {
+                    repeats_listUPD.remove(dateFromCustomRepeat);
+                }
+            }
+
+
+        }
 
         if (repeats_listUPD.size() > 0) {
             while (cursor.moveToNext()) {
@@ -1289,7 +1281,9 @@ public class Edit_Update_Activity extends AppCompatActivity {
         MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
         Cursor cursorEvent = myDB.readAllEvents();
         Cursor cursorRem = myDB.readAllReminder();
-        reminders_upd_list.sort((o1, o2) -> o1.compareTo(o2));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            reminders_upd_list.sort(Date::compareTo);
+        }
 
 
         if (!(editAllArray.isEmpty())) {
@@ -1318,8 +1312,11 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
                     if (!(cursorEvent.getString(0).equals(id_row)) && (parent_id==null && (!(cursorEvent.getString(7)==null) && cursorEvent.getString(7).equals(id_row))))
                     {reminders_upd_list_all_events.clear();
-                        LocalDate cursorLocalDate = CalendarUtils.stringToLocalDate(cursorEvent.getString(3));
-                        Date cursorDate = Date.from(cursorLocalDate.atStartOfDay().atZone(java.time.ZoneId.systemDefault()).toInstant());
+                        LocalDate cursorLocalDate = stringToLocalDate(cursorEvent.getString(3));
+                        Date cursorDate = null;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            cursorDate = Date.from(cursorLocalDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+
                         cAllEventsReminder.setTime(cursorDate);
                         for (int i = 0; i < reminders_upd_list.size(); i++) {
                             Date getRemindersValues = reminders_upd_list.get(i);
@@ -1336,7 +1333,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                             cAllEventsReminder.set(Calendar.MILLISECOND, 0);
 
                             reminders_upd_list_all_events.add(cAllEventsReminder.getTime());
-
+                        }
                         }
                         for (int j = 0; j < reminders_upd_list_all_events.size(); j++) {
 
@@ -1361,8 +1358,11 @@ public class Edit_Update_Activity extends AppCompatActivity {
                         }
                     }else if (!(cursorEvent.getString(0).equals(id_row)) && (!(parent_id==null) && (!(cursorEvent.getString(7)==null) && cursorEvent.getString(7).equals(parent_id)) || cursorEvent.getString(0).equals(parent_id))) {
                         reminders_upd_list_all_events.clear();
-                        LocalDate cursorLocalDate = CalendarUtils.stringToLocalDate(cursorEvent.getString(3));
-                        Date cursorDate = Date.from(cursorLocalDate.atStartOfDay().atZone(java.time.ZoneId.systemDefault()).toInstant());
+                        LocalDate cursorLocalDate = stringToLocalDate(cursorEvent.getString(3));
+                        Date cursorDate = null;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            cursorDate = Date.from(cursorLocalDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+
                         cAllEventsReminder.setTime(cursorDate);
                         for (int i = 0; i < reminders_upd_list.size(); i++) {
                             Date getRemindersValues = reminders_upd_list.get(i);
@@ -1381,7 +1381,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                             reminders_upd_list_all_events.add(cAllEventsReminder.getTime());
 
                         }
-
+                        }
                             for (int j = 0; j < reminders_upd_list_all_events.size(); j++) {
 
 
@@ -1424,7 +1424,31 @@ public class Edit_Update_Activity extends AppCompatActivity {
         Cursor cursor = myDB.readAllEvents();
 
 
-        repeats_listUPD.sort((o1, o2) -> o1.compareTo(o2));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            repeats_listUPD.sort(Date::compareTo);
+        }
+        if (repeatState == 5) {
+            for (LocalDate localDate : CustomRepeatActivity.customDatesToSaveLocalDate) {
+                Calendar cForCustom = Calendar.getInstance();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                    cForCustom.set(Calendar.YEAR, localDate.getYear());
+                    cForCustom.set(Calendar.MONTH, localDate.getMonth().getValue() - 1);
+                    cForCustom.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
+                }
+
+                cForCustom.set(Calendar.HOUR_OF_DAY, 8);
+                cForCustom.set(Calendar.MINUTE, 0);
+                cForCustom.set(Calendar.SECOND, 0);
+                Date dateFromCustomRepeat = cForCustom.getTime();
+                repeats_listUPD.add(dateFromCustomRepeat);
+                if (localDate.equals(date)) {
+                    repeats_listUPD.remove(dateFromCustomRepeat);
+                }
+            }
+
+
+        }
 
         if (repeats_listUPD.size() > 0) {
             while (cursor.moveToNext()) {
@@ -1584,16 +1608,21 @@ public class Edit_Update_Activity extends AppCompatActivity {
             for (int i = 0; i < editFutureArray.size(); i++) {
                 cursorEvent.moveToPosition(-1);
                 while (cursorEvent.moveToNext()) {
-                    if (id_row.equals(cursorEvent.getString(0)) && !date.equals(CalendarUtils.stringToLocalDate(cursorEvent.getString(3)))) {
-                        LocalDate oldDate = CalendarUtils.stringToLocalDate(cursorEvent.getString(3));
-                        daysBetween = ChronoUnit.DAYS.between(oldDate, date);
+                    if (id_row.equals(cursorEvent.getString(0)) && !date.equals(stringToLocalDate(cursorEvent.getString(3)))) {
+                        LocalDate oldDate = stringToLocalDate(cursorEvent.getString(3));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            daysBetween = ChronoUnit.DAYS.between(oldDate, date);
+                        }
                         myDB.updateEventDate(id_row, date);
                         myDB.updateEventTime(id_row, time);
                     }
                     if (editFutureArray.get(i).equals(cursorEvent.getString(0)) && !editFutureArray.get(i).equals(id_row)) {
 
-                        LocalDate newDate = CalendarUtils.stringToLocalDate(cursorEvent.getString(3));
-                        LocalDate newDateDB = newDate.plusDays(daysBetween);
+                        LocalDate newDate = stringToLocalDate(cursorEvent.getString(3));
+                        LocalDate newDateDB = null;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            newDateDB = newDate.plusDays(daysBetween);
+                        }
                         myDB.updateEventDate(editFutureArray.get(i), newDateDB);
                         myDB.updateEventTime(editFutureArray.get(i), time);
 
@@ -1614,7 +1643,9 @@ public class Edit_Update_Activity extends AppCompatActivity {
         MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
         Cursor cursorEvent = myDB.readAllEvents();
         Cursor cursorRem = myDB.readAllReminder();
-        reminders_upd_list.sort((o1, o2) -> o1.compareTo(o2));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            reminders_upd_list.sort(Date::compareTo);
+        }
 
 
         if (!(editFutureArray.isEmpty())) {
@@ -1650,8 +1681,11 @@ public class Edit_Update_Activity extends AppCompatActivity {
                                 !(editFutureArray.get(k)).equals(id_row) &&
                                 cursorEvent.getString(0).equals(editFutureArray.get(k))) {
                             reminders_upd_list_all_events.clear();
-                            LocalDate cursorLocalDate = CalendarUtils.stringToLocalDate(cursorEvent.getString(3));
-                            Date cursorDate = Date.from(cursorLocalDate.atStartOfDay().atZone(java.time.ZoneId.systemDefault()).toInstant());
+                            LocalDate cursorLocalDate = stringToLocalDate(cursorEvent.getString(3));
+                            Date cursorDate = null;
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                cursorDate = Date.from(cursorLocalDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+
                             cAllEventsReminder.setTime(cursorDate);
                             for (int i = 0; i < reminders_upd_list.size(); i++) {
                                 Date getRemindersValues = reminders_upd_list.get(i);
@@ -1668,7 +1702,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                                 cAllEventsReminder.set(Calendar.MILLISECOND, 0);
 
                                 reminders_upd_list_all_events.add(cAllEventsReminder.getTime());
-
+                            }
                             }
 
                                 for (int j = 0; j < reminders_upd_list_all_events.size(); j++) {
@@ -1720,7 +1754,9 @@ public class Edit_Update_Activity extends AppCompatActivity {
         String eventComment = eventCommentETUPD.getText().toString();
 
         cRepeat.clear();
-        cRepeat.set(date.getYear(), date.getMonthValue() - 1, date.getDayOfMonth());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            cRepeat.set(date.getYear(), date.getMonthValue() - 1, date.getDayOfMonth());
+        }
         cRepeat.set(Calendar.HOUR_OF_DAY, 8);
         cRepeat.set(Calendar.MINUTE, 0);
         cRepeat.set(Calendar.SECOND, 0);
@@ -1757,6 +1793,26 @@ public class Edit_Update_Activity extends AppCompatActivity {
                 repeats_listUPD.add(cRepeat.getTime());
             }
         } else if (repeatState == 5) {
+            for (LocalDate localDate : CustomRepeatActivity.customDatesToSaveLocalDate) {
+                Calendar cForCustom = Calendar.getInstance();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                    cForCustom.set(Calendar.YEAR, localDate.getYear());
+                    cForCustom.set(Calendar.MONTH, localDate.getMonth().getValue() - 1);
+                    cForCustom.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
+                }
+
+                cForCustom.set(Calendar.HOUR_OF_DAY, 8);
+                cForCustom.set(Calendar.MINUTE, 0);
+                cForCustom.set(Calendar.SECOND, 0);
+                Date dateFromCustomRepeat = cForCustom.getTime();
+                repeats_listUPD.add(dateFromCustomRepeat);
+                if (localDate.equals(date)) {
+                    repeats_listUPD.remove(dateFromCustomRepeat);
+                }
+            }
+
+
         }
 
         while (cursorEvent.moveToNext()) {
@@ -1825,7 +1881,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
 //----------------------------------------------------------------------------
 
 
-    //----------------------------------------------------------------------
 
     private void updEventAction() {
         MyDatabaseHelper myDB = new MyDatabaseHelper(getApplicationContext());
@@ -1887,10 +1942,13 @@ public class Edit_Update_Activity extends AppCompatActivity {
         myDB.close();
 
         Intent i1 = new Intent(Edit_Update_Activity.this, MainActivity.class);
-        Boolean myBool = true;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            i1.putExtra("date", date);
+        }
 
-        i1.putExtra("date", date);
-        i1.putExtra("bool", myBool);
+        String myTemp = CalendarUtils.selectedDate.toString();
+        i1.putExtra("tempDate",myTemp);
+        i1.putExtra("stack",stackNow);
 
         myDB.removeDuplicateReminders();
         overridePendingTransition(0, 0);

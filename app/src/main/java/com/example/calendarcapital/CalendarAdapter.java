@@ -2,22 +2,24 @@ package com.example.calendarcapital;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +35,8 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
     static int numEvents;
     static  int numRepeatingEvents;
     Context context;
+    private Drawable defaultBackgroundDrawable;
+
 
 
     public CalendarAdapter(ArrayList<LocalDate> days, OnItemListener onItemListener, Context context) {
@@ -41,6 +45,8 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
         this.myDB = new MyDatabaseHelper(context.getApplicationContext());
         this.context = context;
         this.daysForRepeat = new ArrayList<>();
+        this.defaultBackgroundDrawable = null; // Set the default background drawable to null
+
 
     }
 
@@ -83,9 +89,12 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
             layoutParams.height = (int) parent.getHeight();
 
 
+
         return new CalendarViewHolder(view, onItemListener, days);
     }
 
+
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position) {
 
@@ -104,7 +113,9 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
 
         for (LocalDate day : days) {
             Calendar calendar1 = Calendar.getInstance();
-            calendar1.set(day.getYear(), day.getMonthValue() - 1, day.getDayOfMonth());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                calendar1.set(day.getYear(), day.getMonthValue() - 1, day.getDayOfMonth());
+            }
             calendar1.set(Calendar.HOUR_OF_DAY, 8);
             calendar1.set(Calendar.MINUTE, 0);
             calendar1.set(Calendar.SECOND, 0);
@@ -114,23 +125,42 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
         }
 
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            holder.dayOfMonth.setText(String.valueOf(date.getDayOfMonth()));
+        }
 
-        holder.dayOfMonth.setText(String.valueOf(date.getDayOfMonth()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (date.equals(CalendarUtils.selectedDate))
+            {
 
-        if (date.equals(CalendarUtils.selectedDate))
-            holder.parentView.setBackgroundColor(Color.LTGRAY);
-        if (date.getMonth().equals(CalendarUtils.selectedDate.getMonth()))
-            holder.dayOfMonth.setTextColor(Color.BLACK);
-        else
-            holder.dayOfMonth.setTextColor(Color.LTGRAY);
+                holder.parentView.setBackgroundColor(Color.LTGRAY);
+
+            }else {
+//                holder.parentView.setBackground(defaultBackgroundDrawable);
+                holder.parentView.setBackgroundResource(R.drawable.back);
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (date.getMonth().equals(CalendarUtils.selectedDate.getMonth())) {
+                holder.dayOfMonth.setTextColor(Color.BLACK);
+            }
+            else
+            {
+                holder.dayOfMonth.setTextColor(Color.LTGRAY);
+                }
+        }
         ArrayList<Event> myEvents = new ArrayList<>();
 
 
         cursor.moveToPosition(-1);
         while (cursor.moveToNext()) {
-            Event eventDB = new Event(cursor.getString(0), cursor.getString(1), cursor.getString(2),
-                    CalendarUtils.stringToLocalDate(cursor.getString(3)), LocalTime.parse(cursor.getString(4)),
-                    cursor.getString(5), cursor.getString(6),cursor.getString(7));
+            Event eventDB = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                eventDB = new Event(cursor.getString(0), cursor.getString(1), cursor.getString(2),
+                        CalendarUtils.stringToLocalDate(cursor.getString(3)), LocalTime.parse(cursor.getString(4)),
+                        cursor.getString(5), cursor.getString(6),cursor.getString(7));
+            }
 
             myEvents.add(eventDB);
 
@@ -138,14 +168,11 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
         }
 
 
-
-//        myEvents.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
-//
-//        myEvents.sort((o1, o2) -> o2.getTime().compareTo(o1.getTime()));
-//
         numEvents=0;
         numRepeatingEvents=0;
-        myEvents.sort((o1, o2) -> o2.getName().compareTo(o1.getName()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            myEvents.sort((o1, o2) -> o2.getName().compareTo(o1.getName()));
+        }
         cursor.moveToPosition(-1);
         for (int i=0; i<days.size(); i++)
         {
@@ -192,11 +219,6 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
             checkForMore( holder);
 
         }
-//        myEvents.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
-//
-//        myEvents.sort((o1, o2) -> o2.getTime().compareTo(o1.getTime()));
-//        myEvents.sort((o1, o2) -> o2.getName().compareTo(o1.getName()));
-
 
         cursor.moveToPosition(-1);
         for (int i=0; i<days.size(); i++) {
@@ -233,10 +255,6 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                     holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner);
                 }
 
-if (date.toString().equals("2023-05-11"))
-{
-    System.out.println();
-}
             checkForMore( holder);
         }
 
@@ -329,9 +347,14 @@ public void checkForMore(@NonNull CalendarViewHolder holder)
     @Override
     public int getItemCount() {
         return days.size();
+
+
     }
 
     public interface OnItemListener {
+
         void onItemClick(int position, LocalDate date);
+
     }
+
 }

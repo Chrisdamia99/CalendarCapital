@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    //layoutToolBar
+    <dimen name="margin_calendar_name_main_activity">100dp</dimen>
+    <dimen name="refreshMenuBtn_main_activity">90dp</dimen>
+
+    //linLayDateChange
+    <dimen name="linLayDateChange_main_activity_width">410dp</dimen>
+    <dimen name="linLayDateChange_main_activity_height">40dp</dimen>
+    <dimen name="linear_lay_change_month_margin">1dp</dimen>
+
+    //recyclerView
+    <dimen name="recycler_view_main_width">390dp</dimen>
+    <dimen name="recycler_view_main_height">400dp</dimen>
+
+<!--    <dimen name="float_button_margin_top">20dp</dimen>-->
+    //daysOfWeek
+    <dimen name="daysOfWeek_main_activity_width">400dp</dimen>
+    <dimen name="daysOfWeek_main_activity_height">30dp</dimen>
+    <dimen name="daysOfWeek_main_activity_margin_left">1dp</dimen>
+
+    //floatButton
+    <dimen name="float_button_margin_bottom">1dp</dimen>
+
+
+    //hourCellLin
+    <dimen name="hour_cell_Lin_width">680dp</dimen>
+</resources>

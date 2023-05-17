@@ -5,139 +5,89 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="20dp"
-    android:layout_marginBottom="20dp"
-    android:padding="16dp"
+    android:padding="5dp"
     >
+    <!--    android:padding="16dp"-->
 
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:orientation="horizontal"
-    android:layout_height="130dp"
-    android:background="@drawable/hour_cell_shape"
-    >
-
-    <TextView
-        android:layout_width="70dp"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:id="@+id/dateTV"
-        android:textSize="12sp"
-        android:textColor="@color/black"
-        android:text="@string/example_month_hour_cell"/>
-    <TextView
-        android:layout_width="70dp"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:id="@+id/timeTV"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:text="@string/example_hour_hour_cell"/>
-
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/hourCellLin"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="100dp"
         android:background="@drawable/hour_cell_shape"
-        android:padding="5dp">
+        >
 
         <TextView
-            android:id="@+id/event1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/rounded_corner"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:padding="3dp"
-            android:lines="2"
-            android:backgroundTint="@color/secondPrimaryLightTirquiso"
-            android:text="Event 1"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:id="@+id/dateTV"
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            android:text="@string/example_month_hour_cell"/>
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_toRightOf="@id/event1"
-            android:background="@color/secondPrimaryLightTirquiso"
-            android:layout_height="wrap_content"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:id="@+id/event2"
-            android:textSize="18sp"
-            android:lines="2"
-            android:textColor="@color/white"
-            android:text="Event 2"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@color/secondPrimaryLightTirquiso"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_toRightOf="@id/event2"
-            android:id="@+id/event3"
-            android:textSize="18sp"
-            android:lines="2"
-            android:textColor="@color/white"
-            android:text="Event 3"/>
+            android:id="@+id/timeTV"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:text="@string/example_hour_hour_cell"/>
 
-        <TextView
-            android:id="@+id/comment1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/event1"
-            android:background="@drawable/rounded_corner"
-            android:backgroundTint="@color/secondPrimaryLightTirquiso"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:padding="3dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
-            android:gravity="center"
-            android:lines="2"
-            android:text="Comment 1"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/hour_cell_shape"
+            android:padding="5dp">
 
-        <TextView
-            android:id="@+id/comment2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/event2"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_toRightOf="@id/comment1"
-            android:background="@color/secondPrimaryLightTirquiso"
-            android:gravity="center"
-            android:lines="2"
-            android:text="Comment 2"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/coment3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/event3"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_toRightOf="@id/comment2"
-            android:background="@color/secondPrimaryLightTirquiso"
-            android:gravity="center"
-            android:lines="2"
-            android:text="Comment 3"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
+            <TextView
+                android:id="@+id/event1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/rounded_corner"
+                android:gravity="center"
+                android:padding="3dp"
+                android:lines="2"
+                android:backgroundTint="@color/secondPrimaryLightTirquiso"
+                android:text="Event 1"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
 
-    </RelativeLayout>
+
+            <TextView
+                android:id="@+id/comment1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/event1"
+                android:background="@drawable/rounded_corner"
+                android:backgroundTint="@color/secondPrimaryLightTirquiso"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:padding="3dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:lines="2"
+                android:text="Comment 1"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:layout_toRightOf="@id/event1" />
 
 
 
 
-</LinearLayout>
+
+
+        </RelativeLayout>
+
+
+
+
+    </LinearLayout>
 </LinearLayout>

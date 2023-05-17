@@ -19,8 +19,6 @@ android:background="@drawable/rounded_alertdialog"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/event_info"
-            android:textStyle="bold"
-
             android:textColor="@color/white"
             android:textSize="25sp" />
     </LinearLayout>
@@ -49,7 +47,6 @@ android:background="@drawable/rounded_alertdialog"
             android:text="@string/id"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold"
             />
 
         <TextView
@@ -61,7 +58,6 @@ android:background="@drawable/rounded_alertdialog"
             android:text="@string/id"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold"
             />
 
 
@@ -85,7 +81,6 @@ android:background="@drawable/rounded_alertdialog"
             android:text="@string/title"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold"
             />
 
 
@@ -99,7 +94,6 @@ android:background="@drawable/rounded_alertdialog"
             android:text="@string/title"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold"
             />
 
 
@@ -125,7 +119,6 @@ android:background="@drawable/rounded_alertdialog"
             android:text="@string/date_info"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold"
             />
 
 
@@ -139,7 +132,6 @@ android:background="@drawable/rounded_alertdialog"
             android:text="@string/date_info"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold"
             />
 
 
@@ -167,7 +159,6 @@ android:background="@drawable/rounded_alertdialog"
             android:text="@string/time_info"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold"
             />
 
 
@@ -181,7 +172,6 @@ android:background="@drawable/rounded_alertdialog"
             android:text="@string/time_info"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold"
             />
 
 
@@ -205,7 +195,6 @@ android:background="@drawable/rounded_alertdialog"
             android:text="@string/comment_info"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold"
             />
 
 
@@ -219,7 +208,6 @@ android:background="@drawable/rounded_alertdialog"
             android:text="@string/comment_info"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold"
             />
 
 
@@ -235,7 +223,6 @@ android:background="@drawable/rounded_alertdialog"
 <!--    android:text="Start Alarm"-->
 <!--    android:backgroundTint="@color/blue"-->
 <!--    android:textColor="@color/white"-->
-<!--    android:textStyle="bold"-->
 <!--    android:textAllCaps="false"-->
 <!--    android:layout_gravity="center"-->
 <!--    android:layout_marginTop="20dp"-->

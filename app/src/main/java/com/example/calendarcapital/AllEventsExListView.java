@@ -103,7 +103,10 @@ public class AllEventsExListView extends AppCompatActivity {
                 @SuppressLint("Range") String title = cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_TITLE));
                 @SuppressLint("Range") String comment = cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_COMMENT));
                 @SuppressLint("Range") LocalDate date = CalendarUtils.stringToLocalDate(cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_DATE)));
-                @SuppressLint("Range") LocalTime time = LocalTime.parse(cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_TIME)));
+                @SuppressLint("Range") LocalTime time = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    time = LocalTime.parse(cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_TIME)));
+                }
                 @SuppressLint("Range") String alarm = String.valueOf(cursor.getInt(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_ALARM)));
                 @SuppressLint("Range") String parentId = String.valueOf(cursor.getLong(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_PARENT_ID)));
 
@@ -144,7 +147,10 @@ public class AllEventsExListView extends AppCompatActivity {
                 @SuppressLint("Range") String title = cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_TITLE));
                 @SuppressLint("Range") String comment = cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_COMMENT));
                 @SuppressLint("Range") LocalDate date = CalendarUtils.stringToLocalDate(cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_DATE)));
-                @SuppressLint("Range") LocalTime time = LocalTime.parse(cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_TIME)));
+                @SuppressLint("Range") LocalTime time = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    time = LocalTime.parse(cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_TIME)));
+                }
                 @SuppressLint("Range") String alarm = String.valueOf(cursor.getInt(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_ALARM)));
                 @SuppressLint("Range") String parentId = String.valueOf(cursor.getLong(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_PARENT_ID)));
 
@@ -185,7 +191,10 @@ public class AllEventsExListView extends AppCompatActivity {
                 @SuppressLint("Range") String title = cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_TITLE));
                 @SuppressLint("Range") String comment = cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_COMMENT));
                 @SuppressLint("Range") LocalDate date = CalendarUtils.stringToLocalDate(cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_DATE)));
-                @SuppressLint("Range") LocalTime time = LocalTime.parse(cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_TIME)));
+                @SuppressLint("Range") LocalTime time = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    time = LocalTime.parse(cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_TIME)));
+                }
                 @SuppressLint("Range") String alarm = String.valueOf(cursor.getInt(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_ALARM)));
                 @SuppressLint("Range") String parentId = String.valueOf(cursor.getLong(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_PARENT_ID)));
 

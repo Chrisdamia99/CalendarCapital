@@ -1,0 +1,1199 @@
+---------------------------------------From CalendarAdapter:------------------------------------------------------------------------------
+
+   private void compareAndGetValuesFromDB(View convertView, LocalTime time) {
+
+
+        Cursor cursor = myDB.readAllData();
+
+
+        if (cursor.getCount() == 0) {
+            try {
+
+
+                Toast.makeText(context, "No data to present.", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            while (cursor.moveToNext()) {
+                if (LocalTime.parse(cursor.getString(4)).equals(time)) {
+                    Event eventDB = new Event(cursor.getString(0), cursor.getString(1), cursor.getString(2),
+                            CalendarUtils.stringToLocalDate(cursor.getString(3)), LocalTime.parse(cursor.getString(4)));
+                    ArrayList<Event> eventArrayDB = new ArrayList<>();
+                    eventArrayDB.add(eventDB);
+                    HourEvent event = new HourEvent(LocalTime.parse(cursor.getString(4)), eventArrayDB);
+                    event.setEvents(eventArrayDB);
+                    event.setTime(LocalTime.parse(cursor.getString(4)));
+                    //Καλείτε η setHour και δίνω στην λίστα τις τιμές της ώρες από την βάση δεδομένων και το αντίστοιχο event
+
+
+                }
+
+            }
+        }
+
+
+    }
+
+
+---------------------------------------From AlarmReceiver:------------------------------------------------------------------------------
+
+//        now = (LocalDateTime) b.get("calendar");
+//        Instant instant2 = Instant.from(now.atZone(ZoneId.of("Europe/Athens")));
+//        Date date = Date.from(instant2);
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(date);
+
+
+//                final Handler handler = new Handler();
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (r.isPlaying())
+//                            r.stop();
+//                    }
+//                }, 500 * 10);
+
+---------------------------------------From EventEdit:------------------------------------------------------------------------------
+//        TimeZone tz = calendar.getTimeZone();
+//        ZoneId zoneId = tz.toZoneId();
+//        LocalDateTime localDateTime = LocalDateTime.ofInstant(calendar.toInstant(), zoneId);
+//        LocalDateTime ld = calendar.;
+
+
+
+//        findViewById(R.id.menu_new_add_edit).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
+//                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//                    public boolean onMenuItemClick(MenuItem item) {
+//
+//                        switch (item.getItemId()) {
+//                            case R.id.refreshItemOnLay:
+//                                AllEventsList.reloadActivity(EventEdit.this);
+//                                return true;
+//                            case R.id.previousAct:
+//
+//                                Intent i = new Intent(EventEdit.this, MainActivity.class);
+//                                Boolean myBool = true;
+//                                i.putExtra("bool", myBool);
+//
+//                                startActivity(i);
+//
+//                        }
+//
+//                        return false;
+//                    }
+//                });
+//                popupMenu.inflate(R.menu.menu_up_inlayout);
+//                popupMenu.show();
+//            }
+//        });
+
+
+-------------------Loop for repeat----------------
+         if (cursor.getString(6).equals("1"))
+                        {
+                            for (int j=0; j<days.size(); j++)
+                            {
+                                if (days.get(j).equals(date)) {
+                                    holder.eventRepeatText1.setVisibility(View.VISIBLE);
+                                    holder.eventRepeatText1.setText(myEvents.get(0).getName());
+                                }
+                            }
+                        }
+                        if (cursor.getString(6).equals("2"))
+                        {
+
+                                if (days.get(i).equals(date)) {
+                                    for (int j=0; j<days.size(); j=j+6) {
+                                        holder.eventRepeatText2.setVisibility(View.VISIBLE);
+                                        holder.eventRepeatText2.setText(myEvents.get(0).getName());
+                                    }
+                                }
+
+                        }
+
+//------------------------EVENT CURSOR ADAPTER------------------------------
+//    private void startAlarm(int alarmId, Calendar c, String title, String comment) {
+//        MyDatabaseHelper myDB = new MyDatabaseHelper(mContext);
+//        Cursor cursor = myDB.readAllEvents();
+//        while (cursor.moveToNext()) {
+//            if (cursor.getString(0).equals(String.valueOf(alarmId))) {
+//                if (cursor.getString(6).equals("0")){
+//                myDB.updateData(cursor.getString(0), cursor.getString(1), cursor.getString(2), LocalDate.parse(cursor.getString(3)),
+//                        LocalTime.parse(cursor.getString(4)), "true","0");
+//        }else if (cursor.getString(6).equals("1"))
+//                {
+//                    myDB.updateData(cursor.getString(0), cursor.getString(1), cursor.getString(2), LocalDate.parse(cursor.getString(3)),
+//                            LocalTime.parse(cursor.getString(4)), "true","1");
+//                }
+//
+//
+//            }
+//        }
+//        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+//        Intent intent = new Intent(mContext, AlarmReceiver.class);
+//
+////        intent.putExtra("calendar", c.getTime());
+//        intent.putExtra("title", title);
+//        intent.putExtra("comment", comment);
+//
+//
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, alarmId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+//
+//        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+//        notifyDataSetChanged();
+//
+//    }
+
+//
+//    private void cancelAlarmCursorAdapter(int alarmId) {
+//        MyDatabaseHelper myDB = new MyDatabaseHelper(mContext);
+//        Cursor cursor = myDB.readAllEvents();
+//        cursor.moveToPosition(-1);
+//        Calendar DBdate;
+//        while (cursor.moveToNext()) {
+//            if (cursor.getString(0).equals(String.valueOf(alarmId))) {
+//                if (cursor.getString(6).equals("0")){
+//                    myDB.updateData(cursor.getString(0), cursor.getString(1), cursor.getString(2), LocalDate.parse(cursor.getString(3)),
+//                            LocalTime.parse(cursor.getString(4)), "false","0");
+//                }else if (cursor.getString(6).equals("1"))
+//                {
+//                    myDB.updateData(cursor.getString(0), cursor.getString(1), cursor.getString(2), LocalDate.parse(cursor.getString(3)),
+//                            LocalTime.parse(cursor.getString(4)), "false","1");
+//                }
+//
+//            }
+//        }
+//
+//
+//        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+//        Intent intent = new Intent(mContext, AlarmReceiver.class);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, alarmId, intent, 0);
+//        Toast.makeText(mContext, "Alarm Cancelled", Toast.LENGTH_SHORT).show();
+//
+//
+//        alarmManager.cancel(pendingIntent);
+//        notifyDataSetChanged();
+//    }
+
+//------------------------------------ALARM RECEIVER HANDLER TO STOP AFTER 10SEC---------------------------
+
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (!isNotificationDeleted) {
+//                    stopRingtone();
+//                }
+//            }
+//        }, 1000);
+
+
+//    public void stopRingtone() {
+//        if (r != null && r.isPlaying()) {
+//            r.stop();
+//        }
+//        if (vibrator != null) {
+//            vibrator.cancel();
+//        }
+//    }
+//
+//
+//    public void onNotificationDeleted(Context context, int notificationId, int reason) {
+//        isNotificationDeleted = true;
+//        stopRingtone();
+//    }
+
+
+//-----------------------------FROM MAIN ACTIVITY-------------------------------------------------------------
+
+  private void editIfRepeating(AlertDialog builderRepeating, int position, TextView editAll, TextView editOne,TextView editFuture)
+    {
+        builderRepeating.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                editAll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String parent_id = hourAdapter.getItem(position).getEvents().get(0).getParent_id();
+                        String row_id = hourAdapter.getItem(position).getEvents().get(0).getId();
+                        ArrayList<String> editAllArray = new ArrayList<>();
+                        Cursor cursorEvent = myDB.readAllEvents();
+                        Cursor remCursor = myDB.readAllReminder();
+
+
+
+
+                        hourAdapter.notifyDataSetChanged();
+
+                        if (parent_id==null)
+                        {
+                            cursorEvent.moveToPosition(-1);
+                            while(cursorEvent.moveToNext())
+                            {
+                                if (cursorEvent.getString(0).equals(row_id) || (!(cursorEvent.getString(7)==null) &&cursorEvent.getString(7).equals(row_id)))
+                                {
+                                    editAllArray.add(cursorEvent.getString(0));
+                                }
+                            }
+                            editAllArray.size();
+
+
+                        }else {
+
+                            cursorEvent.moveToPosition(-1);
+                            while (cursorEvent.moveToNext())
+                            {
+                                if (cursorEvent.getString(0).equals(parent_id) || (!(cursorEvent.getString(7)==null) && cursorEvent.getString(7).equals(parent_id)))
+                                {
+                                    editAllArray.add(cursorEvent.getString(0));
+                                }
+                            }
+                            editAllArray.size();
+
+                        }
+                        editAllArray.size();
+                        Intent i = new Intent(MainActivity.this, Edit_Update_Activity.class);
+                        i.putExtra("id",row_id);
+                        i.putExtra("edit_array",editAllArray);
+
+                        startActivity(i);
+                        cursorEvent.close();
+                        remCursor.close();
+                        myDB.close();
+
+
+
+
+                        String previousViewType = stack.peekFirst();
+                        if (previousViewType.equals("all")) {
+                            setAllEvents();
+                        } else if (previousViewType.equals("double-click-week")) {
+                            setDaily();
+                        } else if (previousViewType.equals("month")) {
+                            setDaily();
+                        } else if (previousViewType.equals("double-click-month")) {
+                            setDaily();
+                        } else if (previousViewType.equals("week")) {
+                            setWeek();
+                        } else if (previousViewType.equals("daily")) {
+                            setDaily();
+                        } else {
+                            onMyBackPressed();
+                        }
+                        dialog.dismiss();
+                    }
+                });
+
+                editFuture.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        String parent_id = hourAdapter.getItem(position).getEvents().get(0).getParent_id();
+                        String row_id = hourAdapter.getItem(position).getEvents().get(0).getId();
+                        LocalDate event_date = hourAdapter.getItem(position).getEvents().get(0).getDate();
+
+                        ArrayList<String> editAllArray = new ArrayList<>();
+                        Cursor cursorEvent = myDB.readAllEvents();
+
+                        Cursor eventCursor = myDB.readAllEvents();
+                        Cursor remCursor = myDB.readAllReminder();
+
+                        if (parent_id==null)
+                        {
+                            cursorEvent.moveToPosition(-1);
+                            while(cursorEvent.moveToNext())
+                            {
+                                if (cursorEvent.getString(0).equals(row_id) || (!(cursorEvent.getString(7) == null) &&cursorEvent.getString(7).equals(row_id)))
+                                {
+                                    editAllArray.add(cursorEvent.getString(0));
+                                }
+                            }
+                            editAllArray.size();
+
+                        }else {
+
+                            cursorEvent.moveToPosition(-1);
+                            while(cursorEvent.moveToNext()) {
+                                LocalDate cursorLocalDate = stringToLocalDate(cursorEvent.getString(3));
+                                String cursorParentID = cursorEvent.getString(7);
+                                int comparisonLocalDates = event_date.compareTo(cursorLocalDate);
+                                if (!(cursorParentID == null) && cursorParentID.equals(parent_id)) {
+
+                                    if (comparisonLocalDates < 0 || event_date.equals(cursorLocalDate)) {
+                                        editAllArray.add(cursorEvent.getString(0));
+
+                                    }
+                                }
+                            }
+                            editAllArray.size();
+
+                        }
+                        editAllArray.size();
+                        Intent i = new Intent(MainActivity.this, Edit_Update_Activity.class);
+                        i.putExtra("id",row_id);
+                        i.putExtra("edit_array",editAllArray);
+
+                        startActivity(i);
+
+                        hourAdapter.notifyDataSetChanged();
+
+                        eventCursor.close();
+                        remCursor.close();
+                        myDB.close();
+
+                        String previousViewType = stack.peekFirst();
+                        if (previousViewType.equals("all")) {
+                            setAllEvents();
+                        } else if (previousViewType.equals("double-click-week")) {
+                            setDaily();
+                        } else if (previousViewType.equals("month")) {
+                            setDaily();
+                        } else if (previousViewType.equals("double-click-month")) {
+                            setDaily();
+                        } else if (previousViewType.equals("week")) {
+                            setWeek();
+                        } else if (previousViewType.equals("daily")) {
+                            setDaily();
+                        } else {
+                            onMyBackPressed();
+                        }
+                        dialog.dismiss();
+                    }
+                });
+
+                editOne.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String row_id = hourAdapter.getItem(position).getEvents().get(0).getId();
+
+                        Intent i = new Intent(MainActivity.this, Edit_Update_Activity.class);
+
+
+                        Cursor cursorEvent = myDB.readAllEvents();
+                        Cursor remCursor = myDB.readAllReminder();
+
+
+                        i.putExtra("id", row_id);
+
+                        startActivity(i);
+
+
+
+
+                        cursorEvent.close();
+                        remCursor.close();
+                        myDB.close();
+
+                        String previousViewType = stack.peekFirst();
+                        if (previousViewType.equals("all")) {
+                            setAllEvents();
+                        } else if (previousViewType.equals("double-click-week")) {
+                            setDaily();
+                        } else if (previousViewType.equals("month")) {
+                            setDaily();
+                        } else if (previousViewType.equals("double-click-month")) {
+                            setDaily();
+                        } else if (previousViewType.equals("week")) {
+                            setWeek();
+                        } else if (previousViewType.equals("daily")) {
+                            setDaily();
+                        } else {
+                            onMyBackPressed();
+                        }
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
+    }
+
+    -----------------------------------------------RepeatReceiver-----------------------------------------------------------------
+
+    package com.example.calendarcapital;
+
+
+    import android.app.PendingIntent;
+    import android.content.BroadcastReceiver;
+    import android.content.Context;
+    import android.content.Intent;
+    import android.media.Ringtone;
+    import android.media.RingtoneManager;
+    import android.net.Uri;
+    import android.os.Build;
+    import android.os.Bundle;
+    import android.os.Handler;
+    import android.os.VibrationEffect;
+    import android.os.Vibrator;
+    import androidx.core.app.NotificationCompat;
+    import androidx.core.app.NotificationManagerCompat;
+
+
+    public class RepeatReceiver extends BroadcastReceiver {
+
+        String event;
+        String comment;
+        String text;
+        private Ringtone r;
+        private Vibrator vibrator;
+        private boolean isNotificationDeleted;
+
+
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            Bundle b = intent.getExtras();
+
+            event = "";
+            comment = "";
+            isNotificationDeleted = false;
+
+
+            vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+            if (vibrator != null && vibrator.hasVibrator()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    vibrator.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    vibrator.vibrate(1000);
+                }
+            }
+
+            if (b != null) {
+
+                event = (String) b.get("title");
+                comment = (String) b.get("comment");
+                text = "Reminder for the Event: " + "\n" + event + "\n" + "Comments: " + "\n" + comment;
+            }
+
+
+            Intent activityIntent = new Intent(context, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, activityIntent, PendingIntent.FLAG_IMMUTABLE);
+
+            Intent stopIntent = new Intent(context, StopRingtoneReceiver.class);
+            stopIntent.setAction("STOP_ALARM");
+            PendingIntent stopPendingIntent = PendingIntent.getBroadcast(context, 0, stopIntent, PendingIntent.FLAG_IMMUTABLE);
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "myandroid")
+                    .setSmallIcon(R.drawable.alarm)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setContentTitle(event)
+                    .setContentText(text)
+                    .setCategory(NotificationCompat.CATEGORY_ALARM)
+                    .setSound(null)
+                    .setOngoing(true)
+                    .setAutoCancel(true)
+                    .addAction(R.drawable.alarm_off, "Stop ringtone", stopPendingIntent)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
+                    .setContentIntent(pendingIntent)
+                    .setDeleteIntent(stopPendingIntent)
+                    .setDefaults(NotificationCompat.DEFAULT_ALL);
+
+            NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+            notificationManagerCompat.notify(123, builder.build());
+
+            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            r = RingtoneManager.getRingtone(context, notification);
+            r.play();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!isNotificationDeleted) {
+                        stopRingtoneRepeat();
+                    }
+                }
+            }, 1000);
+
+
+        }
+
+        public void stopRingtoneRepeat() {
+            if (r != null && r.isPlaying()) {
+                r.stop();
+            }
+            if (vibrator != null) {
+                vibrator.cancel();
+            }
+        }
+
+
+        public void onNotificationDeleted(Context context, int notificationId, int reason) {
+            isNotificationDeleted = true;
+            stopRingtoneRepeat();
+        }
+
+
+    }
+
+    //----------------------------------OnCongigurationChange test, not working properly--------------------
+
+      @Override
+        public void onConfigurationChanged(@NonNull Configuration newConfig) {
+            super.onConfigurationChanged(newConfig);
+
+            if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+                floatAddBtnMonthViewLandscape.setVisibility(View.VISIBLE);
+                int daysofweekheight = getResources().getDimensionPixelSize(R.dimen.daysOfWeek_main_activity_height);
+                int daysofweekwidth = getResources().getDimensionPixelSize(R.dimen.daysOfWeek_main_activity_width);
+                int daysofweekmarginleft = getResources().getDimensionPixelSize(R.dimen.daysOfWeek_main_activity_margin_left);
+                int refreshBtn = getResources().getDimensionPixelSize(R.dimen.refreshMenuBtn_main_activity);
+                int textTittle = getResources().getDimensionPixelSize(R.dimen.margin_calendar_name_main_activity);
+                daysOfWeek.getLayoutParams().height = daysofweekheight;
+                daysOfWeek.getLayoutParams().width = daysofweekwidth;
+
+                View myView = findViewById(R.id.daysOfWeek);
+                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) myView.getLayoutParams();
+                params.leftMargin = daysofweekmarginleft;
+                myView.setLayoutParams(params);
+
+                View myViewRefresh = findViewById(R.id.refreshMenuBtn);
+                ConstraintLayout.LayoutParams paramsRefresh = (ConstraintLayout.LayoutParams) myView.getLayoutParams();
+                paramsRefresh.leftMargin = refreshBtn;
+                myViewRefresh.setLayoutParams(paramsRefresh);
+
+
+                View myViewCalendarTittle = findViewById(R.id.textTitle);
+                ConstraintLayout.LayoutParams paramsTextTittle = (ConstraintLayout.LayoutParams) myView.getLayoutParams();
+                paramsTextTittle.leftMargin = textTittle;
+                myViewCalendarTittle.setLayoutParams(paramsTextTittle);
+
+            }else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT || newConfig.orientation == Configuration.ORIENTATION_UNDEFINED)
+            {
+                floatAddBtnMonthViewLandscape.setVisibility(View.GONE);
+                int daysofweekheight = getResources().getDimensionPixelSize(R.dimen.daysOfWeek_main_activity_height);
+                int daysofweekwidth = getResources().getDimensionPixelSize(R.dimen.daysOfWeek_main_activity_width);
+                int daysofweekmarginleft = getResources().getDimensionPixelSize(R.dimen.daysOfWeek_main_activity_margin_left);
+                int refreshBtn = getResources().getDimensionPixelSize(R.dimen.refreshMenuBtn_main_activity);
+                int textTittle = getResources().getDimensionPixelSize(R.dimen.margin_calendar_name_main_activity);
+                daysOfWeek.getLayoutParams().height = daysofweekheight;
+                daysOfWeek.getLayoutParams().width = daysofweekwidth;
+
+                View myView = findViewById(R.id.daysOfWeek);
+                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) myView.getLayoutParams();
+                params.leftMargin = daysofweekmarginleft;
+                myView.setLayoutParams(params);
+
+                View myViewRefresh = findViewById(R.id.refreshMenuBtn);
+                ConstraintLayout.LayoutParams paramsRefresh = (ConstraintLayout.LayoutParams) myView.getLayoutParams();
+                paramsRefresh.leftMargin = refreshBtn;
+                myViewRefresh.setLayoutParams(paramsRefresh);
+
+
+                View myViewCalendarTittle = findViewById(R.id.textTitle);
+                ConstraintLayout.LayoutParams paramsTextTittle = (ConstraintLayout.LayoutParams) myView.getLayoutParams();
+                paramsTextTittle.leftMargin = textTittle;
+                myViewCalendarTittle.setLayoutParams(paramsTextTittle);
+
+            }
+
+
+        }
+
+-----------------------------------------------------------------------EX-LAYOUT DETAILS ACTIVITY MAIN -----------------------------------------------------------------------
+<!--            <RelativeLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="120dp">-->
+<!--            <ScrollView-->
+<!--                android:id="@+id/scrolTest"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                >-->
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="vertical">-->
+
+<!--                    <androidx.recyclerview.widget.RecyclerView-->
+<!--                        android:id="@+id/calendarRecyclerView"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:nestedScrollingEnabled="true"-->
+<!--                        android:scrollbars="vertical"/>-->
+<!--                    -->
+<!--                </LinearLayout>-->
+<!--            </ScrollView>-->
+
+<!--            <ScrollView-->
+<!--                android:id="@+id/scrollViewList"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@id/scrolTest"-->
+<!--                android:layout_marginTop="10dp">-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="vertical">-->
+
+
+<!--                    <ListView-->
+<!--                        android:id="@+id/monthListView"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="bottom"-->
+<!--                        android:dividerHeight="10dp"-->
+<!--                        android:scrollbars="vertical"-->
+<!--                        android:visibility="gone"/>-->
+
+
+<!--                </LinearLayout>-->
+<!--            </ScrollView>-->
+<!--            </RelativeLayout>-->
+
+
+
+
+
+<!--            <androidx.core.widget.NestedScrollView-->
+<!--                android:id="@+id/scrollView1"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="120dp"-->
+<!--                android:fillViewport="true"-->
+<!--                android:scrollbars="vertical"-->
+<!--                app:layout_anchor="@id/daysOfWeek"-->
+<!--                app:layout_anchorGravity="bottom|center">-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="vertical">-->
+
+<!--                    <androidx.recyclerview.widget.RecyclerView-->
+<!--                        android:id="@+id/calendarRecyclerView"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:nestedScrollingEnabled="true"-->
+<!--                        android:scrollbars="vertical"-->
+
+<!--                        />-->
+
+
+<!--                    <ListView-->
+<!--                        android:id="@+id/monthListView"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="bottom"-->
+<!--                        android:layout_marginTop="10dp"-->
+<!--                        android:dividerHeight="10dp"-->
+
+<!--                        android:nestedScrollingEnabled="true"-->
+<!--                        android:scrollbars="vertical"-->
+<!--                        android:visibility="gone" />-->
+
+
+<!--                </LinearLayout>-->
+
+<!--            </androidx.core.widget.NestedScrollView>-->
+
+------------------------------------------Navigation Selected prev----------------------------
+//    @Override
+//    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//
+//        switch (item.getItemId()) {
+//            case R.id.menuSchedule:
+////                setAllEvents();
+//                setAllEventsExListView();
+//                stack.addFirst("all");
+//                drawerLayout.closeDrawer(GravityCompat.START);
+//
+//                break;
+//            case R.id.daysView:
+//                setDaily();
+//                stack.addFirst("daily");
+//                drawerLayout.closeDrawer(GravityCompat.START);
+//
+//                break;
+//
+//            case R.id.weekView:
+//
+//                setWeek();
+//                stack.addFirst("week");
+//                drawerLayout.closeDrawer(GravityCompat.START);
+//
+//
+//                break;
+//
+//            case R.id.monthView:
+//                setMonthView();
+//                stack.addFirst("month");
+//                drawerLayout.closeDrawer(GravityCompat.START);
+//
+//
+//                break;
+//            case R.id.refreshItem:
+//                finish();
+//                startActivity(getIntent());
+//                break;
+//            case R.id.syncItem:
+//                break;
+//
+//            default:
+//                onNavigationItemSelected(item);
+//        }
+//
+//
+//        return true;
+//    }
+
+
+//--------------------------------Previous MainLayout Activity----------------------
+
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/LinearMain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <!--Layout ToolBar-->
+        <LinearLayout
+            android:id="@+id/layoutToolBar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="@color/primaryLightTirquiso"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
+
+            <ImageView
+                android:id="@+id/imageMenu"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_menu"
+                app:tint="@color/white" />
+
+            <ImageView
+                android:id="@+id/BackMenuBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:srcCompat="@drawable/back_toactivity"
+                app:tint="@color/white" />
+
+
+            <TextView
+                android:id="@+id/textTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_calendar_name_main_activity"
+                android:gravity="center_horizontal"
+                android:text="@string/capital_calendar_title"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:layout_marginLeft="100dp" />
+
+            <ImageView
+                android:id="@+id/refreshMenuBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="@dimen/refreshMenuBtn_main_activity"
+                app:srcCompat="@drawable/refresh"
+                app:tint="@color/white"
+                android:layout_marginLeft="50dp" />
+
+
+        </LinearLayout>
+
+
+        <!--        Layout monthshownextprev-->
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/testConst"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/layoutToolBar">
+
+
+            <LinearLayout
+
+
+                android:id="@+id/linLayDateChange"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/linear_lay_change_month_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+
+                <ImageButton
+                    android:id="@+id/prevMonthButton"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:onClick="previousMonthAction"
+                    android:src="@drawable/previous_date"
+                    android:textColor="@color/primaryLightTirquiso"
+                    android:textSize="20sp"
+                    />
+
+                <TextView
+                    android:id="@+id/monthYearTV"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="Nov 2021"
+                    android:textAlignment="center"
+                    android:textColor="@color/blakcgray"
+                    android:textSize="20sp" />
+
+                <ImageButton
+                    android:id="@+id/nextMonthButton"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:onClick="nextMonthAction"
+                    android:src="@drawable/next_date"
+                    android:textColor="@color/primaryLightTirquiso"
+                    android:textSize="20sp"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/daysOfWeekMain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/linLayDateChange" />
+
+            <!--Layout DaysOfWeek-->
+            <LinearLayout
+                android:id="@+id/daysOfWeek"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/linLayDateChange">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="@string/synday_gr"
+                    android:textAlignment="center"
+                    android:textColor="@color/blakcgray"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="@string/monday_gr"
+                    android:textAlignment="center"
+                    android:textColor="@color/blakcgray"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="@string/tuesday_gr"
+                    android:textAlignment="center"
+                    android:textColor="@color/blakcgray"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="@string/wednesday_gr"
+                    android:textAlignment="center"
+                    android:textColor="@color/blakcgray"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="@string/thursday_gr"
+                    android:textAlignment="center"
+                    android:textColor="@color/blakcgray"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="@string/friday_gr"
+                    android:textAlignment="center"
+                    android:textColor="@color/blakcgray"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="@string/saturday_gr"
+                    android:textAlignment="center"
+                    android:textColor="@color/blakcgray"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/scrollView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true"
+                android:scrollbars="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/daysOfWeek">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/calendarRecyclerView"
+                        android:layout_width="@dimen/recycler_view_main_width"
+                        android:layout_height="@dimen/recycler_view_main_height"
+
+                        />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/floatAddBtnMonthView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:backgroundTint="@color/primaryLightTirquiso"
+                        android:src="@drawable/add"
+                        android:tint="@color/white" />
+
+                    <ListView
+                        android:id="@+id/monthListView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="bottom"
+                        android:layout_marginTop="10dp"
+                        android:dividerHeight="10dp"
+                        android:nestedScrollingEnabled="true"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+
+            </androidx.core.widget.NestedScrollView>
+
+
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigationView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/layout_navigation_header"
+        app:menu="@menu/navigation_menu" />
+</androidx.drawerlayout.widget.DrawerLayout>
+
+-------------------EVENT EDIT UPDATE EDIT METHOD FOR DUBLICATE REMINDER-------------------------
+//            for (int i = 0; i < reminders_upd_list.size(); i++) {
+//                for (int j = i + 1; j < reminders_upd_list.size(); j++) {
+//                    if (reminders_upd_list.get(i).getMonth() == reminders_upd_list.get(j).getMonth() &&
+//                            reminders_upd_list.get(i).getYear() == reminders_upd_list.get(j).getYear() &&
+//                            reminders_upd_list.get(i).getDay() == reminders_upd_list.get(j).getDay() &&
+//                            reminders_upd_list.get(i).getHours() == reminders_upd_list.get(j).getHours() &&
+//                            reminders_upd_list.get(i).getMinutes() == reminders_upd_list.get(j).getMinutes()) {
+//                        reminders_upd_list.remove(i);
+//
+//                        Toast.makeText(Edit_Update_Activity.this, "Σφάλμα, η υπενθύμιση υπάρχει.", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+
+-------------------EX-HOUR_CELL--------------------------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:padding="5dp"
+    >
+<!--    android:padding="16dp"-->
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="100dp"
+    android:background="@drawable/hour_cell_shape"
+    >
+
+    <TextView
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:id="@+id/dateTV"
+        android:textSize="12sp"
+        android:textColor="@color/black"
+        android:text="@string/example_month_hour_cell"/>
+    <TextView
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:id="@+id/timeTV"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:text="@string/example_hour_hour_cell"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/hour_cell_shape"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/event1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/rounded_corner"
+            android:gravity="center"
+            android:padding="3dp"
+            android:lines="2"
+            android:backgroundTint="@color/secondPrimaryLightTirquiso"
+            android:text="Event 1"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/event2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_toRightOf="@id/event1"
+            android:background="@color/secondPrimaryLightTirquiso"
+            android:gravity="center"
+            android:lines="2"
+            android:text="Event 2"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@color/secondPrimaryLightTirquiso"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_toRightOf="@id/event2"
+            android:id="@+id/event3"
+            android:textSize="18sp"
+            android:lines="2"
+            android:textColor="@color/white"
+            android:text="Event 3"/>
+
+        <TextView
+            android:id="@+id/comment1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/event1"
+            android:background="@drawable/rounded_corner"
+            android:backgroundTint="@color/secondPrimaryLightTirquiso"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:padding="3dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:lines="2"
+            android:text="Comment 1"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/comment2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/event2"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_toRightOf="@id/comment1"
+            android:background="@color/secondPrimaryLightTirquiso"
+            android:gravity="center"
+            android:lines="2"
+            android:text="Comment 2"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/coment3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/event3"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_toRightOf="@id/comment2"
+            android:background="@color/secondPrimaryLightTirquiso"
+            android:gravity="center"
+            android:lines="2"
+            android:text="Comment 3"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+
+    </RelativeLayout>
+
+
+
+
+</LinearLayout>
+</LinearLayout>

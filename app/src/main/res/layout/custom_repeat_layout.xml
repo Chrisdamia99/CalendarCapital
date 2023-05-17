@@ -130,7 +130,7 @@
                     android:text="Κ"
                     android:textColor="@color/black"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                  />
 
                 <TextView
                     android:id="@+id/mondayChoice"
@@ -142,7 +142,7 @@
                     android:text="Δ"
                     android:textColor="@color/black"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                     />
 
                 <TextView
                     android:id="@+id/tuesdayChoice"
@@ -155,7 +155,7 @@
 
                     android:textColor="@color/black"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                   />
 
                 <TextView
                     android:id="@+id/wednesdayChoice"
@@ -167,7 +167,7 @@
                     android:text="Τ"
                     android:textColor="@color/black"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                    />
 
                 <TextView
                     android:id="@+id/thursdayChoice"
@@ -179,7 +179,7 @@
                     android:text="Π"
                     android:textColor="@color/black"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                     />
 
                 <TextView
                     android:id="@+id/fridayChoice"
@@ -191,7 +191,7 @@
                     android:text="Π"
                     android:textColor="@color/black"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                     />
 
                 <TextView
                     android:id="@+id/saturdayChoice"
@@ -202,7 +202,7 @@
                     android:text="Σ"
                     android:textColor="@color/black"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                    />
             </LinearLayout>
 
         </LinearLayout>
@@ -371,7 +371,7 @@
                 android:text="@string/save"
                 android:textColor="@color/primaryLightTirquiso"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                 />
         </LinearLayout>
 
     </LinearLayout>

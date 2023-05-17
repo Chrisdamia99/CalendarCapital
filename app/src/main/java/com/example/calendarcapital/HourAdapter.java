@@ -4,7 +4,6 @@ import static com.example.calendarcapital.CalendarUtils.selectedDate;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -41,8 +39,6 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
         if (convertView == null)
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.hour_cell, parent, false);
 
-//        Drawable roundedBg = ContextCompat.getDrawable(getContext(), R.drawable.hour_cell_shape);
-//        convertView.setBackground(roundedBg);
 
         compareAndGetValuesFromDBWithId(event.getId());
 
@@ -112,81 +108,131 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
     }
 
 
-    private void setEvents(View convertView, ArrayList<Event> events) {
-        TextView event1 = convertView.findViewById(R.id.event1);
-        TextView event2 = convertView.findViewById(R.id.event2);
-        TextView event3 = convertView.findViewById(R.id.event3);
-        TextView comment1 = convertView.findViewById(R.id.comment1);
-        TextView comment2 = convertView.findViewById(R.id.comment2);
-        TextView comment3 = convertView.findViewById(R.id.coment3);
+//    private void setEvents(View convertView, ArrayList<Event> events) {
+//        TextView event1 = convertView.findViewById(R.id.event1);
+//        TextView event2 = convertView.findViewById(R.id.event2);
+//        TextView event3 = convertView.findViewById(R.id.event3);
+//        TextView comment1 = convertView.findViewById(R.id.comment1);
+//        TextView comment2 = convertView.findViewById(R.id.comment2);
+//        TextView comment3 = convertView.findViewById(R.id.coment3);
+//
+//        if (events.size() == 0) {
+//            hideEvent(event1);
+//            hideEvent(event2);
+//            hideEvent(event3);
+//            hideEvent(comment1);
+//            hideEvent(comment2);
+//            hideEvent(comment3);
+//        } else if (events.size() == 1) {
+//            setEvent(event1, events.get(0));
+//            setComment(comment1, events.get(0));
+//            hideEvent(comment2);
+//            hideEvent(comment3);
+//
+//            hideEvent(event2);
+//            hideEvent(event3);
+//
+//        } else if (events.size() == 2) {
+//            setEvent(event1, events.get(0));
+//            setEvent(event2, events.get(1));
+//            setComment(comment1, events.get(0));
+//            setComment(comment2, events.get(1));
+//            hideEvent(comment3);
+//            hideEvent(event3);
+//
+//
+//        } else if (events.size() == 3) {
+//            setEvent(event1, events.get(0));
+//            setEvent(event2, events.get(1));
+//            setEvent(event3, events.get(2));
+//            setComment(comment1, events.get(0));
+//            setComment(comment2, events.get(1));
+//            setComment(comment3, events.get(2));
+//        } else {
+//            setEvent(event1, events.get(0));
+//            setEvent(event2, events.get(1));
+//            event3.setVisibility(View.VISIBLE);
+//            String eventsNotShown = String.valueOf(events.size() - 2);
+//            eventsNotShown += " More Events";
+//            event3.setText(eventsNotShown);
+//
+//            setComment(comment1, events.get(0));
+//            setComment(comment2, events.get(1));
+//            comment3.setVisibility(View.VISIBLE);
+//            String commentsNotShown = String.valueOf(events.size() - 2);
+//            commentsNotShown += " More Comments";
+//            comment3.setText(commentsNotShown);
+//        }
+//
+//        if (comment1.getText().toString().isEmpty()) {
+//            comment1.setVisibility(View.GONE);
+//        }
+//
+//
+//    }
+private void setEvents(View convertView, ArrayList<Event> events) {
+    TextView event1 = convertView.findViewById(R.id.event1);
 
-        if (events.size() == 0) {
-            hideEvent(event1);
-            hideEvent(event2);
-            hideEvent(event3);
-            hideEvent(comment1);
-            hideEvent(comment2);
-            hideEvent(comment3);
-        } else if (events.size() == 1) {
-            setEvent(event1, events.get(0));
-            setComment(comment1, events.get(0));
-            hideEvent(comment2);
-            hideEvent(comment3);
-
-            hideEvent(event2);
-            hideEvent(event3);
-
-        } else if (events.size() == 2) {
-            setEvent(event1, events.get(0));
-            setEvent(event2, events.get(1));
-            setComment(comment1, events.get(0));
-            setComment(comment2, events.get(1));
-            hideEvent(comment3);
-            hideEvent(event3);
+    TextView comment1 = convertView.findViewById(R.id.comment1);
 
 
-        } else if (events.size() == 3) {
-            setEvent(event1, events.get(0));
-            setEvent(event2, events.get(1));
-            setEvent(event3, events.get(2));
-            setComment(comment1, events.get(0));
-            setComment(comment2, events.get(1));
-            setComment(comment3, events.get(2));
-        } else {
-            setEvent(event1, events.get(0));
-            setEvent(event2, events.get(1));
-            event3.setVisibility(View.VISIBLE);
-            String eventsNotShown = String.valueOf(events.size() - 2);
-            eventsNotShown += " More Events";
-            event3.setText(eventsNotShown);
+    if (events.size() == 0) {
+        hideEvent(event1);
 
-            setComment(comment1, events.get(0));
-            setComment(comment2, events.get(1));
-            comment3.setVisibility(View.VISIBLE);
-            String commentsNotShown = String.valueOf(events.size() - 2);
-            commentsNotShown += " More Comments";
-            comment3.setText(commentsNotShown);
-        }
+        hideEvent(comment1);
 
-        if (comment1.getText().toString().isEmpty()) {
-            comment1.setVisibility(View.GONE);
-        }
+    } else if (events.size() == 1) {
+        setEvent(event1, events.get(0));
+        setComment(comment1, events.get(0));
 
+
+    } else if (events.size() == 2) {
+        setEvent(event1, events.get(0));
+        setComment(comment1, events.get(0));
+
+
+
+    } else if (events.size() == 3) {
+        setEvent(event1, events.get(0));
+        setComment(comment1, events.get(0));
+
+    } else {
+        setEvent(event1, events.get(0));
+        setComment(comment1, events.get(0));
 
     }
 
+    if (comment1.getText().toString().isEmpty()) {
+        comment1.setVisibility(View.GONE);
+    }
+
+
+}
+
     private void setEvent(TextView textView, Event event) {
 
-        textView.setText(event.getName());
-        textView.setVisibility(View.VISIBLE);
+        if (event.getName().equals(""))
+        {
+
+            textView.setVisibility(View.GONE);
+        }else
+        {
+            textView.setText(event.getName());
+            textView.setVisibility(View.VISIBLE);
+        }
+
 
     }
 
     private void setComment(TextView textView, Event event) {
+        if (event.getComment().equals(""))
+        {
 
-        textView.setText(event.getComment());
-        textView.setVisibility(View.VISIBLE);
-
+            textView.setVisibility(View.GONE);
+        }else {
+            textView.setText(event.getComment());
+            textView.setVisibility(View.VISIBLE);
+        }
     }
 
 

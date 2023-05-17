@@ -10,8 +10,7 @@
         android:layout_margin="10dp"
         android:text="Repeat on:"
         android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textSize="20sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -69,8 +68,7 @@
         android:layout_marginTop="10dp"
         android:text="Repeat at:"
         android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textSize="20sp"/>
 
     <TimePicker
         android:id="@+id/timePicker"
@@ -84,8 +82,7 @@
         android:layout_marginTop="10dp"
         android:text="Repeat on date:"
         android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textSize="20sp"/>
 
     <DatePicker
         android:id="@+id/datePicker"

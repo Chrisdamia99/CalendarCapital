@@ -30,7 +30,6 @@
 
             android:padding="5dp"
             android:textSize="15sp"
-            android:textStyle="bold"
             android:textColor="@color/blakcgray"/>
 
                 <LinearLayout
@@ -49,7 +48,6 @@
             android:text="Event"
             android:singleLine="true"
             android:textColor="@color/black"
-            android:textStyle="bold"
             android:textSize="10sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -71,8 +69,6 @@
                 android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="10sp"
-            android:textStyle="bold"
-
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -93,8 +89,6 @@
                             android:singleLine="true"
                             android:textColor="@color/black"
                             android:textSize="10sp"
-                            android:textStyle="bold"
-
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintLeft_toLeftOf="parent"
@@ -112,7 +106,6 @@
                             android:text="Event"
                             android:singleLine="true"
                             android:textColor="@color/black"
-                            android:textStyle="bold"
                             android:textSize="10sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -134,7 +127,6 @@
                             android:singleLine="true"
                             android:textColor="@color/black"
                             android:textSize="10sp"
-                            android:textStyle="bold"
 
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -156,7 +148,6 @@
                             android:singleLine="true"
                             android:textColor="@color/black"
                             android:textSize="10sp"
-                            android:textStyle="bold"
 
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -180,7 +171,6 @@
                         android:singleLine="true"
                         android:textColor="@color/black"
                         android:textSize="8sp"
-                        android:textStyle="bold"
 
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"

@@ -34,7 +34,6 @@
         android:text="@string/calendar_gr"
         android:textColor="@color/white"
         android:textSize="18sp"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageProfile" />
 

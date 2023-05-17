@@ -215,58 +215,32 @@ public class EventExpandableListAdapter extends BaseExpandableListAdapter {
 
     private void setEvents(View convertView, ArrayList<Event> events) {
         TextView event1 = convertView.findViewById(R.id.event1Ex);
-        TextView event2 = convertView.findViewById(R.id.event2Ex);
-        TextView event3 = convertView.findViewById(R.id.event3Ex);
+
+
         TextView comment1 = convertView.findViewById(R.id.comment1Ex);
-        TextView comment2 = convertView.findViewById(R.id.comment2Ex);
-        TextView comment3 = convertView.findViewById(R.id.comment3Ex);
+
 
         if (events.size() == 0) {
             hideEvent(event1);
-            hideEvent(event2);
-            hideEvent(event3);
             hideEvent(comment1);
-            hideEvent(comment2);
-            hideEvent(comment3);
         } else if (events.size() == 1) {
             setEvent(event1, events.get(0));
             setComment(comment1, events.get(0));
-            hideEvent(comment2);
-            hideEvent(comment3);
 
-            hideEvent(event2);
-            hideEvent(event3);
 
         } else if (events.size() == 2) {
             setEvent(event1, events.get(0));
-            setEvent(event2, events.get(1));
             setComment(comment1, events.get(0));
-            setComment(comment2, events.get(1));
-            hideEvent(comment3);
-            hideEvent(event3);
+
 
 
         } else if (events.size() == 3) {
             setEvent(event1, events.get(0));
-            setEvent(event2, events.get(1));
-            setEvent(event3, events.get(2));
             setComment(comment1, events.get(0));
-            setComment(comment2, events.get(1));
-            setComment(comment3, events.get(2));
         } else {
             setEvent(event1, events.get(0));
-            setEvent(event2, events.get(1));
-            event3.setVisibility(View.VISIBLE);
-            String eventsNotShown = String.valueOf(events.size() - 2);
-            eventsNotShown += " More Events";
-            event3.setText(eventsNotShown);
 
             setComment(comment1, events.get(0));
-            setComment(comment2, events.get(1));
-            comment3.setVisibility(View.VISIBLE);
-            String commentsNotShown = String.valueOf(events.size() - 2);
-            commentsNotShown += " More Comments";
-            comment3.setText(commentsNotShown);
         }
 
         if (comment1.getText().toString().isEmpty()) {

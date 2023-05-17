@@ -69,92 +69,31 @@
             android:backgroundTint="@color/secondPrimaryLightTirquiso"
             android:text="Event 1"
             android:textColor="@color/white"
-            android:textSize="10sp" />
+            android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/event2Ex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_toRightOf="@id/event1Ex"
-            android:background="@color/secondPrimaryLightTirquiso"
-            android:gravity="center"
-            android:lines="2"
-            android:text="Event 2"
-            android:textColor="@color/white"
-            android:textSize="10sp" />
 
-        <TextView
-            android:id="@+id/event3Ex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_toRightOf="@id/event2Ex"
-            android:background="@color/secondPrimaryLightTirquiso"
-            android:gravity="center"
-            android:lines="2"
-            android:text="Event 3"
-            android:textColor="@color/white"
-            android:textSize="10sp" />
 
         <TextView
             android:id="@+id/comment1Ex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/event1Ex"
+            android:layout_toEndOf="@id/event1Ex"
             android:background="@drawable/rounded_corner"
             android:backgroundTint="@color/secondPrimaryLightTirquiso"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
+            android:padding="3dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
             android:gravity="center"
-            android:lines="1"
-            android:ellipsize="end"
-            android:maxEms="12"
+            android:lines="2"
             android:text="Comment 1"
             android:textColor="@color/white"
-            android:textSize="10sp" />
+            android:textSize="12sp"
+            android:layout_toRightOf="@id/event1Ex" />
 
-        <TextView
-            android:id="@+id/comment2Ex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/event2Ex"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_toRightOf="@id/comment1Ex"
-            android:background="@color/secondPrimaryLightTirquiso"
-            android:gravity="center"
-            android:lines="2"
-            android:text="Comment 2"
-            android:textColor="@color/white"
-            android:textSize="10sp" />
 
-        <TextView
-            android:id="@+id/comment3Ex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/event3Ex"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_toRightOf="@id/comment2Ex"
-            android:background="@color/secondPrimaryLightTirquiso"
-            android:gravity="center"
-            android:lines="2"
-            android:text="Comment 3"
-            android:textColor="@color/white"
-            android:textSize="10sp" />
+
 
 
     </RelativeLayout>

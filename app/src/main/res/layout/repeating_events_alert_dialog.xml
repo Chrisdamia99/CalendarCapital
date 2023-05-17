@@ -15,9 +15,7 @@
         android:layout_margin="20dp"
         android:text="Διαγραφή όλων των συμβάντων"
         android:textColor="@color/black"
-        android:textSize="20sp"
-
-        android:textStyle="bold" />
+        android:textSize="20sp"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -31,8 +29,7 @@
         android:text="Αυτό και μελλοντικών συμβάντων"
         android:textColor="@color/black"
         android:textSize="20sp"
-        android:layout_marginTop="20dp"
-        android:textStyle="bold" />
+        android:layout_marginTop="20dp"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -45,8 +42,7 @@
         android:text="Αυτό"
         android:textColor="@color/black"
         android:textSize="20sp"
-        android:layout_marginTop="20dp"
-        android:textStyle="bold" />
+        android:layout_marginTop="20dp" />
 
     <View
         android:layout_width="match_parent"

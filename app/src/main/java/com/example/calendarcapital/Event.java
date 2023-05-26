@@ -6,36 +6,25 @@ import androidx.annotation.NonNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 
 public class Event {
 
 
     public static ArrayList<Event> eventsList = new ArrayList<>();
-    Map<Event, List<Event>> eventData = new LinkedHashMap<>();
-
-    public static ArrayList<Event> eventsForDate(LocalDate date) {
-        ArrayList<Event> events = new ArrayList<>();
-
-        for (Event event : eventsList) {
-            if (event.getDate().equals(date))
-
-                events.add(event);
-        }
-        return events;
-    }
-
 
 
     public static ArrayList<Event> eventsForDateAndTime(LocalDate date, LocalTime time) {
         ArrayList<Event> events = new ArrayList<>();
 
         for (Event event : eventsList) {
-            int eventHour = event.time.getHour();
-            int cellHour = time.getHour();
+            int eventHour = 0;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                eventHour = event.time.getHour();
+            }
+            int cellHour = 0;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                cellHour = time.getHour();
+            }
             if (event.getDate().equals(date) && eventHour == cellHour)
                 events.add(event);
         }
@@ -47,18 +36,18 @@ public class Event {
     private LocalDate date;
     private LocalTime time;
     private String alarm;
-    private String repeat;
     private String parent_id;
+    private String color;
 
-    public Event(String id, String name, String comment, LocalDate date, LocalTime time, String alarm,String repeat,String parent_id) {
+    public Event(String id, String name, String comment, LocalDate date, LocalTime time, String alarm,String repeat,String parent_id,String color) {
         this.id = id;
         this.comment = comment;
         this.name = name;
         this.date = date;
         this.time = time;
         this.alarm = alarm;
-        this.repeat = repeat;
         this.parent_id = parent_id;
+        this.color = color;
 
 
     }
@@ -88,12 +77,16 @@ public class Event {
         return name + "\n" + comment + "\n" + date + "\n" + CalendarUtils.formattedShortTime(time);
     }
 
-    public String getParent_id() {
-        return parent_id;
+    public String getColor() {
+        return color;
     }
 
-    public void setParent_id(String parent_id) {
-        this.parent_id = parent_id;
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getParent_id() {
+        return parent_id;
     }
 
     public String getComment() {
@@ -106,10 +99,6 @@ public class Event {
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public LocalDate getDate() {
@@ -144,11 +133,4 @@ public class Event {
         this.alarm = alarm;
     }
 
-    public String getRepeat() {
-        return repeat;
-    }
-
-    public void setRepeat(String repeat) {
-        this.repeat = repeat;
-    }
 }

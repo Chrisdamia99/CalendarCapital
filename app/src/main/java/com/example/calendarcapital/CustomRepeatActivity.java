@@ -122,7 +122,6 @@ public class CustomRepeatActivity extends AppCompatActivity {
         custom_repeat_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItem = parent.getItemAtPosition(position).toString();
                 customDatesToSaveLocalDate.clear();
                 if (!(position == 1)) {
                     daysOfWeekChoice.setVisibility(View.GONE);
@@ -562,12 +561,8 @@ public class CustomRepeatActivity extends AppCompatActivity {
     }
 
     private boolean daysOfWeekAllFalse() {
-        if (!sundayFlag && !mondayFlag && !tuesdayFlag && !wednesdayFlag && !thursdayFlag
-                && !fridayFlag && !saturdayFlag) {
-            return true;
-        } else {
-            return false;
-        }
+        return !sundayFlag && !mondayFlag && !tuesdayFlag && !wednesdayFlag && !thursdayFlag
+                && !fridayFlag && !saturdayFlag;
     }
 
     private String textForWeek(int repeatSeperateCounterInt) {

@@ -6,301 +6,350 @@
     android:orientation="vertical"
     tools:context=".Edit_Update_Activity">
 
-    <androidx.core.widget.NestedScrollView
+    <ScrollView
+        android:id="@+id/scrolTest"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true"
-        android:orientation="vertical"
-        android:scrollbars="vertical">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:layout_marginTop="10dp"
-
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textColor="@color/primaryLightTirquiso"
-                android:gravity="center"
-                android:ellipsize="end"
-                android:layout_marginRight="13dp"
-                android:maxLines="1"
-                android:background="@color/white"
-                android:layout_gravity="center"
-                android:text="Επεξεργασία συμβάντος"
-
-                />
-            <ImageButton
-                android:id="@+id/eventEditBackButtonUPD"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:backgroundTint="@color/white"
-                android:src="@drawable/back_to_activity_blue" />
-
-            <ImageButton
-                android:id="@+id/eventEditRefreshButtonUPD"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="10dp"
-                android:backgroundTint="@color/white"
-                android:src="@drawable/refresh" />
-        </LinearLayout>
-
-        <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-        android:orientation="vertical">
-
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:text="@string/event"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/eventNameETupd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:ems="10"
-            android:hint="@string/event_title_hint"
-            android:importantForAutofill="no"
-            android:inputType="textCapSentences|textMultiLine"
-            android:maxLength="2000"
-            android:textSize="20sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:text="@string/comments"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/eventCommentETupd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:ems="10"
-            android:hint="@string/event_comment_hint"
-            android:importantForAutofill="no"
-            android:inputType="textCapSentences|textMultiLine"
-            android:maxLength="2000"
-            android:textSize="20sp" />
-
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_weight="1"
+
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/reminderLayoutUPD"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:gravity="end"
 
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="13dp"
+                    android:background="@color/white"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="Επεξεργασία συμβάντος"
+                    android:textColor="@color/primaryLightTirquiso"
+                    android:textSize="20sp"
+
+                    />
+
+                <ImageButton
+                    android:id="@+id/eventEditBackButtonUPD"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:backgroundTint="@color/white"
+                    android:src="@drawable/back_to_activity_blue" />
+
+                <ImageButton
+                    android:id="@+id/eventEditRefreshButtonUPD"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="10dp"
+                    android:backgroundTint="@color/white"
+                    android:src="@drawable/refresh" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
                 android:orientation="vertical">
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@android:color/darker_gray" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:orientation="horizontal">
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/event"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
 
-                    <TextView
-                        android:id="@+id/changeDateTVupd"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/rounded_corners_textview_eventedit"
-                        android:drawableLeft="@drawable/date"
-                        android:drawablePadding="10dp"
-                        android:drawableTint="@color/primaryLightTirquiso"
-                        android:text="Αλλαγή ημ/νίας"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/eventDateETupd"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:gravity="end"
-                        android:textColor="@color/black"
-
-                        android:textSize="20sp" />
-
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@android:color/darker_gray" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <EditText
+                    android:id="@+id/eventNameETupd"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:orientation="horizontal">
+                    android:layout_gravity="center"
+                    android:ems="10"
+                    android:hint="@string/event_title_hint"
+                    android:importantForAutofill="no"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxLength="2000"
+                    android:textSize="20sp" />
 
-                    <TextView
-                        android:id="@+id/changeTimeTVupd"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/comments"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
 
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/rounded_corners_textview_eventedit"
-                        android:drawableLeft="@drawable/clock"
-                        android:drawablePadding="10dp"
-                        android:drawableTint="@color/primaryLightTirquiso"
-                        android:text="Αλλαγή ώρας"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/eventTimeETupd"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginRight="10dp"
-
-
-                        android:gravity="end"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
-                </LinearLayout>
+                <EditText
+                    android:id="@+id/eventCommentETupd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:ems="10"
+                    android:hint="@string/event_comment_hint"
+                    android:importantForAutofill="no"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxLength="2000"
+                    android:textSize="20sp" />
 
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@android:color/darker_gray" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:layout_margin="10dp"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/addRepeatButtonUPD"
-                        android:layout_width="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/reminderLayoutUPD"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:drawableLeft="@drawable/repeat"
-                        android:drawablePadding="10dp"
-                        android:text="@string/repeat_gr"
-                        android:textAlignment="center"
-                        android:textAllCaps="false"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
-                    <ImageButton
-                        android:id="@+id/cancelRepeatUPD"
-                        android:layout_width="20dp"
-                        android:layout_marginLeft="15dp"
-                        android:layout_height="20dp"
-                        android:visibility="gone"
-                        android:backgroundTint="@color/primaryLightTirquiso"
-                        android:background="@drawable/cancel_reminder" />
+
+                        android:orientation="vertical">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@android:color/darker_gray" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/changeDateTVupd"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/rounded_corners_textview_eventedit"
+                                android:drawableLeft="@drawable/date"
+                                android:drawablePadding="10dp"
+                                android:drawableTint="@color/primaryLightTirquiso"
+                                android:text="Αλλαγή ημ/νίας"
+                                android:textAlignment="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                android:gravity="center_horizontal" />
+
+                            <TextView
+                                android:id="@+id/eventDateETupd"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="10dp"
+                                android:gravity="end"
+                                android:textColor="@color/black"
+
+                                android:textSize="20sp" />
+
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@android:color/darker_gray" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/changeTimeTVupd"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+                                android:layout_marginTop="10dp"
+                                android:background="@drawable/rounded_corners_textview_eventedit"
+                                android:drawableLeft="@drawable/clock"
+                                android:drawablePadding="10dp"
+                                android:drawableTint="@color/primaryLightTirquiso"
+                                android:text="Αλλαγή ώρας"
+                                android:textAlignment="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                android:gravity="center_horizontal" />
+
+                            <TextView
+                                android:id="@+id/eventTimeETupd"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginRight="10dp"
+
+
+                                android:gravity="end"
+                                android:textColor="@color/black"
+                                android:textSize="20sp" />
+                        </LinearLayout>
+
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@android:color/darker_gray" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/changeColorTVUPD"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:drawableLeft="@drawable/change_color"
+                                android:ems="5"
+                                android:text="Χρώμα"
+                                android:textAlignment="center"
+                                android:textAllCaps="false"
+                                android:textColor="@color/black"
+                                android:textSize="20sp" />
+
+                            <Spinner
+                                android:id="@+id/changeColorSpinnerUPD"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:drawableLeft="@drawable/change_color"
+                                android:ems="10"
+                                android:text="Χρώμα"
+                                android:textAlignment="center"
+                                android:textAllCaps="false"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"/>
+
+                        </LinearLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@android:color/darker_gray" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/addRepeatButtonUPD"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:drawableLeft="@drawable/repeat"
+                                android:drawablePadding="10dp"
+                                android:text="@string/repeat_gr"
+                                android:textAlignment="center"
+                                android:textAllCaps="false"
+                                android:textColor="@color/black"
+                                android:textSize="20sp" />
+
+                            <ImageButton
+                                android:id="@+id/cancelRepeatUPD"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_marginLeft="15dp"
+                                android:background="@drawable/cancel_reminder"
+                                android:backgroundTint="@color/primaryLightTirquiso"
+                                android:visibility="gone" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/repeatCountTvUPD"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone" />
+
+                        <View
+                            android:id="@+id/aboveAddRemViewUPD"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+
+                            android:background="@android:color/darker_gray" />
+
+
+                        <TextView
+                            android:id="@+id/addAlarmButtonUPD"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="10dp"
+                            android:drawableLeft="@drawable/notification_bell"
+                            android:drawablePadding="10dp"
+                            android:text="Προσθήκη υπενθύμισης"
+                            android:textAlignment="center"
+                            android:textAllCaps="false"
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@android:color/darker_gray" />
+
+
+                    </LinearLayout>
                 </LinearLayout>
-                <TextView
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ListView
+                    android:id="@+id/remindersListViewUPD"
                     android:layout_width="match_parent"
-                    android:id="@+id/repeatCountTvUPD"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:id="@+id/aboveAddRemViewUPD"
-
-                    android:background="@android:color/darker_gray" />
-
-
-                <TextView
-                    android:id="@+id/addAlarmButtonUPD"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="10dp"
-                    android:drawableLeft="@drawable/notification_bell"
-                    android:drawablePadding="10dp"
-                    android:text="Προσθήκη υπενθύμισης"
-                    android:textAlignment="center"
-                    android:textAllCaps="false"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@android:color/darker_gray" />
-
-
-
+                    android:layout_gravity="center_vertical"
+                    android:clipToPadding="true"
+                    android:nestedScrollingEnabled="true"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="10dp" />
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-        <ListView
-            android:id="@+id/remindersListViewUPD"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingStart="10dp"
-            android:nestedScrollingEnabled="true"
-            android:paddingEnd="10dp"
-            android:paddingBottom="10dp" />
-    </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:layout_gravity="bottom"
-        android:gravity="bottom|center"
-        android:background="@color/lightdarkgrey"
+    </ScrollView>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:gravity="bottom|center"
         android:orientation="vertical">
 
         <Button
             android:id="@+id/btnUpdate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@null"
+            android:background="@drawable/simple_borders_rounded_lightgray"
             android:text="@string/save"
+            android:layout_marginBottom="5dp"
+
             android:textColor="@color/primaryLightTirquiso"
-            android:textSize="20sp"
-      />
+            android:textSize="20sp" />
 
     </LinearLayout>
 

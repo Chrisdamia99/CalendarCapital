@@ -2,24 +2,20 @@ package com.example.calendarcapital;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -35,7 +31,6 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
     static int numEvents;
     static  int numRepeatingEvents;
     Context context;
-    private Drawable defaultBackgroundDrawable;
 
 
 
@@ -45,7 +40,6 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
         this.myDB = new MyDatabaseHelper(context.getApplicationContext());
         this.context = context;
         this.daysForRepeat = new ArrayList<>();
-        this.defaultBackgroundDrawable = null; // Set the default background drawable to null
 
 
     }
@@ -125,6 +119,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
         }
 
 
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             holder.dayOfMonth.setText(String.valueOf(date.getDayOfMonth()));
         }
@@ -159,7 +154,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 eventDB = new Event(cursor.getString(0), cursor.getString(1), cursor.getString(2),
                         CalendarUtils.stringToLocalDate(cursor.getString(3)), LocalTime.parse(cursor.getString(4)),
-                        cursor.getString(5), cursor.getString(6),cursor.getString(7));
+                        cursor.getString(5), cursor.getString(6),cursor.getString(7), cursor.getString(8));
             }
 
             myEvents.add(eventDB);
@@ -179,43 +174,122 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
 
 
             List<String> eventNames = new ArrayList<>();
+            List<String> eventColor = new ArrayList<>();
             for (Event event : myEvents) {
 
                 if (event.getDate().equals(date) && event.getParent_id()==null) {
                         eventNames.add(event.getName());
-
+                        eventColor.add(event.getColor());
                 }
+
+
             }
 
-            Collections.sort(eventNames);
 
              numEvents = eventNames.size();
 
             if (numEvents >= 1) {
                 holder.eventDayText.setVisibility(View.VISIBLE);
                 holder.eventDayText.setText(eventNames.get(0));
-                holder.eventDayText.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-                holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner);
+                holder.eventDayText.setTextColor(ContextCompat.getColor(context, R.color.white));
+                if (eventColor.get(0).equals("0"))
+                {
+                    holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner);
+                }else if (eventColor.get(0).equals("1"))
+                {
+                    holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner_red);
+
+                }else if (eventColor.get(0).equals("2"))
+                {
+                    holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner_yellow);
+
+                }else if (eventColor.get(0).equals("3"))
+                {
+                    holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner_green);
+
+                }else if (eventColor.get(0).equals("4"))
+                {
+                    holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner_blue);
+
+                }else if (eventColor.get(0).equals("5"))
+                {
+                    holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner_purple);
+                }else
+                {
+                    holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner);
+
+                }
+
             }
 
             if (numEvents >= 2) {
                 holder.eventDayText2.setVisibility(View.VISIBLE);
                 holder.eventDayText2.setText(eventNames.get(1));
-                holder.eventDayText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-                holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner);
+                holder.eventDayText2.setTextColor(ContextCompat.getColor(context, R.color.white));
+
+                if (eventColor.get(1).equals("0"))
+                {
+                    holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner);
+                }else if (eventColor.get(1).equals("1"))
+                {
+                    holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner_red);
+
+                }else if (eventColor.get(1).equals("2"))
+                {
+                    holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner_yellow);
+
+                }else if (eventColor.get(1).equals("3"))
+                {
+                    holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner_green);
+
+                }else if (eventColor.get(1).equals("4"))
+                {
+                    holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner_blue);
+
+                }else if (eventColor.get(1).equals("5"))
+                {
+                    holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner_purple);
+                }else
+                {
+                    holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner);
+
+                }
             }
 
             if (numEvents >= 3) {
                 holder.eventDayText3.setVisibility(View.VISIBLE);
                 holder.eventDayText3.setText(eventNames.get(2));
-                holder.eventDayText3.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-                holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner);
+                holder.eventDayText3.setTextColor(ContextCompat.getColor(context, R.color.white));
+
+                if (eventColor.get(2).equals("0"))
+                {
+                    holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner);
+                }else if (eventColor.get(2).equals("1"))
+                {
+                    holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner_red);
+
+                }else if (eventColor.get(2).equals("2"))
+                {
+                    holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner_yellow);
+
+                }else if (eventColor.get(2).equals("3"))
+                {
+                    holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner_green);
+
+                }else if (eventColor.get(2).equals("4"))
+                {
+                    holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner_blue);
+
+                }else if (eventColor.get(2).equals("5"))
+                {
+                    holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner_purple);
+                }else
+                {
+                    holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner);
+
+                }
             }
 
-            if (date.toString().equals("2023-05-11"))
-            {
-                System.out.println();
-            }
             checkForMore( holder);
 
         }
@@ -223,36 +297,118 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
         cursor.moveToPosition(-1);
         for (int i=0; i<days.size(); i++) {
 
-                List<String> eventNamesRepeating = new ArrayList<>();
+            List<String> eventNamesRepeating = new ArrayList<>();
+            List<String> eventColorRepeating = new ArrayList<>();
+
+
                 for (Event event : myEvents) {
                     if (event.getDate().equals(date) && !(event.getParent_id()==null)) {
                         eventNamesRepeating.add(event.getName());
+                        eventColorRepeating.add(event.getColor());
                     }
                 }
 
-            Collections.sort(eventNamesRepeating);
+
 
 
                  numRepeatingEvents = eventNamesRepeating.size();
                 if (numRepeatingEvents >= 1 ) {
                     holder.eventRepeatText1.setVisibility(View.VISIBLE);
                     holder.eventRepeatText1.setText(eventNamesRepeating.get(0));
-                    holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-                    holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+                    holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.white));
+                    if (eventColorRepeating.get(0).equals("0"))
+                    {
+                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+                    }else if (eventColorRepeating.get(0).equals("1"))
+                    {
+                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner_red);
+
+                    }else if (eventColorRepeating.get(0).equals("2"))
+                    {
+                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner_yellow);
+
+                    }else if (eventColorRepeating.get(0).equals("3"))
+                    {
+                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner_green);
+
+                    }else if (eventColorRepeating.get(0).equals("4"))
+                    {
+                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner_blue);
+
+                    }else if (eventColorRepeating.get(0).equals("5"))
+                    {
+                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner_purple);
+                    }else
+                    {
+                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+
+                    }
                 }
 
                 if (numRepeatingEvents >= 2) {
                     holder.eventRepeatText2.setVisibility(View.VISIBLE);
                     holder.eventRepeatText2.setText(eventNamesRepeating.get(1));
-                    holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-                    holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
+                    holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.white));
+                    if (eventColorRepeating.get(1).equals("0"))
+                    {
+                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
+                    }else if (eventColorRepeating.get(1).equals("1"))
+                    {
+                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner_red);
+
+                    }else if (eventColorRepeating.get(1).equals("2"))
+                    {
+                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner_yellow);
+
+                    }else if (eventColorRepeating.get(1).equals("3"))
+                    {
+                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner_green);
+
+                    }else if (eventColorRepeating.get(1).equals("4"))
+                    {
+                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner_blue);
+
+                    }else if (eventColorRepeating.get(1).equals("5"))
+                    {
+                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner_purple);
+                    }else
+                    {
+                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
+
+                    }
                 }
 
                 if (numRepeatingEvents >= 3) {
                     holder.eventRepeatText3.setVisibility(View.VISIBLE);
                     holder.eventRepeatText3.setText(eventNamesRepeating.get(2));
-                    holder.eventRepeatText3.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-                    holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner);
+                    holder.eventRepeatText3.setTextColor(ContextCompat.getColor(context, R.color.white));
+                    if (eventColorRepeating.get(2).equals("0"))
+                    {
+                        holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner);
+                    }else if (eventColorRepeating.get(2).equals("1"))
+                    {
+                        holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner_red);
+
+                    }else if (eventColorRepeating.get(2).equals("2"))
+                    {
+                        holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner_yellow);
+
+                    }else if (eventColorRepeating.get(2).equals("3"))
+                    {
+                        holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner_green);
+
+                    }else if (eventColorRepeating.get(2).equals("4"))
+                    {
+                        holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner_blue);
+
+                    }else if (eventColorRepeating.get(2).equals("5"))
+                    {
+                        holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner_purple);
+                    }else
+                    {
+                        holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner);
+
+                    }
                 }
 
             checkForMore( holder);
@@ -275,8 +431,8 @@ public void checkForMore(@NonNull CalendarViewHolder holder)
         holder.eventRepeatText2.setVisibility(View.GONE);
         holder.eventRepeatText3.setVisibility(View.GONE);
         holder.eventsMore.setVisibility(View.VISIBLE);
-        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner);
+        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.black));
+        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner_events_more);
 
     }
 
@@ -286,8 +442,8 @@ public void checkForMore(@NonNull CalendarViewHolder holder)
         holder.eventDayText2.setVisibility(View.GONE);
         holder.eventDayText3.setVisibility(View.GONE);
         holder.eventsMore.setVisibility(View.VISIBLE);
-        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner);
+        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.black));
+        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner_events_more);
     }
 
     if (numRepeatingEvents==2 && numEvents>1)
@@ -296,8 +452,8 @@ public void checkForMore(@NonNull CalendarViewHolder holder)
         holder.eventDayText3.setVisibility(View.GONE);
         holder.eventRepeatText3.setVisibility(View.GONE);
         holder.eventsMore.setVisibility(View.VISIBLE);
-        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner);
+        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.black));
+        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner_events_more);
     }
 
     if (numEvents==2 && numRepeatingEvents>1)
@@ -306,23 +462,23 @@ public void checkForMore(@NonNull CalendarViewHolder holder)
         holder.eventRepeatText3.setVisibility(View.GONE);
         holder.eventDayText3.setVisibility(View.GONE);
         holder.eventsMore.setVisibility(View.VISIBLE);
-        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner);
+        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.black));
+        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner_events_more);
 
     }
 
     if (numEvents>3 && numRepeatingEvents==0)
     {
         holder.eventsMore.setVisibility(View.VISIBLE);
-        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner);
+        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.black));
+        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner_events_more);
     }
 
     if (numRepeatingEvents>3 && numEvents==0)
     {
         holder.eventsMore.setVisibility(View.VISIBLE);
-        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner);
+        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.black));
+        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner_events_more);
     }
     if (numEvents>=3 && numRepeatingEvents>0)
     {
@@ -330,8 +486,8 @@ public void checkForMore(@NonNull CalendarViewHolder holder)
         holder.eventRepeatText2.setVisibility(View.GONE);
         holder.eventRepeatText3.setVisibility(View.GONE);
         holder.eventsMore.setVisibility(View.VISIBLE);
-        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner);
+        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.black));
+        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner_events_more);
     }
 
     if (numRepeatingEvents>=3 && numEvents>0)
@@ -340,8 +496,8 @@ public void checkForMore(@NonNull CalendarViewHolder holder)
         holder.eventDayText2.setVisibility(View.GONE);
         holder.eventDayText3.setVisibility(View.GONE);
         holder.eventsMore.setVisibility(View.VISIBLE);
-        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.primaryLightTirquiso));
-        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner);
+        holder.eventsMore.setTextColor(ContextCompat.getColor(context, R.color.black));
+        holder.eventsMore.setBackgroundResource(R.drawable.rounded_corner_events_more);
     }
 }
     @Override

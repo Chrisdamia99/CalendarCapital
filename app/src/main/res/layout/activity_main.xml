@@ -49,21 +49,33 @@
                     android:layout_gravity="center"
                     app:srcCompat="@drawable/back_toactivity"
                     app:tint="@color/white" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
                 <TextView
-                    android:id="@+id/textTitle"
+                    android:id="@+id/monthYearTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/capital_calendar_title"
+                    android:gravity="center"
+                    android:text="Nov 2021"
                     android:textAlignment="center"
                     android:textColor="@color/white"
-                    android:textSize="18sp"/>
+                    android:textSize="18sp" />
+
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+<!--                <TextView-->
+<!--                    android:id="@+id/textTitle"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:text="@string/capital_calendar_title"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="18sp"/>-->
+
 
                 <View
                     android:layout_width="0dp"
@@ -71,6 +83,13 @@
                     android:layout_weight="1" />
 
 
+                <ImageView
+                    android:id="@+id/refreshMenuBtn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="right|center"
+                    app:srcCompat="@drawable/calendar_today"
+                    app:tint="@color/white" />
                 <ImageView
                     android:id="@+id/searchMenuBtn"
                     android:layout_width="30dp"
@@ -80,13 +99,7 @@
                     android:layout_gravity="right|center"
                     app:tint="@color/white"/>
 
-                <ImageView
-                    android:id="@+id/refreshMenuBtn"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="right|center"
-                    app:srcCompat="@drawable/refresh"
-                    app:tint="@color/white" />
+
 
 
             </LinearLayout>
@@ -102,28 +115,22 @@
                 android:layout_below="@id/layoutToolBar"
                 android:orientation="horizontal">
 
-
                 <ImageButton
                     android:id="@+id/prevMonthButton"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:layout_weight="1"
                     android:background="@null"
-                    android:onClick="previousMonthAction"
                     android:src="@drawable/previous_date"
                     android:textColor="@color/primaryLightTirquiso"
                     android:textSize="20sp"/>
 
                 <TextView
-                    android:id="@+id/monthYearTV"
-                    android:layout_width="0dp"
-                    android:layout_height="30dp"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:text="Nov 2021"
-                    android:textAlignment="center"
-                    android:textColor="@color/blakcgray"
-                    android:textSize="16sp" />
+                    android:id="@+id/daysOfWeekMain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_anchor="@id/daysOfWeek"
+                    app:layout_anchorGravity="center" />
 
                 <ImageButton
                     android:id="@+id/nextMonthButton"
@@ -131,37 +138,13 @@
                     android:layout_height="30dp"
                     android:layout_weight="1"
                     android:background="@null"
-                    android:onClick="nextMonthAction"
                     android:src="@drawable/next_date"
                     android:textColor="@color/primaryLightTirquiso"
                     android:textSize="20sp" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/linLayDateChange"
-                android:orientation="horizontal">
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-                <TextView
-                    android:id="@+id/daysOfWeekMain"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_anchor="@id/daysOfWeek"
-                    app:layout_anchorGravity="center" />
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-            </LinearLayout>
-
-
-            <!--Layout DaysOfWeek-->
             <LinearLayout
                 android:id="@+id/daysOfWeek"
                 android:layout_width="match_parent"
@@ -249,6 +232,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/daysOfWeek"
                 >
+
                 <ScrollView
                     android:id="@+id/scrolTest"
                     android:layout_width="match_parent"
@@ -265,7 +249,7 @@
                             android:layout_height="match_parent"
                             android:clipToPadding="true"
                             android:nestedScrollingEnabled="true"
-                            android:scrollbars="vertical"/>
+                            android:scrollbars="none"/>
 
                     </LinearLayout>
                 </ScrollView>
@@ -319,6 +303,7 @@
         android:tint="@color/white"
         app:layout_anchor="@id/drawerLayout"
         app:layout_anchorGravity="bottom|end|right" />
+
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

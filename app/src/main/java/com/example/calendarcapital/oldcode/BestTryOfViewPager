@@ -1,0 +1,315 @@
+----------------------------------------CalendarPagerAdapter-------------------------------------------
+
+package com.example.calendarcapital;
+
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+public class CalendarPagerAdapter extends RecyclerView.Adapter<CalendarPagerAdapter.CalendarViewHolder> {
+    private final ArrayList<ArrayList<LocalDate>> pages;
+    private final CalendarAdapter.OnItemListener onItemListener;
+
+    public CalendarPagerAdapter(ArrayList<ArrayList<LocalDate>> pages, CalendarAdapter.OnItemListener onItemListener) {
+        this.pages = pages;
+        this.onItemListener = onItemListener;
+    }
+
+    @NonNull
+    @Override
+    public CalendarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        RecyclerView recyclerView = new RecyclerView(parent.getContext());
+        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        recyclerView.setLayoutParams(layoutParams);
+
+        // Set the layout manager for the inner RecyclerView
+        recyclerView.setLayoutManager(new GridLayoutManager(parent.getContext(),7));
+
+        return new CalendarViewHolder(recyclerView);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position) {
+        RecyclerView recyclerView = holder.recyclerView;
+        ArrayList<LocalDate> days = pages.get(position);
+
+        // Create a new CalendarAdapter instance for each page
+        CalendarAdapter calendarAdapter = new CalendarAdapter(days, onItemListener, recyclerView.getContext());
+
+        // Set the adapter for the inner RecyclerView
+        recyclerView.setAdapter(calendarAdapter);
+    }
+
+    @Override
+    public int getItemCount() {
+        return pages.size();
+    }
+
+    static class CalendarViewHolder extends RecyclerView.ViewHolder {
+        RecyclerView recyclerView;
+
+        CalendarViewHolder(@NonNull RecyclerView recyclerView) {
+            super(recyclerView);
+            this.recyclerView = recyclerView;
+        }
+    }
+}
+
+
+----------------------------------------MainActivity2-----------------------------------------------------
+
+package com.example.calendarcapital;
+
+import static com.example.calendarcapital.CalendarUtils.daysInMonthArray;
+import static com.example.calendarcapital.CalendarUtils.daysInMonthArrayViewPager;
+import static com.example.calendarcapital.CalendarUtils.selectedDate;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
+
+import android.os.Build;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.GridLayout;
+import android.widget.GridView;
+import android.widget.LinearLayout;
+
+import com.google.android.material.navigation.NavigationView;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity2 extends AppCompatActivity implements CalendarAdapter.OnItemListener, NavigationView.OnNavigationItemSelectedListener {
+    private int previousPosition = 0;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main2);
+        ViewPager2 viewPager2 = findViewById(R.id.viewPager);
+        ArrayList<ArrayList<LocalDate>> pages = CalendarUtils.monthsOfYearArray();
+        CalendarPagerAdapter calendarPagerAdapter = new CalendarPagerAdapter(pages, onItemListener);
+        viewPager2.setAdapter(calendarPagerAdapter);
+
+        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+
+                RecyclerView recyclerView = (RecyclerView) viewPager2.getChildAt(0);
+                if (recyclerView != null) {
+
+                    // Retrieve values from the RecyclerView
+                    // ...
+                }
+                if (position > previousPosition) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+
+                    }
+                    // Scrolling to the right
+                    // Handle right scroll logic here
+
+                } else if (position < previousPosition) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                    }
+                    // Scrolling to the left
+                    // Handle left scroll logic here
+                }
+
+                previousPosition = position;
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                super.onPageScrollStateChanged(state);
+            }
+        });
+
+    }
+
+    private CalendarAdapter.OnItemListener onItemListener = new CalendarAdapter.OnItemListener() {
+        @Override
+        public void onItemClick(int position, LocalDate date) {
+            // Handle item click event
+        }
+    };
+    @Override
+    public void onItemClick(int position, LocalDate date) {
+
+
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        return false;
+    }
+}
+
+-----------------------------------------------Calendar UTILS------------------------------------------
+
+
+    public static ArrayList<LocalDate> daysInMonthArrayViewPager(LocalDate selectedDate) //The arraylist that month will be stored
+    {
+        ArrayList<LocalDate> daysInMonthArray = new ArrayList<>();
+
+        YearMonth yearMonth = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            yearMonth = YearMonth.from(selectedDate);
+        }
+        int daysInMonth = 0; //get how many days are in month
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            daysInMonth = yearMonth.lengthOfMonth();
+        }
+
+        LocalDate prevMonth = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            prevMonth = selectedDate.minusMonths(1);
+        }
+        LocalDate nextMonth = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            nextMonth = selectedDate.plusMonths(1);
+        }
+
+        YearMonth prevYearMonth = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            prevYearMonth = YearMonth.from(prevMonth);
+        }
+        int prevDaysInMonth = 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            prevDaysInMonth = prevYearMonth.lengthOfMonth();
+        }
+
+        LocalDate firstOfMonth = null; //get first day of month
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            firstOfMonth = CalendarUtils.selectedDate.withDayOfMonth(1);
+        }
+        int dayOfWeek = 0; // return int between 0-7 which is the day of the week
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            dayOfWeek = firstOfMonth.getDayOfWeek().getValue();
+        }
+
+        for (int i = 1; i <= 42; i++) {
+            if (i <= dayOfWeek) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    daysInMonthArray.add(LocalDate.of(prevMonth.getYear(), prevMonth.getMonth(), prevDaysInMonth + i - dayOfWeek));
+                }
+                if (dayOfWeek == 7 && daysInMonthArray.size() >= 7) {
+
+                    daysInMonthArray.clear();
+                }
+
+
+            } else if (i > daysInMonth + dayOfWeek) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    daysInMonthArray.add(LocalDate.of(nextMonth.getYear(), nextMonth.getMonth(), i - dayOfWeek - daysInMonth));
+                }
+
+
+            }
+            else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    daysInMonthArray.add(LocalDate.of(selectedDate.getYear(), selectedDate.getMonth(), i - dayOfWeek));
+                }
+
+            }
+
+        }
+
+
+        return daysInMonthArray;
+
+
+    }
+
+    public static ArrayList<ArrayList<LocalDate>> monthsOfYearArray() {
+        ArrayList<ArrayList<LocalDate>> monthsOfYearArray = new ArrayList<>();
+
+        for (int month = 1; month <= 12; month++) {
+            ArrayList<LocalDate> daysInMonthArray = new ArrayList<>();
+
+            YearMonth yearMonth = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                yearMonth = YearMonth.of(CalendarUtils.selectedDate.getYear(), month);
+            }
+            int daysInMonth = 0;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                daysInMonth = yearMonth.lengthOfMonth();
+            }
+
+            LocalDate firstOfMonth = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                firstOfMonth = CalendarUtils.selectedDate.withMonth(month).withDayOfMonth(1);
+            }
+            int dayOfWeek = 0;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                dayOfWeek = firstOfMonth.getDayOfWeek().getValue();
+            }
+
+            for (int i = 1; i <= 42; i++) {
+                if (i <= dayOfWeek || i > daysInMonth + dayOfWeek) {
+                    LocalDate date;
+                    if (i <= dayOfWeek) {
+                        YearMonth prevYearMonth = null;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            prevYearMonth = YearMonth.of(CalendarUtils.selectedDate.getYear(), month);
+                        }
+                        int prevDaysInMonth = 0;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            prevDaysInMonth = prevYearMonth.lengthOfMonth();
+                        }
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            date = LocalDate.of(prevYearMonth.getYear(), prevYearMonth.getMonth(), prevDaysInMonth + i - dayOfWeek);
+                        } else {
+                            date = null; // Handle the case when SDK_INT < Build.VERSION_CODES.O
+                        }
+                    } else {
+                        YearMonth nextYearMonth = null;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            nextYearMonth = YearMonth.of(CalendarUtils.selectedDate.getYear(), month );
+                        }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            date = LocalDate.of(nextYearMonth.getYear(), nextYearMonth.getMonth(), i - dayOfWeek - daysInMonth);
+                        } else {
+                            date = null; // Handle the case when SDK_INT < Build.VERSION_CODES.O
+                        }
+                    }
+                    if (date != null) {
+                        daysInMonthArray.add(date);
+                    }
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        LocalDate date = LocalDate.of(CalendarUtils.selectedDate.getYear(), month, i - dayOfWeek);
+                        daysInMonthArray.add(date);
+                    }
+                }
+            }
+
+            monthsOfYearArray.add(daysInMonthArray);
+        }
+
+        return monthsOfYearArray;
+    }

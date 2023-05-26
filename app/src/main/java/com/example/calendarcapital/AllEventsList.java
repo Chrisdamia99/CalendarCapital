@@ -10,11 +10,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import java.text.SimpleDateFormat;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Objects;
 
 public class AllEventsList {
 
@@ -50,9 +52,10 @@ public class AllEventsList {
             String alarm = cursor.getString(5);
             String repeat = cursor.getString(6);
             String parent_id = cursor.getString(7);
-            Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB, alarm,repeat,parent_id);
+            String color = cursor.getString(8);
+            Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB, alarm,repeat,parent_id,color);
 
-            if (CalendarUtils.formattedDate(selectedDate).equals(CalendarUtils.formattedDate(dateDB)) ) {
+            if (Objects.equals(CalendarUtils.formattedDate(selectedDate), CalendarUtils.formattedDate(dateDB))) {
                 ArrayList<Event> eventarrayDB = Event.eventsForDateAndTime(selectedDate, timeDB);
 
                 eventarrayDB.add(eventDB);
@@ -61,14 +64,14 @@ public class AllEventsList {
                 eventsDB.add(hourEventDB);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
+                    Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
                 }
 
 
             }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
+                Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
             }
 
 
@@ -79,7 +82,7 @@ public class AllEventsList {
         myDB.close();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
+            Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
         }
         return eventsDB;
     }
@@ -107,7 +110,8 @@ public class AllEventsList {
                 String alarm = cursor.getString(5);
                 String repeat = cursor.getString(6);
                 String parent_id = cursor.getString(7);
-                Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB, alarm,repeat,parent_id);
+                String color = cursor.getString(8);
+                Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB, alarm,repeat,parent_id,color);
 
 
                 ArrayList<Event> eventarrayDB = Event.eventsForDateAndTime(selectedDate, timeDB);
@@ -119,19 +123,19 @@ public class AllEventsList {
 
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
+                    Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
                 }
 
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
+                Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
             }
 
         }
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
+            Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
         }
 
         cursor.close();
@@ -162,7 +166,8 @@ public class AllEventsList {
                     String alarm = cursor.getString(5);
                     String repeat = cursor.getString(6);
                     String parent_id = cursor.getString(7);
-                    Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB, alarm, repeat, parent_id);
+                    String color = cursor.getString(8);
+                    Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB, alarm, repeat, parent_id,color);
 
 
                     ArrayList<Event> eventarrayDB = Event.eventsForDateAndTime(selectedDate, timeDB);
@@ -174,19 +179,19 @@ public class AllEventsList {
 
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
+                        Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
                     }
                 }
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
+                Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
             }
 
         }
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
+            Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
         }
 
         cursor.close();
@@ -216,7 +221,8 @@ public class AllEventsList {
                     String alarm = cursor.getString(5);
                     String repeat = cursor.getString(6);
                     String parent_id = cursor.getString(7);
-                    Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB, alarm, repeat, parent_id);
+                    String color = cursor.getString(8);
+                    Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB, alarm, repeat, parent_id,color);
 
 
                     ArrayList<Event> eventarrayDB = Event.eventsForDateAndTime(selectedDate, timeDB);
@@ -228,19 +234,19 @@ public class AllEventsList {
 
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
+                        Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
                     }
                 }
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
+                Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
             }
 
         }
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Collections.sort(eventsDB, (a, b) -> a.events.get(0).getDate().compareTo(b.events.get(0).getDate()));
+            Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
         }
 
         cursor.close();

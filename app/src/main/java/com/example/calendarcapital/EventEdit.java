@@ -1,8 +1,10 @@
 package com.example.calendarcapital;
 
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -14,28 +16,33 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -45,7 +52,8 @@ import java.util.concurrent.TimeUnit;
 public class EventEdit extends AppCompatActivity {
 
     private EditText eventNameET, eventCommentET, repeatCounter;
-    private TextView eventDateTV, eventTimeTV, changeTimeTV, changeDateTV, addAlarmButton, addRepeatButton;
+    private Spinner color_spinner;
+    private TextView eventDateTV, eventTimeTV, changeTimeTV, changeDateTV, addAlarmButton, addRepeatButton,changeColorTV;
     private TextView oneDayBefore, oneHourMinBefore, halfHourMinBefore, fifteenMinBefore, tenMinBefore, fiveMinBefore, customChoice;
     private TextView everyDay, everyWeek, everyMonth, everyYear, customRepeat, repeatCountTv;
     Button btnSave;
@@ -70,6 +78,7 @@ public class EventEdit extends AppCompatActivity {
     private ScheduledFuture<?> scheduledFuture;
     int repeatCounterInt;
     String stackNow;
+    private static int color;
 
 
     @Override
@@ -133,6 +142,7 @@ public class EventEdit extends AppCompatActivity {
             addRepeatButton.setText(R.string.repeat_gr);
             CustomRepeatActivity.customDatesToSaveLocalDate.clear();
         });
+        changeColor();
 
 
     }
@@ -156,10 +166,22 @@ public class EventEdit extends AppCompatActivity {
         cancelRepeat = findViewById(R.id.cancelRepeat);
         repeatCountTv = findViewById(R.id.repeatCountTv);
         btnSave = findViewById(R.id.btnSave);
+        changeColorTV=findViewById(R.id.changeColorTV);
+        color_spinner = findViewById(R.id.changeColorSpinner);
 
 
     }
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 
+
+
+        } else {
+
+        }
+    }
     private void setIntentsFromCustomRepeat() {
         if (getIntent().hasExtra("5")) {
             repeatState = 5;
@@ -258,6 +280,51 @@ public class EventEdit extends AppCompatActivity {
 
     }
 
+    private void changeColor()
+    {
+        List<String> items = Arrays.asList("Προκαθορισμένο","Κόκκινο", "Κίτρινο", "Πράσινο", "Μπλε", "Μωβ");
+        List<Drawable> iconsDraw = Arrays.asList(ResourcesCompat.getDrawable(getResources(),R.drawable.default_circle,null),
+                ResourcesCompat.getDrawable(getResources(),R.drawable.red_circle,null),
+                ResourcesCompat.getDrawable(getResources(),R.drawable.yellow_circle,null),
+                ResourcesCompat.getDrawable(getResources(),R.drawable.green_circle,null),
+                ResourcesCompat.getDrawable(getResources(),R.drawable.blue_circle,null),
+                ResourcesCompat.getDrawable(getResources(),R.drawable.purple_circle,null));
+        CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(this, items, iconsDraw);
+        color_spinner.setAdapter(adapter);
+
+        color_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+
+            if (position==0)
+            {
+                color=0;
+            }else if (position==1)
+            {
+                color=1;
+            }else if (position==2)
+            {
+                color=2;
+            }else if (position==3)
+            {
+                color=3;
+            }else if (position==4)
+            {
+                color=4;
+            }else if (position==5)
+            {
+                color=5;
+            }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                color=0;
+            }
+        });
+    }
 
     private void showChangeDate(int year, int month, int dayofmonth) {
         ArrayList<Date> reminder_list_date_changed = new ArrayList<>();
@@ -290,9 +357,18 @@ public class EventEdit extends AppCompatActivity {
                         Calendar cRemChanged = Calendar.getInstance();
                         cRemChanged.clear();
                         Date cRemBefore = reminders_list.get(i);
-                        int yearTEST = myDD.getYear();
-                        int monthTEST = myDD.getMonth().getValue()-1;
-                        int dayTest = myDD.getDayOfMonth();
+                        int yearTEST = 0;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            yearTEST = myDD.getYear();
+                        }
+                        int monthTEST = 0;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            monthTEST = myDD.getMonth().getValue()-1;
+                        }
+                        int dayTest = 0;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            dayTest = myDD.getDayOfMonth();
+                        }
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             cRemChanged.set(Calendar.YEAR, yearTEST);
@@ -837,8 +913,12 @@ public class EventEdit extends AppCompatActivity {
     private void makeAndSaveEvent() {
         MyDatabaseHelper myDB = new MyDatabaseHelper(EventEdit.this);
         String eventName = eventNameET.getText().toString();
+        if (eventName.equals(""))
+        {
+            eventName="(Χωρίς τίτλο)";
+        }
         String eventComment = eventCommentET.getText().toString();
-        myDB.addEvent(eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState), null);
+        myDB.addEvent(eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState), null, String.valueOf(color));
 
     }
 
@@ -892,7 +972,7 @@ public class EventEdit extends AppCompatActivity {
 
         Cursor cursor = myDB.readAllEvents();
 
-        String idForRepeat = "";
+        String idForRepeat;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             repeats_list.sort(Date::compareTo);
         }
@@ -928,7 +1008,7 @@ public class EventEdit extends AppCompatActivity {
                         LocalTime timeDB = CalendarUtils.dateToLocalTime(repeats_list.get(i));
 
                         myDB.addEvent(cursor.getString(1), cursor.getString(2), dateDB, timeDB, "0",
-                                "0", idForRepeat);
+                                "0", idForRepeat,String.valueOf(color));
 
                         list_repeat_for_db.add(cursor.getString(0));
 

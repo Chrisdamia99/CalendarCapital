@@ -6,7 +6,7 @@
         android:width="1dp"
         android:color="@color/white" />
 
-    <solid android:color ="@color/secondPrimaryLightTirquiso" />
+    <solid android:color ="@color/green_circle" />
 
     <padding
         android:left="10dp"

@@ -1,19 +1,15 @@
 package com.example.calendarcapital;
 
-import static com.example.calendarcapital.CalendarUtils.selectedDate;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -29,14 +25,8 @@ public class EventExpandableListAdapter extends BaseExpandableListAdapter {
     private HashMap<Event, List<Event>> listDataChild;
 
 
-    public EventExpandableListAdapter(Context context, List<HourEvent> events) {
-        mContext = context;
-        mEvents = filterEvents(events);
-    }
 
-    public EventExpandableListAdapter(Context mContext) {
-        this.mContext = mContext;
-    }
+
 
     public EventExpandableListAdapter(AllEventsExListView context, List<Event> listDataHeader, HashMap<Event, List<Event>> listDataChild, List<HourEvent> events,List<HourEvent> RepeatingEvents) {
         this.mContext = context;
@@ -98,6 +88,7 @@ public class EventExpandableListAdapter extends BaseExpandableListAdapter {
 
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
@@ -115,7 +106,8 @@ public class EventExpandableListAdapter extends BaseExpandableListAdapter {
 
 
         setHour(convertView,childEvent.getEvents().get(0).getTime(),childEvent.getEvents().get(0).getDate());
-        setEvents(convertView, childEvent.getEvents());
+        setEvents(convertView, childEvent.getEvents(),childEvent.getEvents().get(0).getColor());
+
 
         return convertView;
     }
@@ -138,8 +130,13 @@ public class EventExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getGroup(int groupPosition) {
-        return mEvents.get(groupPosition);
+        if (groupPosition >= 0 && groupPosition < mEvents.size()) {
+            return mEvents.get(groupPosition);
+        } else {
+            return null;
+        }
     }
+
 
     @Override
     public int getGroupCount() {
@@ -148,12 +145,14 @@ public class EventExpandableListAdapter extends BaseExpandableListAdapter {
 
     }
 
+
     @Override
     public long getGroupId(int groupPosition) {
         HourEvent parentEvent = (HourEvent) getGroup(groupPosition);
         return Long.parseLong(parentEvent.getId());
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         HourEvent parentEvent = (HourEvent) getGroup(groupPosition);
@@ -183,7 +182,7 @@ public class EventExpandableListAdapter extends BaseExpandableListAdapter {
 
 
         setHour(convertView,parentEvent.getEvents().get(0).getTime(),parentEvent.getEvents().get(0).getDate());
-        setEvents(convertView, parentEvent.getEvents());
+        setEvents(convertView, parentEvent.getEvents(),parentEvent.getEvents().get(0).getColor());
         return convertView;
     }
 
@@ -209,11 +208,11 @@ public class EventExpandableListAdapter extends BaseExpandableListAdapter {
 
         timeTv.setText(CalendarUtils.formattedShortTime(time));
         dayofmonthTV.setText(CalendarUtils.formattedDate(date));
-
+        notifyDataSetChanged();
     }
 
 
-    private void setEvents(View convertView, ArrayList<Event> events) {
+    private void setEvents(View convertView, ArrayList<Event> events,String color) {
         TextView event1 = convertView.findViewById(R.id.event1Ex);
 
 
@@ -224,48 +223,109 @@ public class EventExpandableListAdapter extends BaseExpandableListAdapter {
             hideEvent(event1);
             hideEvent(comment1);
         } else if (events.size() == 1) {
-            setEvent(event1, events.get(0));
-            setComment(comment1, events.get(0));
+            setEvent(event1, events.get(0),color);
+            setComment(comment1, events.get(0),color);
 
 
-        } else if (events.size() == 2) {
-            setEvent(event1, events.get(0));
-            setComment(comment1, events.get(0));
-
-
-
-        } else if (events.size() == 3) {
-            setEvent(event1, events.get(0));
-            setComment(comment1, events.get(0));
-        } else {
-            setEvent(event1, events.get(0));
-
-            setComment(comment1, events.get(0));
         }
 
         if (comment1.getText().toString().isEmpty()) {
             comment1.setVisibility(View.GONE);
         }
-
-
-    }
-
-    private void setEvent(TextView textView, Event event) {
-
-        textView.setText(event.getName());
-        textView.setVisibility(View.VISIBLE);
+        notifyDataSetChanged();
 
     }
 
-    private void setComment(TextView textView, Event event) {
+    private void setEvent(TextView textView, Event event,String color) {
 
-        textView.setText(event.getComment());
-        textView.setVisibility(View.VISIBLE);
+        if (event.getName().equals(""))
+        {
 
+            textView.setVisibility(View.GONE);
+        }else
+        {
+            textView.setText(event.getName());
+            textView.setVisibility(View.VISIBLE);
+        }
+        if (color.equals("0"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner);
+        }else if (color.equals("1"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner_red);
+
+        }else if (color.equals("2"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner_yellow);
+
+        }else if (color.equals("3"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner_green);
+
+        }else if (color.equals("4"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner_blue);
+
+        }else if (color.equals("5"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner_purple);
+        }else
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner);
+
+        }
+        notifyDataSetChanged();
+
+    }
+
+    private void setComment(TextView textView, Event event,String color) {
+
+        if (event.getComment().equals(""))
+        {
+
+            textView.setVisibility(View.GONE);
+        }else {
+            textView.setText(event.getComment());
+            textView.setVisibility(View.VISIBLE);
+        }
+
+        if (color.equals("0"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner);
+        }else if (color.equals("1"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner_red);
+
+        }else if (color.equals("2"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner_yellow);
+
+        }else if (color.equals("3"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner_green);
+
+        }else if (color.equals("4"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner_blue);
+
+        }else if (color.equals("5"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner_purple);
+        }else
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner);
+
+        }
+        notifyDataSetChanged();
     }
 
 
     private void hideEvent(TextView tv) {
         tv.setVisibility(View.INVISIBLE);
     }
+
+    // Add this method to your EventExpandableListAdapter class
+
+
+
 }

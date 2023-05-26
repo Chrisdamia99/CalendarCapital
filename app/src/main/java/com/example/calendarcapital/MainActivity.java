@@ -13,12 +13,10 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -38,10 +36,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.ArrayDeque;
@@ -59,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     //and a LocalDate which is selectedDate
     FloatingActionButton floatAddBtnMonthAdd;
     private TextView monthYearText, daysOfWeekDaily;
-    LinearLayout daysOfWeek, hourCellLin;
+    LinearLayout daysOfWeek;
     private RecyclerView calendarRecyclerView;
     private ListView monthListView;
     HourAdapter hourAdapter;
@@ -70,7 +66,11 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     public static ArrayDeque<String> stack = new ArrayDeque<>();
     public static String getSaveStack;
     public static LocalDate tempSelectedDate;
+    public static String viewNow;
     private boolean isSearchViewExpanded = false;
+
+
+
 
 
 
@@ -80,7 +80,10 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
 
         setContentView(R.layout.activity_main);
+//        setContentView(R.layout.test_lay_main);
+
         initWidgets();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             selectedDate = LocalDate.now();
         }
@@ -105,20 +108,22 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
         refreshMenuBtn.setOnClickListener(v -> {
 
-
-            finish();
-            Intent i = getIntent();
-            overridePendingTransition(0, 0);
-            overridePendingTransition(0, 0);
-
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                tempSelectedDate = LocalDate.now();
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                selectedDate = LocalDate.now();
+                if (Objects.equals(viewNow, "month"))
+                {
+                    setMonthView();
+                }else if (Objects.equals(viewNow, "week"))
+                {
+                    setWeek();
+                } else if (Objects.equals(viewNow, "daily")) {
+                    setDaily();
+                }else
+                {
+                    setMonthView();
+                }
             }
-            String myTemp = tempSelectedDate.toString();
-            i.putExtra("tempDate", myTemp);
-            startActivity(getIntent());
-            setMonthView();
+
 
 
         });
@@ -132,11 +137,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         });
 
 
-        floatAddBtnMonthAdd.setOnClickListener(v -> {
-
-            newEventAction();
-
-        });
+        floatAddBtnMonthAdd.setOnClickListener(v -> newEventAction());
 
 
         imageMenu.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
@@ -146,6 +147,11 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
             i.putExtra("stack",stackNow);
             startActivity(i);
         });
+prevMonth.setOnClickListener(v -> previousMonthAction());
+
+nextMonth.setOnClickListener(v -> nextMonthAction());
+
+
 
         NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setItemIconTintList(null);
@@ -154,7 +160,9 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
     }
 
+
     private void initWidgets() {
+
         calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
         monthYearText = findViewById(R.id.monthYearTV);
         floatAddBtnMonthAdd = findViewById(R.id.floatAddBtnMonthView);
@@ -171,9 +179,6 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
 
     }
-
-
-
 
 
 
@@ -215,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                     setWeek();
                     break;
                 case "all":
-                    setAllEvents();
+                    setAllEventsExListView();
                     break;
                 case "month":
                     setMonthView();
@@ -300,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
                     break;
                 case "all":
-                    setAllEvents();
+                    setAllEventsExListView();
                     stack.removeFirst();
 
                     break;
@@ -429,16 +434,11 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     protected void onResume() {
         super.onResume();
 
-//        getIntentFromEventEdit();
-//        setWeek();
-//        selectedDate=tempSelectedDate;
-//        setMonthView();
         if (!(hourAdapter == null)) {
             hourAdapter.notifyDataSetChanged();
         }
 
         DialogClickedItemAndDelete();
-//        getStackFromSave();
 
 
     }
@@ -496,106 +496,66 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
             builder.setView(viewFinal).
 
-                    setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                    setPositiveButton("Delete", (dialog, which) -> {
 
-                            AlertDialog.Builder builderDel = new AlertDialog.Builder(MainActivity.this);
-                            builderDel.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    String parent_id_value = hourAdapter.getItem(position).getEvents().get(0).getParent_id();
-                                    String row_id = hourAdapter.getItem(position).getEvents().get(0).getId();
-
-
-                                    if (parent_id_value == null && !myDB.checkNextRowHasParentId(Long.parseLong(row_id))) {
-                                        deleteEventNotRepeating(position, CA);
-                                    } else {
-                                        deleteEventIfRepeating(builderRepeatingDelete, position, CA, deleteAll, deleteOne, deleteFuture);
-                                        builderRepeatingDelete.show();
-                                    }
-
-
-                                }
-                            }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    String previousViewType = stack.peekFirst();
-                                    switch (previousViewType) {
-                                        case "all":
-                                            setAllEvents();
-                                            break;
-                                        case "double-click-week":
-                                            selectedDate = EventDate;
-
-                                            setDaily();
-                                            break;
-                                        case "month":
-                                            selectedDate = EventDate;
-
-                                            setDaily();
-                                            break;
-                                        case "double-click-month":
-                                            selectedDate = EventDate;
-
-                                            setDaily();
-                                            break;
-                                        case "week":
-                                            selectedDate = EventDate;
-
-                                            setWeek();
-                                            break;
-                                        case "daily":
-                                            selectedDate = EventDate;
-
-                                            setDaily();
-                                            break;
-                                        default:
-                                            selectedDate = EventDate;
-
-                                            onMyBackPressed();
-                                            break;
-                                    }
-
-                                }
-                            }).setTitle("Are you sure you want to delete event " + title_upd + " ?");
-                            builderDel.show();
-
-
-                        }
-                    }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-
-                            dialog.cancel();
-                        }
-                    }).setNeutralButton("Edit", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent i = new Intent(MainActivity.this, Edit_Update_Activity.class);
-
+                        AlertDialog.Builder builderDel = new AlertDialog.Builder(MainActivity.this);
+                        builderDel.setPositiveButton("Yes", (dialog1, which1) -> {
+                            String parent_id_value = hourAdapter.getItem(position).getEvents().get(0).getParent_id();
                             String row_id = hourAdapter.getItem(position).getEvents().get(0).getId();
 
 
-                            i.putExtra("id", row_id);
-                            startActivity(i);
-                        }
-                    }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            hourAdapter.notifyDataSetChanged();
+                            if (parent_id_value == null && !myDB.checkNextRowHasParentId(Long.parseLong(row_id))) {
+                                deleteEventNotRepeating(position, CA);
+                            } else {
+                                deleteEventIfRepeating(builderRepeatingDelete, position, CA, deleteAll, deleteOne, deleteFuture);
+                                builderRepeatingDelete.show();
+                            }
 
 
-                        }
-                    }).setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
+                        }).setNegativeButton("No", (dialog12, which12) -> {
+                            String previousViewType = stack.peekFirst();
+                            switch (Objects.requireNonNull(previousViewType)) {
+                                case "all":
+                                    setAllEventsExListView();
+                                    break;
+                                case "double-click-week":
+                                case "month":
 
-                            hourAdapter.notifyDataSetChanged();
+                                case "double-click-month":
+                                case "daily":
+                                    selectedDate = EventDate;
 
-                        }
-                    });
+                                    setDaily();
+                                    break;
+
+                                case "week":
+                                    selectedDate = EventDate;
+
+                                    setWeek();
+                                    break;
+
+                                default:
+                                    selectedDate = EventDate;
+
+                                    onMyBackPressed();
+                                    break;
+                            }
+
+                        }).setTitle("Are you sure you want to delete event " + title_upd + " ?");
+                        builderDel.show();
+
+
+                    }).setNegativeButton("Exit", (dialog, which) -> dialog.cancel()).setNeutralButton("Edit", (dialog, which) -> {
+                        Intent i = new Intent(MainActivity.this, Edit_Update_Activity.class);
+
+                        String row_id = hourAdapter.getItem(position).getEvents().get(0).getId();
+
+
+                        i.putExtra("id", row_id);
+                        String stackNow = stack.peekFirst();
+                        i.putExtra("stack", stackNow);
+                        startActivity(i);
+                    }).setOnCancelListener(dialog -> hourAdapter.notifyDataSetChanged()).setOnDismissListener(dialog -> hourAdapter.notifyDataSetChanged());
 
 
             builder.show();
@@ -609,292 +569,304 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     private void deleteEventIfRepeating(AlertDialog builderRepeating, int position, EventCursorAdapter CA, TextView deleteAll, TextView deleteOne, TextView deleteFuture) {
 
         builderRepeating.setOnShowListener(dialog -> {
-            deleteAll.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String parent_id = hourAdapter.getItem(position).getEvents().get(0).getParent_id();
-                    String row_id = hourAdapter.getItem(position).getEvents().get(0).getId();
-                    LocalDate EventDate = hourAdapter.getItem(position).getEvents().get(0).getDate();
+            deleteAll.setOnClickListener(v -> {
+                String parent_id = hourAdapter.getItem(position).getEvents().get(0).getParent_id();
+                String row_id = hourAdapter.getItem(position).getEvents().get(0).getId();
+                LocalDate EventDate = hourAdapter.getItem(position).getEvents().get(0).getDate();
 
-                    Cursor cursorEvent = myDB.readAllEvents();
-                    Cursor remCursor = myDB.readAllReminder();
+                Cursor cursorEvent = myDB.readAllEvents();
+                Cursor remCursor = myDB.readAllReminder();
 
 
-                    if (parent_id == null) {
-                        cursorEvent.moveToPosition(-1);
-                        while (cursorEvent.moveToNext()) {
-                            remCursor.moveToPosition(-1);
-                            while (remCursor.moveToNext()) {
+                if (parent_id == null) {
+                    cursorEvent.moveToPosition(-1);
+                    while (cursorEvent.moveToNext()) {
+                        remCursor.moveToPosition(-1);
+                        while (remCursor.moveToNext()) {
 
-                                if (cursorEvent.getString(0).equals(row_id) &&
-                                        cursorEvent.getString(5).equals("1")) {
+                            if (cursorEvent.getString(0).equals(row_id) &&
+                                    cursorEvent.getString(5).equals("1")) {
 
-                                    if (remCursor.getString(1).equals(row_id)) {
+                                if (remCursor.getString(1).equals(row_id)) {
 
-                                        myDB.deleteOneRowReminder(remCursor.getString(0));
-                                        cancelAlarm(Integer.parseInt(remCursor.getString(0)));
-                                    }
-
-                                }
-
-
-                                if (!(cursorEvent.getString(7) == null) &&
-                                        cursorEvent.getString(7).equals(row_id) &&
-                                        cursorEvent.getString(5).equals("1")) {
-
-                                    if (remCursor.getString(1).equals(cursorEvent.getString(0))) {
-
-                                        myDB.deleteOneRowReminder(remCursor.getString(0));
-                                        cancelAlarm(Integer.parseInt(remCursor.getString(0)));
-                                    }
-                                }
-
-
-                            }
-
-                        }
-
-
-                    } else {
-
-                        cursorEvent.moveToPosition(-1);
-                        while (cursorEvent.moveToNext()) {
-                            remCursor.moveToPosition(-1);
-                            while (remCursor.moveToNext()) {
-                                if (!(cursorEvent.getString(7) == null) && cursorEvent.getString(7).equals(parent_id) &&
-                                        cursorEvent.getString(5).equals("1")) {
-                                    if (remCursor.getString(1).equals(cursorEvent.getString(0))) {
-                                        myDB.deleteOneRowReminder(remCursor.getString(0));
-                                        cancelAlarm(Integer.parseInt(remCursor.getString(0)));
-                                    }
-                                } else if (cursorEvent.getString(7) == null &&
-                                        cursorEvent.getString(0).equals(parent_id) && cursorEvent.getString(5).equals("1")) {
-                                    if (remCursor.getString(1).equals(cursorEvent.getString(0))) {
-                                        myDB.deleteOneRowReminder(remCursor.getString(0));
-                                        cancelAlarm(Integer.parseInt(remCursor.getString(0)));
-                                    }
+                                    myDB.deleteOneRowReminder(remCursor.getString(0));
+                                    cancelAlarm(Integer.parseInt(remCursor.getString(0)));
                                 }
 
                             }
 
+
+                            if (!(cursorEvent.getString(7) == null) &&
+                                    cursorEvent.getString(7).equals(row_id) &&
+                                    cursorEvent.getString(5).equals("1")) {
+
+                                if (remCursor.getString(1).equals(cursorEvent.getString(0))) {
+
+                                    myDB.deleteOneRowReminder(remCursor.getString(0));
+                                    cancelAlarm(Integer.parseInt(remCursor.getString(0)));
+                                }
+                            }
+
+
                         }
 
+                    }
+
+
+                } else {
+
+                    cursorEvent.moveToPosition(-1);
+                    while (cursorEvent.moveToNext()) {
+                        remCursor.moveToPosition(-1);
+                        while (remCursor.moveToNext()) {
+                            if (!(cursorEvent.getString(7) == null) && cursorEvent.getString(7).equals(parent_id) &&
+                                    cursorEvent.getString(5).equals("1")) {
+                                if (remCursor.getString(1).equals(cursorEvent.getString(0))) {
+                                    myDB.deleteOneRowReminder(remCursor.getString(0));
+                                    cancelAlarm(Integer.parseInt(remCursor.getString(0)));
+                                }
+                            } else if (cursorEvent.getString(7) == null &&
+                                    cursorEvent.getString(0).equals(parent_id) && cursorEvent.getString(5).equals("1")) {
+                                if (remCursor.getString(1).equals(cursorEvent.getString(0))) {
+                                    myDB.deleteOneRowReminder(remCursor.getString(0));
+                                    cancelAlarm(Integer.parseInt(remCursor.getString(0)));
+                                }
+                            }
+
+                        }
 
                     }
 
 
-                    CA.notifyDataSetChanged();
-                    hourAdapter.notifyDataSetChanged();
-
-                    if (parent_id == null) {
-                        myDB.deleteAllEventsParentId(row_id);
-                        myDB.deleteOneRow(row_id);
-                    } else {
-                        myDB.deleteAllEventsParentId(parent_id);
-                        myDB.deleteOneRow(parent_id);
-                    }
-
-                    cursorEvent.close();
-                    remCursor.close();
-                    myDB.close();
-
-
-                    String previousViewType = stack.peekFirst();
-                    switch (previousViewType) {
-                        case "all":
-                            setAllEvents();
-                            break;
-                        case "double-click-week":
-                            selectedDate = EventDate;
-
-                            setDaily();
-                            break;
-                        case "month":
-                            selectedDate = EventDate;
-
-                            setDaily();
-                            break;
-                        case "double-click-month":
-                            selectedDate = EventDate;
-
-                            setDaily();
-                            break;
-                        case "week":
-                            selectedDate = EventDate;
-
-                            setWeek();
-                            break;
-                        case "daily":
-                            selectedDate = EventDate;
-
-                            setDaily();
-                            break;
-                        default:
-                            selectedDate = EventDate;
-
-                            onMyBackPressed();
-                            break;
-                    }
-                    dialog.dismiss();
                 }
+
+
+                CA.notifyDataSetChanged();
+                hourAdapter.notifyDataSetChanged();
+
+                if (parent_id == null) {
+                    myDB.deleteAllEventsParentId(row_id);
+                    myDB.deleteOneRow(row_id);
+                } else {
+                    myDB.deleteAllEventsParentId(parent_id);
+                    myDB.deleteOneRow(parent_id);
+                }
+
+                cursorEvent.close();
+                remCursor.close();
+                myDB.close();
+
+
+                String previousViewType = stack.peekFirst();
+                if (previousViewType==null)
+                {
+                    previousViewType="daily";
+                }
+                switch (Objects.requireNonNull(previousViewType)) {
+                    case "all":
+                        setAllEventsExListView();
+                        break;
+                    case "double-click-week":
+                    case "month":
+
+                    case "double-click-month":
+                    case "daily":
+                        selectedDate = EventDate;
+
+                        setDaily();
+                        break;
+
+                    case "week":
+                        selectedDate = EventDate;
+
+                        setWeek();
+                        break;
+
+                    default:
+                        selectedDate = EventDate;
+
+                        onMyBackPressed();
+                        break;
+                }
+                dialog.dismiss();
             });
 
-            deleteOne.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            deleteOne.setOnClickListener(v -> {
 
-                    String event_repeating_id = hourAdapter.getItem(position).getEvents().get(0).getId();
-                    LocalDate EventDate = hourAdapter.getItem(position).getEvents().get(0).getDate();
+                String event_repeating_id = hourAdapter.getItem(position).getEvents().get(0).getId();
+                LocalDate EventDate = hourAdapter.getItem(position).getEvents().get(0).getDate();
+                String event_rep_parent_id = hourAdapter.getItem(position).getEvents().get(0).getParent_id();
 
-                    Cursor eventCursor = myDB.readAllEvents();
-                    Cursor remCursor = myDB.readAllReminder();
 
+                Cursor eventCursor = myDB.readAllEvents();
+                Cursor newEventCursor = myDB.readAllEvents();
+
+                Cursor remCursor = myDB.readAllReminder();
+                int tempIdForNewParent = 0;
+                int repeat = 0;
+                if (event_rep_parent_id==null)
+                {
+                    eventCursor.moveToPosition(-1);
+                    while(eventCursor.moveToNext())
+                    {
+                        if (eventCursor.getString(0).equals(event_repeating_id))
+                        {
+                            repeat= Integer.parseInt(eventCursor.getString(6));
+                        }
+                        if (!(eventCursor.getString(7)==null) && eventCursor.getString(7).equals(event_repeating_id))
+                        {
+                            tempIdForNewParent = Integer.parseInt(eventCursor.getString(0));
+                            myDB.updateEventParentId(String.valueOf(tempIdForNewParent),null);
+                            myDB.updateEventRepeat(String.valueOf(tempIdForNewParent), String.valueOf(repeat));
+                            myDB.deleteOneRow(event_repeating_id);
+                            break;
+                        }
+                    }
+
+                    newEventCursor.moveToPosition(-1);
+                    while(newEventCursor.moveToNext())
+                    {
+                        if (!(newEventCursor.getString(7)==null) && newEventCursor.getString(7).equals(event_repeating_id))
+                        {
+                            myDB.updateEventParentId(newEventCursor.getString(0), String.valueOf(tempIdForNewParent));
+                            myDB.updateEventRepeat(newEventCursor.getString(0), String.valueOf(0));
+                        }
+                    }
+                }else
+                {
                     myDB.deleteOneRow(event_repeating_id);
-
-                    remCursor.moveToPosition(-1);
-                    while (remCursor.moveToNext()) {
-                        if (remCursor.getString(1).equals(event_repeating_id)) {
-                            myDB.deleteOneRowReminder(remCursor.getString(0));
-                            cancelAlarm(Integer.parseInt(remCursor.getString(0)));
-                        }
-                    }
-
-
-                    CA.notifyDataSetChanged();
-                    hourAdapter.notifyDataSetChanged();
-
-                    eventCursor.close();
-                    remCursor.close();
-                    myDB.close();
-
-                    String previousViewType = stack.peekFirst();
-                    switch (previousViewType) {
-                        case "all":
-                            setAllEvents();
-                            break;
-                        case "double-click-week":
-                            selectedDate = EventDate;
-
-                            setDaily();
-                            break;
-                        case "month":
-                            selectedDate = EventDate;
-
-                            setDaily();
-                            break;
-                        case "double-click-month":
-                            selectedDate = EventDate;
-
-                            setDaily();
-                            break;
-                        case "week":
-                            selectedDate = EventDate;
-
-                            setWeek();
-                            break;
-                        case "daily":
-                            selectedDate = EventDate;
-
-                            setDaily();
-                            break;
-                        default:
-                            selectedDate = EventDate;
-
-                            onMyBackPressed();
-                            break;
-                    }
-                    dialog.dismiss();
                 }
+
+                remCursor.moveToPosition(-1);
+                while (remCursor.moveToNext()) {
+                    if (remCursor.getString(1).equals(event_repeating_id)) {
+                        myDB.deleteOneRowReminder(remCursor.getString(0));
+                        cancelAlarm(Integer.parseInt(remCursor.getString(0)));
+                    }
+                }
+
+
+                CA.notifyDataSetChanged();
+                hourAdapter.notifyDataSetChanged();
+                newEventCursor.close();
+                eventCursor.close();
+                remCursor.close();
+                myDB.close();
+
+                String previousViewType = stack.peekFirst();
+                if (previousViewType==null)
+                {
+                    previousViewType="daily";
+                }
+                switch (Objects.requireNonNull(previousViewType)) {
+                    case "all":
+                        setAllEventsExListView();
+                        break;
+                    case "double-click-week":
+                    case "month":
+
+                    case "double-click-month":
+                    case "daily":
+                        selectedDate = EventDate;
+
+                        setDaily();
+                        break;
+
+                    case "week":
+                        selectedDate = EventDate;
+
+                        setWeek();
+                        break;
+
+                    default:
+                        selectedDate = EventDate;
+
+                        onMyBackPressed();
+                        break;
+                }
+                dialog.dismiss();
             });
 
-            deleteFuture.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String parent_id = hourAdapter.getItem(position).getEvents().get(0).getParent_id();
-                    String row_id = hourAdapter.getItem(position).getEvents().get(0).getId();
-                    LocalDate event_date = hourAdapter.getItem(position).getEvents().get(0).getDate();
+            deleteFuture.setOnClickListener(v -> {
+                String parent_id = hourAdapter.getItem(position).getEvents().get(0).getParent_id();
+                String row_id = hourAdapter.getItem(position).getEvents().get(0).getId();
+                LocalDate event_date = hourAdapter.getItem(position).getEvents().get(0).getDate();
 
 
-                    Cursor cursorEvent = myDB.readAllEvents();
-                    Cursor remCursor = myDB.readAllReminder();
+                Cursor cursorEvent = myDB.readAllEvents();
+                Cursor remCursor = myDB.readAllReminder();
 
-                    if (parent_id == null) {
-                        myDB.deleteAllEventsParentId(row_id);
-                        myDB.deleteOneRow(row_id);
+                if (parent_id == null) {
+                    myDB.deleteAllEventsParentId(row_id);
+                    myDB.deleteOneRow(row_id);
 
-                    } else {
+                } else {
 
-                        cursorEvent.moveToPosition(-1);
-                        while (cursorEvent.moveToNext()) {
-                            LocalDate cursorLocalDate = stringToLocalDate(cursorEvent.getString(3));
-                            String cursorParentID = cursorEvent.getString(7);
-                            int comparisonLocalDates = 0;
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                comparisonLocalDates = event_date.compareTo(cursorLocalDate);
-                            }
-                            if (!(cursorParentID == null) && cursorParentID.equals(parent_id)) {
+                    cursorEvent.moveToPosition(-1);
+                    while (cursorEvent.moveToNext()) {
+                        LocalDate cursorLocalDate = stringToLocalDate(cursorEvent.getString(3));
+                        String cursorParentID = cursorEvent.getString(7);
+                        int comparisonLocalDates = 0;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            comparisonLocalDates = event_date.compareTo(cursorLocalDate);
+                        }
+                        if (!(cursorParentID == null) && cursorParentID.equals(parent_id)) {
 
-                                if (comparisonLocalDates < 0 || event_date.equals(cursorLocalDate)) {
-                                    if (cursorEvent.getString(5).equals("1")) {
-                                        remCursor.moveToPosition(-1);
-                                        while (remCursor.moveToNext()) {
-                                            if (remCursor.getString(1).equals(cursorEvent.getString(0))) {
-                                                myDB.deleteOneRowReminder(remCursor.getString(0));
-                                            }
-
+                            if (comparisonLocalDates < 0 || event_date.equals(cursorLocalDate)) {
+                                if (cursorEvent.getString(5).equals("1")) {
+                                    remCursor.moveToPosition(-1);
+                                    while (remCursor.moveToNext()) {
+                                        if (remCursor.getString(1).equals(cursorEvent.getString(0))) {
+                                            myDB.deleteOneRowReminder(remCursor.getString(0));
                                         }
-                                    }
 
-                                    myDB.deleteOneRow(cursorEvent.getString(0));
+                                    }
                                 }
+
+                                myDB.deleteOneRow(cursorEvent.getString(0));
                             }
                         }
-
                     }
 
-
-                    cursorEvent.close();
-                    remCursor.close();
-                    myDB.close();
-
-                    String previousViewType = stack.peekFirst();
-                    switch (previousViewType) {
-                        case "all":
-                            setAllEvents();
-                            break;
-                        case "double-click-week":
-                            selectedDate = event_date;
-
-                            setDaily();
-                            break;
-                        case "month":
-                            selectedDate = event_date;
-
-                            setDaily();
-                            break;
-                        case "double-click-month":
-                            selectedDate = event_date;
-
-                            setDaily();
-                            break;
-                        case "week":
-                            selectedDate = event_date;
-
-                            setWeek();
-                            break;
-                        case "daily":
-                            selectedDate = event_date;
-
-                            setDaily();
-                            break;
-                        default:
-                            selectedDate = event_date;
-
-                            onMyBackPressed();
-                            break;
-                    }
-                    dialog.dismiss();
                 }
+
+
+                cursorEvent.close();
+                remCursor.close();
+                myDB.close();
+
+                String previousViewType = stack.peekFirst();
+                if (previousViewType==null)
+                {
+                    previousViewType="daily";
+                }
+                switch (Objects.requireNonNull(previousViewType)) {
+                    case "all":
+                        setAllEventsExListView();
+                        break;
+                    case "double-click-week":
+                    case "month":
+                    case "daily":
+
+                    case "double-click-month":
+                        selectedDate = event_date;
+
+                        setDaily();
+                        break;
+
+                    case "week":
+                        selectedDate = event_date;
+
+                        setWeek();
+                        break;
+
+                    default:
+                        selectedDate = event_date;
+
+                        onMyBackPressed();
+                        break;
+                }
+                dialog.dismiss();
             });
         });
     }
@@ -943,35 +915,30 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         myDB.close();
 
         String previousViewType = stack.peekFirst();
-        switch (previousViewType) {
+        if (previousViewType==null)
+        {
+            previousViewType="daily";
+        }
+        switch (Objects.requireNonNull(previousViewType)) {
             case "all":
-                setAllEvents();
+                setAllEventsExListView();
                 break;
             case "double-click-week":
-                selectedDate = date_row;
-
-                setDaily();
-                break;
             case "month":
-                selectedDate = date_row;
 
-                setDaily();
-                break;
             case "double-click-month":
-                selectedDate = date_row;
-
-                setDaily();
-                break;
-            case "week":
-                selectedDate = date_row;
-
-                setWeek();
-                break;
             case "daily":
                 selectedDate = date_row;
 
                 setDaily();
                 break;
+
+            case "week":
+                selectedDate = date_row;
+
+                setWeek();
+                break;
+
             default:
                 selectedDate = date_row;
 
@@ -998,7 +965,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
 
     //--------------Previous and Next Month Actions---------
-    public void previousMonthAction(View view) {
+    public void previousMonthAction() {
         if (calendarRecyclerView.getVisibility() == View.GONE) {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -1014,15 +981,16 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 selectedDate = selectedDate.minusMonths(1);
+                setMonthView();
             }
 
-            setMonthView();
+
         }
 
 
     }
 
-    public void nextMonthAction(View view) {
+    public void nextMonthAction() {
 
         if (calendarRecyclerView.getVisibility() == View.GONE) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -1038,17 +1006,20 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 selectedDate = selectedDate.plusMonths(1);
+
             }
             setMonthView();
+            }
+
         }
 
 
-    }
+
 
 
     //--------------Set Views--------------------------------
-    private void setMonthView() {
-
+    public void removeExtraDateIntent()
+    {
         if (getIntent().hasExtra("date")) {
             Bundle b = getIntent().getExtras();
 
@@ -1058,10 +1029,10 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
             getIntent().removeExtra("date");
 
         }
-        monthYearText.setText(monthYearFromDate(selectedDate));
+    }
+    public void setCalendarRecyclerViewMonth()
+    {
         ArrayList<LocalDate> daysInMonth = daysInMonthArray();
-
-
         CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, this, getApplicationContext());
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 7);
 
@@ -1072,41 +1043,14 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         ViewGroup.LayoutParams params = calendarRecyclerView.getLayoutParams();
         ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) calendarRecyclerView.getLayoutParams();
 
-//        params.height = 1500;
         params.height = 1700;
         marginParams.bottomMargin = 100;
 
         calendarRecyclerView.setLayoutParams(params);
         calendarRecyclerView.setLayoutParams(marginParams);
-
-
-        imageMenu.setVisibility(View.VISIBLE);
-        monthListView.setVisibility(View.GONE);
-        monthYearText.setVisibility(View.VISIBLE);
-        daysOfWeekDaily.setVisibility(View.GONE);
-        daysOfWeek.setVisibility(View.VISIBLE);
-        prevMonth.setVisibility(View.VISIBLE);
-        nextMonth.setVisibility(View.VISIBLE);
-        calendarRecyclerView.setVisibility(View.VISIBLE);
-        backMenuBtn.setVisibility(View.GONE);
-
-
     }
-
-
-    private void setWeek() {
-
-
-        if (getIntent().hasExtra("date")) {
-            Bundle b = getIntent().getExtras();
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                selectedDate = (LocalDate) b.get("date");
-            }
-            getIntent().removeExtra("date");
-
-        }
-        monthYearText.setText(monthYearFromDate(selectedDate));
+    private void setCalendarRecyclerViewWeek()
+    {
         ArrayList<LocalDate> days = daysInWeekArray(selectedDate);
 
         CalendarAdapter calendarAdapter = new CalendarAdapter(days, this, getApplicationContext());
@@ -1122,16 +1066,59 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
         calendarRecyclerView.setLayoutParams(params);
         calendarRecyclerView.setLayoutParams(marginParams);
+    }
 
-        backMenuBtn.setVisibility(View.VISIBLE);
-        imageMenu.setVisibility(View.GONE);
+    //MonthView
+    private void setMonthView() {
+        viewNow ="month";
+        RecyclerViewActions.removeExtraDateIntent(this);
+        monthYearText.setText(monthYearFromDate(selectedDate));
+        RecyclerViewActions.setCalendarRecyclerViewMonth(this,getApplicationContext(),calendarRecyclerView);
+        setVisibilityMonth();
+
+    }
+
+    public void setVisibilityMonth()
+    {
+    imageMenu.setVisibility(View.VISIBLE);
+    monthListView.setVisibility(View.GONE);
+    monthYearText.setVisibility(View.VISIBLE);
+    daysOfWeekDaily.setVisibility(View.GONE);
+    daysOfWeek.setVisibility(View.VISIBLE);
+    prevMonth.setVisibility(View.VISIBLE);
+    nextMonth.setVisibility(View.VISIBLE);
+    calendarRecyclerView.setVisibility(View.VISIBLE);
+    backMenuBtn.setVisibility(View.GONE);
+}
 
 
+    //WeeekView
+
+    private void setWeek() {
+
+        viewNow="week";
+        RecyclerViewActions.removeExtraDateIntent(this);
+        monthYearText.setText(monthYearFromDate(selectedDate));
+        RecyclerViewActions.setCalendarRecyclerViewWeek(this,getApplicationContext(),calendarRecyclerView);
+        setParamsMonthListViewWeek();
+
+
+        setVisibilityWeek();
+        setEventListView();
+
+    }
+
+    private void setParamsMonthListViewWeek()
+    {
         ViewGroup.LayoutParams paramsListView = monthListView.getLayoutParams();
         paramsListView.height = 1200;
-
         monthListView.setLayoutParams(paramsListView);
+    }
 
+    public void setVisibilityWeek()
+    {
+        backMenuBtn.setVisibility(View.VISIBLE);
+        imageMenu.setVisibility(View.GONE);
         daysOfWeekDaily.setVisibility(View.GONE);
         monthListView.setVisibility(View.VISIBLE);
         calendarRecyclerView.setVisibility(View.VISIBLE);
@@ -1139,23 +1126,16 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         prevMonth.setVisibility(View.VISIBLE);
         nextMonth.setVisibility(View.VISIBLE);
         monthYearText.setVisibility(View.VISIBLE);
-
-        setEventListView();
-
     }
+
+
+    //DailyView
 
     @SuppressLint("RtlHardcoded")
     private void setDaily() {
+        viewNow="daily";
 
-        if (getIntent().hasExtra("date")) {
-            Bundle b = getIntent().getExtras();
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                selectedDate = (LocalDate) b.get("date");
-            }
-            getIntent().removeExtra("date");
-
-        }
+        RecyclerViewActions.removeExtraDateIntent(this);
 
         Locale locale = new Locale("el", "GR");
         monthYearText.setText(CalendarUtils.monthDayFromDate(selectedDate));
@@ -1163,20 +1143,26 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             dayOfWeekmain = selectedDate.getDayOfWeek().getDisplayName(TextStyle.FULL, locale);
         }
-        setEventListView();
         daysOfWeekDaily.setText(dayOfWeekmain);
+    setParamsMonthListViewDaily();
 
+        setVisibilityDaily();
+        setEventListView();
+    }
+    private void setParamsMonthListViewDaily()
+    {
         ViewGroup.LayoutParams paramsListView = monthListView.getLayoutParams();
         paramsListView.height = 1500;
 
-
         monthListView.setLayoutParams(paramsListView);
+    }
 
-
+    public void setVisibilityDaily()
+    {
         backMenuBtn.setVisibility(View.VISIBLE);
         imageMenu.setVisibility(View.GONE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            backMenuBtn.setForegroundGravity(Gravity.LEFT);
+            backMenuBtn.setForegroundGravity(Gravity.START);
         }
         monthListView.setVisibility(View.VISIBLE);
         monthYearText.setVisibility(View.VISIBLE);
@@ -1185,59 +1171,19 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         prevMonth.setVisibility(View.VISIBLE);
         nextMonth.setVisibility(View.VISIBLE);
         calendarRecyclerView.setVisibility(View.GONE);
-        hourAdapter.notifyDataSetChanged();
-
-
+//        hourAdapter.notifyDataSetChanged();
     }
 
+    //AllEventsExpandable
     private void setAllEventsExListView() {
         Intent i = new Intent(this, AllEventsExListView.class);
         String stackNow = stack.peekFirst();
-//        changeEventEdit = false;
         i.putExtra("stack", stackNow);
         startActivity(i);
 
     }
 
-    @SuppressLint("RtlHardcoded")
-    private void setAllEvents() {
 
-
-        hourAdapter = new HourAdapter(getApplicationContext(), AllEventsList.hourEventListFromDatabaseToShowAllEvents(getApplicationContext(), myDB));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            hourAdapter.sort(Comparator.comparing(o -> o.events.get(0).getTime()));
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            hourAdapter.sort(Comparator.comparing(o -> o.events.get(0).getDate()));
-        }
-
-        hourAdapter.notifyDataSetChanged();
-
-        ViewGroup.LayoutParams params = monthListView.getLayoutParams();
-        params.height = 1800;
-
-        monthListView.setLayoutParams(params);
-        monthListView.setDivider(new ColorDrawable(Color.TRANSPARENT));
-        monthListView.setAdapter(hourAdapter);
-
-
-        backMenuBtn.setVisibility(View.VISIBLE);
-        imageMenu.setVisibility(View.GONE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            backMenuBtn.setForegroundGravity(Gravity.LEFT);
-        }
-        monthListView.setVisibility(View.VISIBLE);
-        monthYearText.setVisibility(View.GONE);
-        daysOfWeekDaily.setVisibility(View.GONE);
-        daysOfWeek.setVisibility(View.GONE);
-        prevMonth.setVisibility(View.GONE);
-        nextMonth.setVisibility(View.GONE);
-        calendarRecyclerView.setVisibility(View.GONE);
-        hourAdapter.notifyDataSetChanged();
-        myDB.close();
-
-
-    }
 
     //---------Add Event-------------------------------------
     private void newEventAction() {

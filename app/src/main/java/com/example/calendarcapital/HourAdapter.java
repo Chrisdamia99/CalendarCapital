@@ -3,6 +3,7 @@ package com.example.calendarcapital;
 import static com.example.calendarcapital.CalendarUtils.selectedDate;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +36,7 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         HourEvent event = getItem(position);
-
+        String eventColor = getItem(position).getEvents().get(0).getColor();
         if (convertView == null)
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.hour_cell, parent, false);
 
@@ -43,8 +44,9 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
         compareAndGetValuesFromDBWithId(event.getId());
 
 
-        setHour(convertView,event.time,selectedDate);
-        setEvents(convertView, event.events);
+//        setHour(convertView,event.time,selectedDate);
+        setHour(convertView,event.time,event.getEvents().get(0).getDate());
+        setEvents(convertView, event.events,eventColor);
 
         return convertView;
     }
@@ -67,13 +69,19 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
             while (cursor.moveToNext()) {
 
                 if (cursor.getString(0).equals(id)) {
-                    Event eventDB = new Event(cursor.getString(0), cursor.getString(1), cursor.getString(2),
-                            CalendarUtils.stringToLocalDate(cursor.getString(3)), LocalTime.parse(cursor.getString(4)),
-                            cursor.getString(5), cursor.getString(6),cursor.getString(7));
+                    Event eventDB = null;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        eventDB = new Event(cursor.getString(0), cursor.getString(1), cursor.getString(2),
+                                CalendarUtils.stringToLocalDate(cursor.getString(3)), LocalTime.parse(cursor.getString(4)),
+                                cursor.getString(5), cursor.getString(6),cursor.getString(7),cursor.getString(8));
+                    }
                     ArrayList<Event> eventArrayDB = new ArrayList<>();
 
 
-                    LocalTime cursorTime = LocalTime.parse(cursor.getString(4));
+                    LocalTime cursorTime = null;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        cursorTime = LocalTime.parse(cursor.getString(4));
+                    }
 
                     String cursorId = cursor.getString(0);
                     eventArrayDB.add(eventDB);
@@ -108,69 +116,7 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
     }
 
 
-//    private void setEvents(View convertView, ArrayList<Event> events) {
-//        TextView event1 = convertView.findViewById(R.id.event1);
-//        TextView event2 = convertView.findViewById(R.id.event2);
-//        TextView event3 = convertView.findViewById(R.id.event3);
-//        TextView comment1 = convertView.findViewById(R.id.comment1);
-//        TextView comment2 = convertView.findViewById(R.id.comment2);
-//        TextView comment3 = convertView.findViewById(R.id.coment3);
-//
-//        if (events.size() == 0) {
-//            hideEvent(event1);
-//            hideEvent(event2);
-//            hideEvent(event3);
-//            hideEvent(comment1);
-//            hideEvent(comment2);
-//            hideEvent(comment3);
-//        } else if (events.size() == 1) {
-//            setEvent(event1, events.get(0));
-//            setComment(comment1, events.get(0));
-//            hideEvent(comment2);
-//            hideEvent(comment3);
-//
-//            hideEvent(event2);
-//            hideEvent(event3);
-//
-//        } else if (events.size() == 2) {
-//            setEvent(event1, events.get(0));
-//            setEvent(event2, events.get(1));
-//            setComment(comment1, events.get(0));
-//            setComment(comment2, events.get(1));
-//            hideEvent(comment3);
-//            hideEvent(event3);
-//
-//
-//        } else if (events.size() == 3) {
-//            setEvent(event1, events.get(0));
-//            setEvent(event2, events.get(1));
-//            setEvent(event3, events.get(2));
-//            setComment(comment1, events.get(0));
-//            setComment(comment2, events.get(1));
-//            setComment(comment3, events.get(2));
-//        } else {
-//            setEvent(event1, events.get(0));
-//            setEvent(event2, events.get(1));
-//            event3.setVisibility(View.VISIBLE);
-//            String eventsNotShown = String.valueOf(events.size() - 2);
-//            eventsNotShown += " More Events";
-//            event3.setText(eventsNotShown);
-//
-//            setComment(comment1, events.get(0));
-//            setComment(comment2, events.get(1));
-//            comment3.setVisibility(View.VISIBLE);
-//            String commentsNotShown = String.valueOf(events.size() - 2);
-//            commentsNotShown += " More Comments";
-//            comment3.setText(commentsNotShown);
-//        }
-//
-//        if (comment1.getText().toString().isEmpty()) {
-//            comment1.setVisibility(View.GONE);
-//        }
-//
-//
-//    }
-private void setEvents(View convertView, ArrayList<Event> events) {
+private void setEvents(View convertView, ArrayList<Event> events,String color) {
     TextView event1 = convertView.findViewById(R.id.event1);
 
     TextView comment1 = convertView.findViewById(R.id.comment1);
@@ -178,29 +124,15 @@ private void setEvents(View convertView, ArrayList<Event> events) {
 
     if (events.size() == 0) {
         hideEvent(event1);
-
         hideEvent(comment1);
 
     } else if (events.size() == 1) {
-        setEvent(event1, events.get(0));
-        setComment(comment1, events.get(0));
+        setEvent(event1, events.get(0),color);
+        setComment(comment1, events.get(0),color);
 
-
-    } else if (events.size() == 2) {
-        setEvent(event1, events.get(0));
-        setComment(comment1, events.get(0));
-
-
-
-    } else if (events.size() == 3) {
-        setEvent(event1, events.get(0));
-        setComment(comment1, events.get(0));
-
-    } else {
-        setEvent(event1, events.get(0));
-        setComment(comment1, events.get(0));
 
     }
+
 
     if (comment1.getText().toString().isEmpty()) {
         comment1.setVisibility(View.GONE);
@@ -209,7 +141,7 @@ private void setEvents(View convertView, ArrayList<Event> events) {
 
 }
 
-    private void setEvent(TextView textView, Event event) {
+    private void setEvent(TextView textView, Event event,String color) {
 
         if (event.getName().equals(""))
         {
@@ -220,11 +152,38 @@ private void setEvents(View convertView, ArrayList<Event> events) {
             textView.setText(event.getName());
             textView.setVisibility(View.VISIBLE);
         }
+        if (color.equals("0"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner);
+        }else if (color.equals("1"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner_red);
 
+        }else if (color.equals("2"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner_yellow);
+
+        }else if (color.equals("3"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner_green);
+
+        }else if (color.equals("4"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner_blue);
+
+        }else if (color.equals("5"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner_purple);
+        }else
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner);
+
+        }
+        notifyDataSetChanged();
 
     }
 
-    private void setComment(TextView textView, Event event) {
+    private void setComment(TextView textView, Event event,String color) {
         if (event.getComment().equals(""))
         {
 
@@ -232,6 +191,34 @@ private void setEvents(View convertView, ArrayList<Event> events) {
         }else {
             textView.setText(event.getComment());
             textView.setVisibility(View.VISIBLE);
+        }
+
+        if (color.equals("0"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner);
+        }else if (color.equals("1"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner_red);
+
+        }else if (color.equals("2"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner_yellow);
+
+        }else if (color.equals("3"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner_green);
+
+        }else if (color.equals("4"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner_blue);
+
+        }else if (color.equals("5"))
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner_purple);
+        }else
+        {
+            textView.setBackgroundResource(R.drawable.rounded_corner);
+
         }
     }
 

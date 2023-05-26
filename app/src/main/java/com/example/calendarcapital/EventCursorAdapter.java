@@ -1,8 +1,10 @@
 package com.example.calendarcapital;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,7 +77,7 @@ public class EventCursorAdapter extends CursorAdapter {
         TextView time_lv_tv = view.findViewById(R.id.time_lv_tv);
         LinearLayout lin_lv_dialog_layout = view.findViewById(R.id.lin_lv_dialog_layout);
         ListView existedRemindersListView = view.findViewById(R.id.existedRemindersListView);
-        View viewInvalidation = LayoutInflater.from(mContext).inflate(R.layout.show_event_from_listview,null);
+        @SuppressLint("InflateParams") View viewInvalidation = LayoutInflater.from(mContext).inflate(R.layout.show_event_from_listview,null);
 
 
         EventCursorAdapter.this.notifyDataSetChanged();
@@ -92,7 +94,9 @@ public class EventCursorAdapter extends CursorAdapter {
         Cursor cursor = myDb.readAllEvents();
         Cursor cursorRem = myDb.readAllReminder();
 
-        existedReminders.sort((o1, o2) -> o1.compareTo(o2));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            existedReminders.sort(Date::compareTo);
+        }
         cursor.moveToPosition(-1);
         while (cursor.moveToNext()) {
             if (cursor.getString(0).equals(id)) {

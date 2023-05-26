@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="gray">#888</color>
-    <color name="lightgray">#EEE</color>
+
     <color name="blue">#3658C4</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="colorPrimaryText">#212121</color>
     <color name="colorGreen">#32CD32</color>
-    <color name="o">#0F9D58</color>
     <color name="primaryLightTirquiso">#1D7874</color>
     <color name="secondPrimaryLightTirquiso">#679289</color>
     <color name="lightGray">#ECECEC</color>
     <color name="lightdarkgrey">#DEDEDE</color>
     <color name="blakcgray">#33363d</color>
+    <color name="darkGray">#5A5A5A</color>
+    <color name="default_circle">#ECECEC</color>
+    <color name="red_circle">#E21B1B</color>
+    <color name="yellow_circle">#EFD91A</color>
+    <color name="green_circle">#15CD2D</color>
+    <color name="blue_circle">#052DFA</color>
+    <color name="purple_circle">#3C407F</color>
 
 </resources>

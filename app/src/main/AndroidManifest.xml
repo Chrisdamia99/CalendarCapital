@@ -21,12 +21,18 @@
         tools:targetApi="31">
         <activity
             android:name=".SearchActivity"
+            android:configChanges="orientation|screenSize"
+
             android:exported="false" />
         <activity
             android:name=".CustomRepeatActivity"
+            android:configChanges="orientation|screenSize"
+
             android:exported="false" />
         <activity
             android:name=".AllEventsExListView"
+            android:configChanges="orientation|screenSize"
+
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -48,6 +54,8 @@
         </activity>
         <activity
             android:name=".EventEdit"
+            android:configChanges="orientation|screenSize"
+
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -55,6 +63,8 @@
         </activity>
         <activity
             android:name=".Edit_Update_Activity"
+            android:configChanges="orientation|screenSize"
+
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

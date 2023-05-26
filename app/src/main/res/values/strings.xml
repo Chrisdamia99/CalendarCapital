@@ -46,7 +46,7 @@
     <string name="every_year_gr">Κάθε χρόνο</string>
     <string name="custom_gr">Επεξεργασία</string>
     <string name="repeat_gr">Επανάληψη</string>
-    <string name="more_events_dots">...</string>
+    <string name="more_events_dots">…</string>
     <string name="calendar_gr">Ημερολόγιο</string>
     <string name="event_title_gr">Τίτλος συμβάντος</string>
     <string name="event_comment_gr">Σχόλια συμβάντος</string>
@@ -56,6 +56,15 @@
         <item>εβδομάδα</item>
         <item>μήνα</item>
         <item>χρόνο</item>
+    </string-array>
+
+    <string-array name="custom_color_spinner">
+        <item>Κόκκινο</item>
+        <item>Κίτρινο</item>
+        <item>Πράσινο</item>
+        <item>Μπλε</item>
+        <item>Μωβ</item>
+        <item>Προκαθορισμένο</item>
     </string-array>
 
     <string-array name="custom_repeat_spinner_more">

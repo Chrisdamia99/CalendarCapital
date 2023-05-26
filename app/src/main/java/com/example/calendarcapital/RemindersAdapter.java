@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class RemindersAdapter extends ArrayAdapter<Date> {
+public class RemindersAdapter extends ArrayAdapter<Date>  {
     LayoutInflater inflater;
     ArrayList<Date> myTest;
 
@@ -68,83 +68,80 @@ public class RemindersAdapter extends ArrayAdapter<Date> {
         Cursor thirdCursorReminders = myDB.readAllReminder();
         reminderTV.setText(testStr);
 
-        cancelBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        cancelBTN.setOnClickListener(v -> {
 
-                while (remCursor.moveToNext()) {
-                    long mytestLong = Date.parse(remCursor.getString(2));
-                    Date lastDate = new Date(mytestLong);
-                    if (lastDate.equals(myTest.get(position))) {
+            while (remCursor.moveToNext()) {
+                long mytestLong = Date.parse(remCursor.getString(2));
+                Date lastDate = new Date(mytestLong);
+                if (lastDate.equals(myTest.get(position))) {
 
-                        myDB.deleteOneRowReminder(remCursor.getString(0));
-                        String alarmId = remCursor.getString(0);
-                        cancelAlarm(Integer.parseInt(alarmId));
-                        RemindersAdapter.this.notifyDataSetChanged();
-                    }
+                    myDB.deleteOneRowReminder(remCursor.getString(0));
+                    String alarmId = remCursor.getString(0);
+                    cancelAlarm(Integer.parseInt(alarmId));
                     RemindersAdapter.this.notifyDataSetChanged();
                 }
-                remCursor.close();
-                myTest.remove(position);
-
-                secMyDbCursor.moveToPosition(-1);
-                secMyRemCursor.moveToPosition(-1);
-
-                while (secMyDbCursor.moveToNext()) {
-                    if (secMyRemCursor.getCount() == 0) {
-                        myDB.updateAlarmNum(secMyDbCursor.getString(0), "0");
-
-                        RemindersAdapter.this.notifyDataSetChanged();
-
-
-                    }
-                    while (secMyRemCursor.moveToNext()) {
-
-                        if (secMyDbCursor.getString(5).equals("1")) {
-
-                            if (!secMyDbCursor.getString(0).equals(secMyRemCursor.getString(1)) || secMyRemCursor.getCount() == 0) {
-                                myDB.updateAlarmNum(secMyDbCursor.getString(0), "0");
-                            }
-                            RemindersAdapter.this.notifyDataSetChanged();
-                        }
-                    }
-                    RemindersAdapter.this.notifyDataSetChanged();
-                }
-                secMyDbCursor.close();
-                secMyRemCursor.close();
-
-                while (thirdCursorEvents.moveToNext())
-                {
-                    String cursor_event_id = thirdCursorEvents.getString(0);
-                    thirdCursorReminders.moveToPosition(-1);
-                    while(thirdCursorReminders.moveToNext())
-                    {
-                        if (cursor_event_id.equals(thirdCursorReminders.getString(1)))
-                        {
-                            myDB.updateEventAlarm(cursor_event_id,"1");
-                            break;
-                        }else
-                        {
-                            myDB.updateEventAlarm(cursor_event_id,"0");
-
-                        }
-
-
-
-                    }
-                }
-
-                thirdCursorEvents.close();
-                thirdCursorReminders.close();
-
-
-                notifyDataSetChanged();
                 RemindersAdapter.this.notifyDataSetChanged();
-
-                myDB.close();
-
-
             }
+            remCursor.close();
+            myTest.remove(position);
+
+            secMyDbCursor.moveToPosition(-1);
+            secMyRemCursor.moveToPosition(-1);
+
+            while (secMyDbCursor.moveToNext()) {
+                if (secMyRemCursor.getCount() == 0) {
+                    myDB.updateAlarmNum(secMyDbCursor.getString(0), "0");
+
+                    RemindersAdapter.this.notifyDataSetChanged();
+
+
+                }
+                while (secMyRemCursor.moveToNext()) {
+
+                    if (secMyDbCursor.getString(5).equals("1")) {
+
+                        if (!secMyDbCursor.getString(0).equals(secMyRemCursor.getString(1)) || secMyRemCursor.getCount() == 0) {
+                            myDB.updateAlarmNum(secMyDbCursor.getString(0), "0");
+                        }
+                        RemindersAdapter.this.notifyDataSetChanged();
+                    }
+                }
+                RemindersAdapter.this.notifyDataSetChanged();
+            }
+            secMyDbCursor.close();
+            secMyRemCursor.close();
+
+            while (thirdCursorEvents.moveToNext())
+            {
+                String cursor_event_id = thirdCursorEvents.getString(0);
+                thirdCursorReminders.moveToPosition(-1);
+                while(thirdCursorReminders.moveToNext())
+                {
+                    if (cursor_event_id.equals(thirdCursorReminders.getString(1)))
+                    {
+                        myDB.updateEventAlarm(cursor_event_id,"1");
+                        break;
+                    }else
+                    {
+                        myDB.updateEventAlarm(cursor_event_id,"0");
+
+                    }
+
+
+
+                }
+            }
+
+            thirdCursorEvents.close();
+            thirdCursorReminders.close();
+
+
+            notifyDataSetChanged();
+            RemindersAdapter.this.notifyDataSetChanged();
+
+            myDB.close();
+
+
         });
 
     }

@@ -1,11 +1,12 @@
 package com.example.calendarcapital;
 
 
-import android.app.AlarmManager;
+
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -13,33 +14,27 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.util.Log;
-
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
-    private String event;
-    private String comment;
     private String text;
     public static Ringtone r;
-    private static final int SNOOZE_MINUTES = 5;
 
     private Vibrator vibrator;
-    public static final String ACTION_STOP_RINGTONE = "com.example.app.ACTION_STOP_RINGTONE";
-    private boolean isNotificationDeleted;
+
 
     public static final int NOTIFICATION_ID = 123;
-    private AlarmManager alarmManager;
 
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle b = intent.getExtras();
-        event = "";
-        comment = "";
-isNotificationDeleted = false;
+        String event = "";
+        String comment;
+
 
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         if (vibrator != null && vibrator.hasVibrator()) {
@@ -56,15 +51,14 @@ isNotificationDeleted = false;
             text = "Υπενθύμιση για το συμβάν: " + "\n" + event + "\n" + "Σχόλια: " + "\n" + comment;
         }
 
-        Intent activityIntent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, activityIntent, 0);
+
+
 
         Intent stopIntent = new Intent(context, StopReceiver.class);
-        PendingIntent stopPendingIntent = PendingIntent.getBroadcast(context, 0, stopIntent, 0);
+        PendingIntent stopPendingIntent = PendingIntent.getBroadcast(context, 0, stopIntent, PendingIntent.FLAG_IMMUTABLE);
 
 
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"myandroid")
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "myandroid")
                 .setSmallIcon(R.drawable.alarm)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentTitle(event)
@@ -75,8 +69,17 @@ isNotificationDeleted = false;
                 .setDefaults(NotificationCompat.DEFAULT_ALL);
 
 
-
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         r = RingtoneManager.getRingtone(context, notification);
@@ -102,6 +105,7 @@ isNotificationDeleted = false;
     public void getInApplication(Context context)
     {
         Intent i = new Intent(context.getApplicationContext(),MainActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
     }
 

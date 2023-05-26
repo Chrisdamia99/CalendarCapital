@@ -15,7 +15,7 @@
             android:id="@+id/customRepeatBackButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:backgroundTint="@color/lightgray"
+            android:backgroundTint="@color/lightGray"
             android:src="@drawable/back_to_activity_blue" />
 
         <ImageButton
@@ -23,8 +23,9 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="10dp"
-            android:backgroundTint="@color/lightgray"
-            android:src="@drawable/refresh" />
+            android:backgroundTint="@color/lightGray"
+            android:src="@drawable/refresh"
+            android:layout_marginLeft="10dp" />
 
     </LinearLayout>
 
@@ -52,7 +53,9 @@
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                app:drawableTint="@color/primaryLightTirquiso" />
+                app:drawableTint="@color/primaryLightTirquiso"
+                android:layout_marginLeft="15dp"
+                android:gravity="center_horizontal" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -72,7 +75,9 @@
                     android:inputType="number"
                     android:maxLines="1"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="10dp" />
 
 
                 <Spinner
@@ -111,14 +116,17 @@
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                app:drawableTint="@color/primaryLightTirquiso" />
+                app:drawableTint="@color/primaryLightTirquiso"
+                android:layout_marginLeft="15dp"
+                android:gravity="center_horizontal" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginLeft="15dp">
 
                 <TextView
                     android:id="@+id/sundayChoice"
@@ -130,7 +138,7 @@
                     android:text="Κ"
                     android:textColor="@color/black"
                     android:textSize="12sp"
-                  />
+                    android:layout_marginRight="5dp" />
 
                 <TextView
                     android:id="@+id/mondayChoice"
@@ -142,7 +150,7 @@
                     android:text="Δ"
                     android:textColor="@color/black"
                     android:textSize="12sp"
-                     />
+                    android:layout_marginRight="5dp" />
 
                 <TextView
                     android:id="@+id/tuesdayChoice"
@@ -155,7 +163,7 @@
 
                     android:textColor="@color/black"
                     android:textSize="12sp"
-                   />
+                    android:layout_marginRight="5dp" />
 
                 <TextView
                     android:id="@+id/wednesdayChoice"
@@ -167,7 +175,7 @@
                     android:text="Τ"
                     android:textColor="@color/black"
                     android:textSize="12sp"
-                    />
+                    android:layout_marginRight="5dp" />
 
                 <TextView
                     android:id="@+id/thursdayChoice"
@@ -179,7 +187,7 @@
                     android:text="Π"
                     android:textColor="@color/black"
                     android:textSize="12sp"
-                     />
+                    android:layout_marginRight="5dp" />
 
                 <TextView
                     android:id="@+id/fridayChoice"
@@ -191,7 +199,7 @@
                     android:text="Π"
                     android:textColor="@color/black"
                     android:textSize="12sp"
-                     />
+                    android:layout_marginRight="5dp" />
 
                 <TextView
                     android:id="@+id/saturdayChoice"
@@ -218,7 +226,8 @@
                 android:id="@+id/monthChoiceSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp" />
+                android:layout_marginStart="15dp"
+                android:layout_marginLeft="15dp" />
         </LinearLayout>
 
         <View
@@ -245,7 +254,9 @@
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                app:drawableTint="@color/primaryLightTirquiso" />
+                app:drawableTint="@color/primaryLightTirquiso"
+                android:gravity="center_horizontal"
+                android:layout_marginLeft="15dp" />
 
 
             <View
@@ -287,7 +298,10 @@
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         app:drawableTint="@color/primaryLightTirquiso"
-                        app:drawableLeftCompat="@drawable/date" />
+                        app:drawableLeftCompat="@drawable/date"
+                        android:layout_toRightOf="@id/untilRB"
+                        android:gravity="center_horizontal"
+                        android:layout_marginLeft="60dp" />
 
                     <ImageButton
                         android:id="@+id/cancelUntil"
@@ -297,7 +311,9 @@
                         android:layout_toEndOf="@id/untilDate"
                         android:background="@drawable/cancel_reminder"
                         android:backgroundTint="@color/primaryLightTirquiso"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        android:layout_marginLeft="8dp"
+                        android:layout_toRightOf="@id/untilDate" />
 
 
                 </RelativeLayout>
@@ -332,7 +348,9 @@
                         android:inputType="number"
                         android:maxLines="1"
                         android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        android:layout_toRightOf="@id/repeatCounterRB"
+                        android:layout_marginLeft="60dp" />
 
                 </RelativeLayout>
 

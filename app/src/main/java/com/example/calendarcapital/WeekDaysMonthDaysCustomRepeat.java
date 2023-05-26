@@ -1,5 +1,9 @@
 package com.example.calendarcapital;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -15,17 +19,19 @@ public static int weekEventsCounterRepeatCounter;
        ArrayList<LocalDate> mondaysList = new ArrayList<>();
 
         flagDate = dateToCustom;
-        while (!flagDate.isAfter(untilRepeatDate))
-        {
-            if (flagDate.getDayOfWeek() == DayOfWeek.MONDAY)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            while (!flagDate.isAfter(untilRepeatDate))
             {
-                mondaysList.add(flagDate);
+                if (flagDate.getDayOfWeek() == DayOfWeek.MONDAY)
+                {
+                    mondaysList.add(flagDate);
+                }
+                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+                {
+                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
+                }
+                flagDate =flagDate.plusDays(1);
             }
-            if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
-            {
-                flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
-            }
-            flagDate =flagDate.plusDays(1);
         }
 
         return mondaysList;
@@ -35,17 +41,19 @@ public static int weekEventsCounterRepeatCounter;
          ArrayList<LocalDate> tuesdayList = new ArrayList<>();
 
         flagDate = dateToCustom;
-        while (!flagDate.isAfter(untilRepeatDate))
-        {
-            if (flagDate.getDayOfWeek() == DayOfWeek.TUESDAY)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            while (!flagDate.isAfter(untilRepeatDate))
             {
-                tuesdayList.add(flagDate);
+                if (flagDate.getDayOfWeek() == DayOfWeek.TUESDAY)
+                {
+                    tuesdayList.add(flagDate);
+                }
+                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+                {
+                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
+                }
+                flagDate =flagDate.plusDays(1);
             }
-            if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
-            {
-                flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
-            }
-            flagDate =flagDate.plusDays(1);
         }
 
         return tuesdayList;
@@ -55,17 +63,19 @@ public static int weekEventsCounterRepeatCounter;
          ArrayList<LocalDate> wednesdayList = new ArrayList<>();
 
         flagDate = dateToCustom;
-        while (!flagDate.isAfter(untilRepeatDate))
-        {
-            if (flagDate.getDayOfWeek() == DayOfWeek.WEDNESDAY)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            while (!flagDate.isAfter(untilRepeatDate))
             {
-                wednesdayList.add(flagDate);
+                if (flagDate.getDayOfWeek() == DayOfWeek.WEDNESDAY)
+                {
+                    wednesdayList.add(flagDate);
+                }
+                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+                {
+                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
+                }
+                flagDate =flagDate.plusDays(1);
             }
-            if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
-            {
-                flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
-            }
-            flagDate =flagDate.plusDays(1);
         }
         return wednesdayList;
     }
@@ -74,17 +84,19 @@ public static int weekEventsCounterRepeatCounter;
          ArrayList<LocalDate> thursdayList = new ArrayList<>();
 
         flagDate = dateToCustom;
-        while (!flagDate.isAfter(untilRepeatDate))
-        {
-            if (flagDate.getDayOfWeek() == DayOfWeek.THURSDAY)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            while (!flagDate.isAfter(untilRepeatDate))
             {
-                thursdayList.add(flagDate);
+                if (flagDate.getDayOfWeek() == DayOfWeek.THURSDAY)
+                {
+                    thursdayList.add(flagDate);
+                }
+                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+                {
+                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
+                }
+                flagDate =flagDate.plusDays(1);
             }
-            if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
-            {
-                flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
-            }
-            flagDate =flagDate.plusDays(1);
         }
         return thursdayList;
     }
@@ -93,17 +105,19 @@ public static int weekEventsCounterRepeatCounter;
          ArrayList<LocalDate> fridayList = new ArrayList<>();
 
         flagDate = dateToCustom;
-        while (!flagDate.isAfter(untilRepeatDate))
-        {
-            if (flagDate.getDayOfWeek() == DayOfWeek.FRIDAY)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            while (!flagDate.isAfter(untilRepeatDate))
             {
-                fridayList.add(flagDate);
+                if (flagDate.getDayOfWeek() == DayOfWeek.FRIDAY)
+                {
+                    fridayList.add(flagDate);
+                }
+                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+                {
+                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
+                }
+                flagDate =flagDate.plusDays(1);
             }
-            if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
-            {
-                flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
-            }
-            flagDate =flagDate.plusDays(1);
         }
 
         return fridayList;
@@ -113,22 +127,24 @@ public static int weekEventsCounterRepeatCounter;
          ArrayList<LocalDate> saturdayList = new ArrayList<>();
 
         flagDate = dateToCustom;
-        while (!flagDate.isAfter(untilRepeatDate))
-        {
-
-            if (flagDate.getDayOfWeek() == DayOfWeek.SATURDAY)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            while (!flagDate.isAfter(untilRepeatDate))
             {
-                saturdayList.add(flagDate);
+
+                if (flagDate.getDayOfWeek() == DayOfWeek.SATURDAY)
+                {
+                    saturdayList.add(flagDate);
+                }
+
+                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+                {
+                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
+                }
+                    flagDate =flagDate.plusDays(1);
+
+
+
             }
-
-            if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
-            {
-                flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
-            }
-                flagDate =flagDate.plusDays(1);
-
-
-
         }
         return saturdayList;
     }
@@ -137,17 +153,19 @@ public static int weekEventsCounterRepeatCounter;
         ArrayList<LocalDate> sundayList = new ArrayList<>();
 
         flagDate = dateToCustom;
-        while (!flagDate.isAfter(untilRepeatDate))
-        {
-            if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            while (!flagDate.isAfter(untilRepeatDate))
             {
-                sundayList.add(flagDate);
+                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+                {
+                    sundayList.add(flagDate);
+                }
+                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+                {
+                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
+                }
+                flagDate =flagDate.plusDays(1);
             }
-            if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
-            {
-                flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
-            }
-            flagDate =flagDate.plusDays(1);
         }
         return sundayList;
     }
@@ -198,17 +216,25 @@ public static int weekEventsCounterRepeatCounter;
     public static boolean checkIfIsLastWeekOfMonth(LocalDate dateToCustom)
     {
 
-        int dayOfMonth = dateToCustom.getDayOfMonth();
-        int daysInMonth = dateToCustom.getMonth().length(dateToCustom.isLeapYear());
-        int dayOfWeek = dateToCustom.getDayOfWeek().getValue();
-
-        boolean isLastWeek = (dayOfMonth > daysInMonth - 7) && (dayOfWeek <= DayOfWeek.SATURDAY.getValue());
-
-        if (isLastWeek) {
-        return true;
-        } else {
-            return false;
+        int dayOfMonth = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            dayOfMonth = dateToCustom.getDayOfMonth();
         }
+        int daysInMonth = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            daysInMonth = dateToCustom.getMonth().length(dateToCustom.isLeapYear());
+        }
+        int dayOfWeek = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            dayOfWeek = dateToCustom.getDayOfWeek().getValue();
+        }
+
+        boolean isLastWeek = false;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            isLastWeek = (dayOfMonth > daysInMonth - 7) && (dayOfWeek <= DayOfWeek.SATURDAY.getValue());
+        }
+
+        return isLastWeek;
     }
 
     public static String numberOfWeekDateMonth(LocalDate dateToCustom)
@@ -216,19 +242,27 @@ public static int weekEventsCounterRepeatCounter;
 
 
         // Get the day of the month
-        int dayOfMonth = dateToCustom.getDayOfMonth();
+        int dayOfMonth = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            dayOfMonth = dateToCustom.getDayOfMonth();
+        }
 
         // Calculate the week of the month
         int weekOfMonth = (dayOfMonth - 1) / 7 + 1;
 
-        if (dateToCustom.getDayOfWeek() == DayOfWeek.SATURDAY)
-        {
-            return "Μηνιαία κάθε " + weekOfMonth +"ο" + " " + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")) + ".";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (dateToCustom.getDayOfWeek() == DayOfWeek.SATURDAY)
+            {
+                return "Μηνιαία κάθε " + weekOfMonth +"ο" + " " + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")) + ".";
 
+            }else
+            {
+                return "Μηνιαία κάθε " + weekOfMonth +"η" + " " + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")) + ".";
+
+            }
         }else
         {
-            return "Μηνιαία κάθε " + weekOfMonth +"η" + " " + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")) + ".";
-
+            return null;
         }
     }
 
@@ -237,22 +271,31 @@ public static int weekEventsCounterRepeatCounter;
 
 
         // Get the day of the month
-        int dayOfMonth = dateToCustom.getDayOfMonth();
+        int dayOfMonth = 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            dayOfMonth = dateToCustom.getDayOfMonth();
+        }
 
         // Calculate the week of the month
         int weekOfMonth = (dayOfMonth - 1) / 7 + 1;
 
-        if (dateToCustom.getDayOfWeek() == DayOfWeek.SATURDAY)
-        {
-            return "κάθε " + weekOfMonth +"o" + " " + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR"));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (dateToCustom.getDayOfWeek() == DayOfWeek.SATURDAY)
+            {
+                return "κάθε " + weekOfMonth +"o" + " " + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR"));
 
+            }else
+            {
+                return "κάθε " + weekOfMonth +"η" + " " + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR"));
+
+            }
         }else
         {
-            return "κάθε " + weekOfMonth +"η" + " " + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR"));
-
+            return null;
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public static ArrayList<LocalDate> addDaysOfMonthChosenUntilRepeat(LocalDate untilRepeatDate, LocalDate dateToCustom, LocalDate flagDate,
                                                                        int monthSpinnerSelection, int repeatSeperateCounterInt)
     {
@@ -261,47 +304,63 @@ public static int weekEventsCounterRepeatCounter;
         if (monthSpinnerSelection==0)
         {
             flagDate = dateToCustom;
-            while (!flagDate.isAfter(untilRepeatDate))
-            {
-               if (flagDate.getDayOfMonth() == dateToCustom.getDayOfMonth())
-               {
-                   monthDaysChoice.add(flagDate);
-               }
-               if ((YearMonth.from(flagDate).lengthOfMonth()-flagDate.getDayOfMonth())==0)
-               {
-                   flagDate =  flagDate.plusMonths(repeatSeperateCounterInt);
-               }
-                flagDate = flagDate.plusDays(1);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                while (!flagDate.isAfter(untilRepeatDate))
+                {
+                   if (flagDate.getDayOfMonth() == dateToCustom.getDayOfMonth())
+                   {
+                       monthDaysChoice.add(flagDate);
+                   }
+                   if ((YearMonth.from(flagDate).lengthOfMonth()-flagDate.getDayOfMonth())==0)
+                   {
+                       flagDate =  flagDate.plusMonths(repeatSeperateCounterInt);
+                   }
+                    flagDate = flagDate.plusDays(1);
 
+                }
             }
         }else if (monthSpinnerSelection==1)
         {
-            int dayOfMonth = dateToCustom.getDayOfMonth();
+            int dayOfMonth = 0;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                dayOfMonth = dateToCustom.getDayOfMonth();
+            }
             int weekOfMonth = (dayOfMonth - 1) / 7 + 1;
-            DayOfWeek dayOfWeek = dateToCustom.getDayOfWeek();
+            DayOfWeek dayOfWeek = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                dayOfWeek = dateToCustom.getDayOfWeek();
+            }
 
             flagDate = dateToCustom;
-            while (!flagDate.isAfter(untilRepeatDate))
-            {   int dayOfMonthFlag = flagDate.getDayOfMonth();
-                int weekOfMonthFlag = (dayOfMonthFlag - 1) / 7 + 1;
-                DayOfWeek dayOfWeekFlag = flagDate.getDayOfWeek();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                while (!flagDate.isAfter(untilRepeatDate))
+                {
+                    int dayOfMonthFlag = 0;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        dayOfMonthFlag = flagDate.getDayOfMonth();
+                    }
+                    int weekOfMonthFlag = (dayOfMonthFlag - 1) / 7 + 1;
+                    DayOfWeek dayOfWeekFlag = null;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        dayOfWeekFlag = flagDate.getDayOfWeek();
+                    }
 
-                if (weekOfMonth==weekOfMonthFlag && dayOfWeek==dayOfWeekFlag)
-                {
-                    monthDaysChoice.add(flagDate);
+                    if (weekOfMonth==weekOfMonthFlag && dayOfWeek==dayOfWeekFlag)
+                    {
+                        monthDaysChoice.add(flagDate);
+                    }
+                    if ((YearMonth.from(flagDate).lengthOfMonth()-flagDate.getDayOfMonth())==0)
+                    {
+                        flagDate =     flagDate.plusMonths(repeatSeperateCounterInt);
+                    }
+                    flagDate =   flagDate.plusDays(1);
                 }
-                if ((YearMonth.from(flagDate).lengthOfMonth()-flagDate.getDayOfMonth())==0)
-                {
-                    flagDate =     flagDate.plusMonths(repeatSeperateCounterInt);
-                }
-                flagDate =   flagDate.plusDays(1);
             }
 
 
         }else if (monthSpinnerSelection==2)
         {
-            int dayOfMonth = dateToCustom.getDayOfMonth();
-            int daysInMonth = dateToCustom.getMonth().length(dateToCustom.isLeapYear());
+
             int dayOfWeek = dateToCustom.getDayOfWeek().getValue();
 
 
@@ -335,13 +394,13 @@ public static int weekEventsCounterRepeatCounter;
     {ArrayList<LocalDate> mondaysList = new ArrayList<>();
 
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (flagDate.getDayOfWeek() == DayOfWeek.MONDAY)
             {
                 mondaysList.add(flagDate);
                 weekEventsCounterRepeatCounter++;
             }
-
-
+        }
 
 
         return mondaysList;
@@ -350,13 +409,13 @@ public static int weekEventsCounterRepeatCounter;
     {ArrayList<LocalDate> tuesdayList = new ArrayList<>();
 
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (flagDate.getDayOfWeek() == DayOfWeek.TUESDAY)
             {
                 tuesdayList.add(flagDate);
                 weekEventsCounterRepeatCounter++;
             }
-
-
+        }
 
 
         return tuesdayList;
@@ -365,13 +424,13 @@ public static int weekEventsCounterRepeatCounter;
     {ArrayList<LocalDate> wednesdayList = new ArrayList<>();
 
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (flagDate.getDayOfWeek() == DayOfWeek.WEDNESDAY)
             {
                 wednesdayList.add(flagDate);
                 weekEventsCounterRepeatCounter++;
             }
-
-
+        }
 
 
         return wednesdayList;
@@ -380,13 +439,13 @@ public static int weekEventsCounterRepeatCounter;
     {ArrayList<LocalDate> thursdayList = new ArrayList<>();
 
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (flagDate.getDayOfWeek() == DayOfWeek.THURSDAY)
             {
                 thursdayList.add(flagDate);
                 weekEventsCounterRepeatCounter++;
             }
-
-
+        }
 
 
         return thursdayList;
@@ -395,13 +454,13 @@ public static int weekEventsCounterRepeatCounter;
     {ArrayList<LocalDate> fridayList = new ArrayList<>();
 
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (flagDate.getDayOfWeek() == DayOfWeek.FRIDAY)
             {
                 fridayList.add(flagDate);
                 weekEventsCounterRepeatCounter++;
             }
-
-
+        }
 
 
         return fridayList;
@@ -411,13 +470,13 @@ public static int weekEventsCounterRepeatCounter;
         ArrayList<LocalDate> saturdayList = new ArrayList<>();
 
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (flagDate.getDayOfWeek() == DayOfWeek.SATURDAY)
             {
                 saturdayList.add(flagDate);
                 weekEventsCounterRepeatCounter++;
             }
-
-
+        }
 
 
         return saturdayList;
@@ -427,13 +486,13 @@ public static int weekEventsCounterRepeatCounter;
         ArrayList<LocalDate> sundayList = new ArrayList<>();
 
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
             {
                 sundayList.add(flagDate);
                 weekEventsCounterRepeatCounter++;
             }
-
-
+        }
 
 
         return sundayList;
@@ -473,11 +532,15 @@ public static int weekEventsCounterRepeatCounter;
             if (sundayFlag) {
                 customDatesToSaveLocalDate.addAll(sundayChosenRepeatCounter(flagDate));
             }
-            if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
-            {
-                flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+                {
+                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
+                }
             }
-            flagDate = flagDate.plusDays(1);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                flagDate = flagDate.plusDays(1);
+            }
         }
         return customDatesToSaveLocalDate;
     }
@@ -493,28 +556,46 @@ public static int weekEventsCounterRepeatCounter;
             flagDate = dateToCustom;
             while (weekEventsCounterRepeatCounter!=repeatCounterIntEnd) {
                 {
-                    if (flagDate.getDayOfMonth() == dateToCustom.getDayOfMonth()) {
-                        monthDaysChoice.add(flagDate);
-                        weekEventsCounterRepeatCounter++;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        if (flagDate.getDayOfMonth() == dateToCustom.getDayOfMonth()) {
+                            monthDaysChoice.add(flagDate);
+                            weekEventsCounterRepeatCounter++;
+                        }
                     }
-                    if ((YearMonth.from(flagDate).lengthOfMonth() - flagDate.getDayOfMonth()) == 0) {
-                        flagDate = flagDate.plusMonths(repeatSeperateCounterInt);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        if ((YearMonth.from(flagDate).lengthOfMonth() - flagDate.getDayOfMonth()) == 0) {
+                            flagDate = flagDate.plusMonths(repeatSeperateCounterInt);
+                        }
                     }
-                    flagDate = flagDate.plusDays(1);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        flagDate = flagDate.plusDays(1);
+                    }
 
                 }
             }
         }else if (monthSpinnerSelection==1)
         {
-            int dayOfMonth = dateToCustom.getDayOfMonth();
+            int dayOfMonth = 0;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                dayOfMonth = dateToCustom.getDayOfMonth();
+            }
             int weekOfMonth = (dayOfMonth - 1) / 7 + 1;
-            DayOfWeek dayOfWeek = dateToCustom.getDayOfWeek();
+            DayOfWeek dayOfWeek = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                dayOfWeek = dateToCustom.getDayOfWeek();
+            }
 
             flagDate = dateToCustom;
             while (weekEventsCounterRepeatCounter!=repeatCounterIntEnd) {
-                int dayOfMonthFlag = flagDate.getDayOfMonth();
+                int dayOfMonthFlag = 0;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    dayOfMonthFlag = flagDate.getDayOfMonth();
+                }
                 int weekOfMonthFlag = (dayOfMonthFlag - 1) / 7 + 1;
-                DayOfWeek dayOfWeekFlag = flagDate.getDayOfWeek();
+                DayOfWeek dayOfWeekFlag = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    dayOfWeekFlag = flagDate.getDayOfWeek();
+                }
 
                 if (weekOfMonth==weekOfMonthFlag && dayOfWeek==dayOfWeekFlag)
                 {
@@ -522,38 +603,61 @@ public static int weekEventsCounterRepeatCounter;
                     weekEventsCounterRepeatCounter++;
 
                 }
-                if ((YearMonth.from(flagDate).lengthOfMonth()- flagDate.getDayOfMonth())==0)
-                {
-                    flagDate =     flagDate.plusMonths(repeatSeperateCounterInt);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    if ((YearMonth.from(flagDate).lengthOfMonth()- flagDate.getDayOfMonth())==0)
+                    {
+                        flagDate =     flagDate.plusMonths(repeatSeperateCounterInt);
+                    }
                 }
-                flagDate =   flagDate.plusDays(1);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    flagDate =   flagDate.plusDays(1);
+                }
             }
 
 
         }else if (monthSpinnerSelection==2)
         {
 
-            int dayOfWeek = dateToCustom.getDayOfWeek().getValue();
+            int dayOfWeek = 0;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                dayOfWeek = dateToCustom.getDayOfWeek().getValue();
+            }
 
 
             flagDate = dateToCustom;
             while (weekEventsCounterRepeatCounter!=repeatCounterIntEnd) {
-                int dayOfMonthFlag = flagDate.getDayOfMonth();
-                int daysInMonthFlag = flagDate.getMonth().length(flagDate.isLeapYear());
-                int dayOfWeekFlag = flagDate.getDayOfWeek().getValue();
+                int dayOfMonthFlag = 0;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    dayOfMonthFlag = flagDate.getDayOfMonth();
+                }
+                int daysInMonthFlag = 0;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    daysInMonthFlag = flagDate.getMonth().length(flagDate.isLeapYear());
+                }
+                int dayOfWeekFlag = 0;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    dayOfWeekFlag = flagDate.getDayOfWeek().getValue();
+                }
 
-                boolean isLastWeekFlag = (dayOfMonthFlag > daysInMonthFlag - 7) && (dayOfWeekFlag <= DayOfWeek.SATURDAY.getValue());
+                boolean isLastWeekFlag = false;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    isLastWeekFlag = (dayOfMonthFlag > daysInMonthFlag - 7) && (dayOfWeekFlag <= DayOfWeek.SATURDAY.getValue());
+                }
                 if (isLastWeekFlag && dayOfWeekFlag==dayOfWeek)
                 {
                     monthDaysChoice.add(flagDate);
                     weekEventsCounterRepeatCounter++;
                 }
 
-                if ((YearMonth.from(flagDate).lengthOfMonth()- flagDate.getDayOfMonth())==0)
-                {
-                    flagDate =     flagDate.plusMonths(repeatSeperateCounterInt);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    if ((YearMonth.from(flagDate).lengthOfMonth()- flagDate.getDayOfMonth())==0)
+                    {
+                        flagDate =     flagDate.plusMonths(repeatSeperateCounterInt);
+                    }
                 }
-                flagDate = flagDate.plusDays(1);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    flagDate = flagDate.plusDays(1);
+                }
             }
 
         }
@@ -574,27 +678,31 @@ public static int weekEventsCounterRepeatCounter;
         boolean saturdayFlag=false;
         boolean sundayFlag=false;
 
-        if (dateToCustom.getDayOfWeek() == DayOfWeek.MONDAY)
-        {
-            mondayFlag=true;
-        }else if (dateToCustom.getDayOfWeek() == DayOfWeek.TUESDAY)
-        {
-            tuesdayFlag=true;
-        }else if (dateToCustom.getDayOfWeek() == DayOfWeek.WEDNESDAY)
-        {
-            wednesdayFlag=true;
-        }else if (dateToCustom.getDayOfWeek() == DayOfWeek.THURSDAY)
-        {
-            thursdayFlag=true;
-        }else if (dateToCustom.getDayOfWeek() == DayOfWeek.FRIDAY)
-        {
-            fridayFlag=true;
-        }else if (dateToCustom.getDayOfWeek() == DayOfWeek.SATURDAY)
-        {
-            saturdayFlag=true;
-        }else if (dateToCustom.getDayOfWeek() == DayOfWeek.SUNDAY)
-        {
-            sundayFlag=true;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (dateToCustom.getDayOfWeek() == DayOfWeek.MONDAY)
+            {
+                mondayFlag=true;
+            }else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (dateToCustom.getDayOfWeek() == DayOfWeek.TUESDAY)
+                {
+                    tuesdayFlag=true;
+                }else if (dateToCustom.getDayOfWeek() == DayOfWeek.WEDNESDAY)
+                {
+                    wednesdayFlag=true;
+                }else if (dateToCustom.getDayOfWeek() == DayOfWeek.THURSDAY)
+                {
+                    thursdayFlag=true;
+                }else if (dateToCustom.getDayOfWeek() == DayOfWeek.FRIDAY)
+                {
+                    fridayFlag=true;
+                }else if (dateToCustom.getDayOfWeek() == DayOfWeek.SATURDAY)
+                {
+                    saturdayFlag=true;
+                }else if (dateToCustom.getDayOfWeek() == DayOfWeek.SUNDAY)
+                {
+                    sundayFlag=true;
+                }
+            }
         }
         ArrayList<LocalDate> customDatesToSaveLocalDate = new ArrayList<>();
         if (mondayFlag)
@@ -646,27 +754,29 @@ public static int weekEventsCounterRepeatCounter;
         boolean fridayFlag=false;
         boolean saturdayFlag=false;
         boolean sundayFlag=false;
-        if (dateToCustom.getDayOfWeek() == DayOfWeek.MONDAY)
-        {
-            mondayFlag=true;
-        }else if (dateToCustom.getDayOfWeek() == DayOfWeek.TUESDAY)
-        {
-            tuesdayFlag=true;
-        }else if (dateToCustom.getDayOfWeek() == DayOfWeek.WEDNESDAY)
-        {
-            wednesdayFlag=true;
-        }else if (dateToCustom.getDayOfWeek() == DayOfWeek.THURSDAY)
-        {
-            thursdayFlag=true;
-        }else if (dateToCustom.getDayOfWeek() == DayOfWeek.FRIDAY)
-        {
-            fridayFlag=true;
-        }else if (dateToCustom.getDayOfWeek() == DayOfWeek.SATURDAY)
-        {
-            saturdayFlag=true;
-        }else if (dateToCustom.getDayOfWeek() == DayOfWeek.SUNDAY)
-        {
-            sundayFlag=true;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (dateToCustom.getDayOfWeek() == DayOfWeek.MONDAY)
+            {
+                mondayFlag=true;
+            }else if (dateToCustom.getDayOfWeek() == DayOfWeek.TUESDAY)
+            {
+                tuesdayFlag=true;
+            }else if (dateToCustom.getDayOfWeek() == DayOfWeek.WEDNESDAY)
+            {
+                wednesdayFlag=true;
+            }else if (dateToCustom.getDayOfWeek() == DayOfWeek.THURSDAY)
+            {
+                thursdayFlag=true;
+            }else if (dateToCustom.getDayOfWeek() == DayOfWeek.FRIDAY)
+            {
+                fridayFlag=true;
+            }else if (dateToCustom.getDayOfWeek() == DayOfWeek.SATURDAY)
+            {
+                saturdayFlag=true;
+            }else if (dateToCustom.getDayOfWeek() == DayOfWeek.SUNDAY)
+            {
+                sundayFlag=true;
+            }
         }
         while (weekEventsCounterRepeatCounter!=repeatCounterIntEnd) {
             if (mondayFlag) {
@@ -696,11 +806,15 @@ public static int weekEventsCounterRepeatCounter;
             if (sundayFlag) {
                 customDatesToSaveLocalDate.addAll(sundayChosenRepeatCounter(flagDate));
             }
-            if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
-            {
-                flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+                {
+                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
+                }
             }
-            flagDate = flagDate.plusDays(1);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                flagDate = flagDate.plusDays(1);
+            }
         }
         return customDatesToSaveLocalDate;
     }

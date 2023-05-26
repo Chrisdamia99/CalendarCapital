@@ -1197,3 +1197,90 @@
 
 </LinearLayout>
 </LinearLayout>
+---------------------------Refresh MainActivity--------------------------------
+
+
+//            finish();
+//            Intent i = getIntent();
+//            overridePendingTransition(0, 0);
+//            overridePendingTransition(0, 0);
+//
+//
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                tempSelectedDate = LocalDate.now();
+//            }
+//            String myTemp = tempSelectedDate.toString();
+//            i.putExtra("tempDate", myTemp);
+//            startActivity(getIntent());
+//            setMonthView();
+
+-------------CalendarUtils DAYSINMONTHARRAY------------------------
+//                if (dayOfWeek < 6 && daysInMonthArray.size() == 41) {
+//
+//                    daysInMonthArray.remove(40);
+//                    daysInMonthArray.remove(39);
+//                    daysInMonthArray.remove(38);
+//                    daysInMonthArray.remove(37);
+//                    daysInMonthArray.remove(36);
+//                    daysInMonthArray.remove(35);
+//                    daysInMonthArray.remove(34);
+//
+//
+//                }
+//                else if (dayOfWeek < 6 && daysInMonthArray.size() == 42) {
+//
+//                    daysInMonthArray.remove(41);
+//                    daysInMonthArray.remove(40);
+//                    daysInMonthArray.remove(39);
+//                    daysInMonthArray.remove(38);
+//                    daysInMonthArray.remove(37);
+//                    daysInMonthArray.remove(36);
+//                    daysInMonthArray.remove(35);
+//
+//
+//                }
+//                else if (daysInMonthArray.size() == 35) {
+//                    daysInMonthArray.remove(34);
+//                    daysInMonthArray.add(daysInMonthArray.get(33).plusDays(1));
+//                }
+
+---------------------MAIN ACTIVITY setAllEvents---------------------
+ @SuppressLint("RtlHardcoded")
+    private void setAllEvents() {
+
+
+        hourAdapter = new HourAdapter(getApplicationContext(), AllEventsList.hourEventListFromDatabaseToShowAllEvents(getApplicationContext(), myDB));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            hourAdapter.sort(Comparator.comparing(o -> o.events.get(0).getTime()));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            hourAdapter.sort(Comparator.comparing(o -> o.events.get(0).getDate()));
+        }
+
+        hourAdapter.notifyDataSetChanged();
+
+        ViewGroup.LayoutParams params = monthListView.getLayoutParams();
+        params.height = 1800;
+
+        monthListView.setLayoutParams(params);
+        monthListView.setDivider(new ColorDrawable(Color.TRANSPARENT));
+        monthListView.setAdapter(hourAdapter);
+
+
+        backMenuBtn.setVisibility(View.VISIBLE);
+        imageMenu.setVisibility(View.GONE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            backMenuBtn.setForegroundGravity(Gravity.LEFT);
+        }
+        monthListView.setVisibility(View.VISIBLE);
+//        monthYearText.setVisibility(View.GONE);
+        daysOfWeekDaily.setVisibility(View.GONE);
+        daysOfWeek.setVisibility(View.GONE);
+        prevMonth.setVisibility(View.GONE);
+        nextMonth.setVisibility(View.GONE);
+        calendarRecyclerView.setVisibility(View.GONE);
+        hourAdapter.notifyDataSetChanged();
+        myDB.close();
+
+
+    }

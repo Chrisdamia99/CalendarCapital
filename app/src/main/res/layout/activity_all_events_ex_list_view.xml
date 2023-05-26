@@ -30,7 +30,7 @@
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="18sp"
-            />
+            android:layout_marginLeft="100dp" />
 
 
         <ImageView
@@ -41,7 +41,7 @@
             app:srcCompat="@drawable/refresh"
             app:tint="@color/white"
 
-             />
+            android:layout_marginLeft="50dp" />
     </LinearLayout>
 
 

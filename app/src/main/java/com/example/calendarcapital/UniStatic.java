@@ -1,10 +1,7 @@
 package com.example.calendarcapital;
 
-import static com.example.calendarcapital.CalendarUtils.selectedDate;
 import static com.example.calendarcapital.CalendarUtils.stringToLocalDate;
-
 import android.database.Cursor;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -71,7 +68,10 @@ public class UniStatic {
             while (cursorEvent.moveToNext()) {
                 LocalDate cursorLocalDate = stringToLocalDate(cursorEvent.getString(3));
                 String cursorParentID = cursorEvent.getString(7);
-                int comparisonLocalDates = selectedDate.compareTo(cursorLocalDate);
+                int comparisonLocalDates = 0;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    comparisonLocalDates = selectedDate.compareTo(cursorLocalDate);
+                }
                 if (!(cursorParentID == null) && cursorParentID.equals(parent_id)) {
 
                     if (comparisonLocalDates < 0 || selectedDate.equals(cursorLocalDate)) {

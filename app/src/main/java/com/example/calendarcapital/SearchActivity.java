@@ -173,8 +173,7 @@ public class SearchActivity extends AppCompatActivity {
                 String myComment = myEvent.getEvents().get(0).getComment();
                 String myDate = String.valueOf(myEvent.getEvents().get(0).getDate());
                 String myTime = String.valueOf(myEvent.getEvents().get(0).getTime());
-                LocalDate EventDate = myEvent.getEvents().get(0).getDate();
-
+                String location = myEvent.getEvents().get(0).getLocation();
 
                 View viewFinal;
                 String title_upd = hourAdapter.getItem(position).getEvents().get(0).getName();
@@ -184,7 +183,7 @@ public class SearchActivity extends AppCompatActivity {
                 AlertDialog builderRepeatingDelete = new AlertDialog.Builder(SearchActivity.this).setView(rowView).setTitle("Διαγραφή συμβάντος").create();
 
 
-                viewFinal = CA.setAllFields(view1, myEventId, myTitle, myComment, myDate, myTime);
+                viewFinal = CA.setAllFields(view1, myEventId, myTitle, myComment, myDate, myTime,location);
 
 
                 builder.setView(viewFinal).
@@ -197,7 +196,7 @@ public class SearchActivity extends AppCompatActivity {
                                 String row_id = hourAdapter.getItem(position).getEvents().get(0).getId();
 
 
-                                if (parent_id_value == null && !myDB.checkNextRowHasParentId(Long.parseLong(row_id))) {
+                                if (parent_id_value == null && !myDB.checkNextRowHasParentId(Integer.parseInt(row_id))) {
                                     deleteEventNotRepeating(position, CA);
                                 } else {
                                     deleteEventIfRepeating(builderRepeatingDelete, position, CA, deleteAll, deleteOne, deleteFuture);

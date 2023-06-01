@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:id="@+id/mainLin"
     tools:context=".AllEventsExListView">
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/relExList">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
+        android:id="@+id/linTop"
         android:background="@color/primaryLightTirquiso"
         android:paddingStart="15dp"
         android:paddingEnd="15dp">
@@ -19,38 +22,75 @@
             android:id="@+id/allEventsBackButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_gravity="left|center"
             app:srcCompat="@drawable/back_toactivity"
             app:tint="@color/white"  />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="100dp"
-            android:gravity="center_horizontal"
-            android:text="@string/capital_calendar_title"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Πρόγραμμα"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="18sp"
-            android:layout_marginLeft="100dp" />
+             />
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+
+
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
         <ImageView
             android:id="@+id/allEventsRefreshButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginStart="50dp"
+            android:layout_gravity="right|center"
             app:srcCompat="@drawable/refresh"
             app:tint="@color/white"
-
-            android:layout_marginLeft="50dp" />
+             />
     </LinearLayout>
 
 
 
-
+    <LinearLayout
+    android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linTop">
     <ExpandableListView
         android:id="@+id/AllEventsExListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
 
-</LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
+
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatAddBtnMonthViewExList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="36dp"
+        android:layout_marginRight="36dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/primaryLightTirquiso"
+        android:src="@drawable/add"
+        android:tint="@color/white"
+        app:layout_anchor="@id/relExList"
+        app:layout_anchorGravity="bottom|end|right" />
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

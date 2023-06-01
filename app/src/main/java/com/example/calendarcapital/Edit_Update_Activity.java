@@ -54,9 +54,11 @@ import java.util.concurrent.TimeUnit;
 
 public class Edit_Update_Activity extends AppCompatActivity {
 
-    private EditText eventNameETUPD, eventCommentETUPD, repeatCounter;
+    private final MyDatabaseHelper myDB = new MyDatabaseHelper(this);
+
+    private EditText eventNameETUPD, eventCommentETUPD, repeatCounter,locationETUPD;
     private Spinner color_spinnerUPD;
-    private TextView eventDateTV, eventTimeTV, changeTimeTV, changeDateTV, addAlarmButtonUPD, addRepeatButtonUPD, repeatCountTvUPD;
+    private TextView eventDateTV, eventTimeTV, changeTimeTV, changeDateTV, addAlarmButtonUPD, addRepeatButtonUPD, repeatCountTvUPD,locationTVUPD;
     private TextView oneDayBefore, oneHourMinBefore, halfHourMinBefore, fifteenMinBefore, tenMinBefore, fiveMinBefore, customChoice;
     private TextView everyDay, everyWeek, everyMonth, everyYear, customRepeat;
     private View oneDayView, oneHourView, halfMinView, fifteenMinView, tenMinView, fiveMinView, aboveAlarmButtonUPD;
@@ -93,8 +95,9 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
     static ArrayList<String> editAllArray = new ArrayList<>();
     static ArrayList<String> editFutureArray = new ArrayList<>();
-    String stackNow;
+    static String stackNow;
     private static int color;
+    static String location;
 
 
     @Override
@@ -113,11 +116,11 @@ public class Edit_Update_Activity extends AppCompatActivity {
         {
             stackNow = getIntent().getStringExtra("stack");
         }
+        retrievetLocation();
         btnUpdate.setOnClickListener(v -> {
-            MyDatabaseHelper myDB = new MyDatabaseHelper(getApplicationContext());
 
 
-            if (parent_id == null && !myDB.checkNextRowHasParentId(Long.parseLong(id_row))) {
+            if (parent_id == null && !myDB.checkNextRowHasParentId(Integer.parseInt(id_row))) {
                 editAllArray.clear();
                 editFutureArray.clear();
                 updEventAction();
@@ -181,7 +184,12 @@ public class Edit_Update_Activity extends AppCompatActivity {
             cancelRepeatUPD.setVisibility(View.GONE);
             repeatCountTvUPD.setVisibility(View.GONE);
             addRepeatButtonUPD.setText(R.string.repeat_gr);
-            CustomRepeatActivity.customDatesToSaveLocalDate.clear();
+
+            if (!(CustomRepeatActivity.customDatesToSaveLocalDate == null))
+            {
+                CustomRepeatActivity.customDatesToSaveLocalDate.clear();
+            }
+
         });
         changeColor();
 
@@ -205,6 +213,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
         cancelRepeatUPD = findViewById(R.id.cancelRepeatUPD);
         repeatCountTvUPD = findViewById(R.id.repeatCountTvUPD);
         color_spinnerUPD = findViewById(R.id.changeColorSpinnerUPD);
+        locationTVUPD = findViewById(R.id.locationTVUPD);
+        locationETUPD = findViewById(R.id.locationETUPD);
 
     }
 
@@ -270,6 +280,31 @@ public class Edit_Update_Activity extends AppCompatActivity {
             }
         });
     }
+
+    private void retrievetLocation()
+    {
+        Cursor cursor = myDB.readAllEvents();
+
+        while (cursor.moveToNext())
+        {
+            if (cursor.getString(0).equals(id_row))
+            {
+                if (!(cursor.getString(9).equals(null)))
+                {
+                    location = cursor.getString(9);
+                    locationETUPD.setText(location.trim());
+
+                }else
+                {
+                    location = null;
+                    locationETUPD.setText("");
+                }
+
+                break;
+            }
+        }
+
+    }
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -295,9 +330,9 @@ public class Edit_Update_Activity extends AppCompatActivity {
         if (getIntent().hasExtra("comment")) {
             eventCommentETUPD.setText(getIntent().getStringExtra("comment"));
         }
+
     }
     private void editIfRepeating(AlertDialog builderRepeating, TextView editAll, TextView editOne, TextView editFuture) {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(getApplicationContext());
 
         builderRepeating.setOnShowListener(dialog -> {
             editAll.setOnClickListener(v -> {
@@ -331,12 +366,11 @@ public class Edit_Update_Activity extends AppCompatActivity {
     }
 
     private void getSetIntentData() {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(getApplicationContext());
 
 
         Cursor eventCursor = myDB.readAllEvents();
 
-        if (getIntent().hasExtra("id") && !getIntent().hasExtra("edit_array")) {
+        if (getIntent().hasExtra("id") ) {
             id_row = getIntent().getStringExtra("id");
 
             eventCursor.moveToPosition(-1);
@@ -449,11 +483,10 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
     public void showExistedRemindersFromDB() {
         String alarmDate;
-        MyDatabaseHelper myDb = new MyDatabaseHelper(Edit_Update_Activity.this);
 
 
-        Cursor cursor = myDb.readAllEvents();
-        Cursor cursorRem = myDb.readAllReminder();
+        Cursor cursor = myDB.readAllEvents();
+        Cursor cursorRem = myDB.readAllReminder();
 
         cursor.moveToPosition(-1);
         while (cursor.moveToNext()) {
@@ -518,7 +551,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
         }
         cursor.close();
         cursorRem.close();
-        myDb.close();
+        myDB.close();
 
 
     }
@@ -1150,6 +1183,10 @@ public class Edit_Update_Activity extends AppCompatActivity {
                     repeatState = 5;
                     Intent iCustomRepeat = new Intent(Edit_Update_Activity.this, CustomRepeatActivity.class);
                     String flagForEditUpdate = "1";
+                    if (!(id_row.equals(null)))
+                    {
+                        iCustomRepeat.putExtra("id",id_row);
+                    }
                     iCustomRepeat.putExtra("flagBack",flagForEditUpdate);
                     iCustomRepeat.putExtra("date",date.toString());
                     iCustomRepeat.putExtra("tittle", eventNameETUPD.getText().toString());
@@ -1186,10 +1223,9 @@ public class Edit_Update_Activity extends AppCompatActivity {
     // ------------------------Events------------------------------------
     //IF EDIT ONE_EVENT
     private void updateAndSaveEvent() {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
         String eventName = eventNameETUPD.getText().toString();
         String eventComment = eventCommentETUPD.getText().toString();
-
+        location = locationETUPD.getText().toString().trim();
         if (eventName.equals(""))
         {
             eventName="(Χώρις τίτλο)";
@@ -1203,9 +1239,9 @@ public class Edit_Update_Activity extends AppCompatActivity {
         if (reminders_upd_list.size() > 0) {
             alarmState = 1;
             if (repeatState == 0) {
-                myDB.updateData(id_row, eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState), parent_id,String.valueOf(color));
+                myDB.updateData(id_row, eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState), parent_id,String.valueOf(color),location);
             } else {
-                myDB.updateData(id_row, eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState), null,String.valueOf(color));
+                myDB.updateData(id_row, eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState), null,String.valueOf(color),location);
 
             }
             cursorRem.moveToPosition(-1);
@@ -1236,9 +1272,9 @@ public class Edit_Update_Activity extends AppCompatActivity {
         } else {
             alarmState = 0;
             if (repeatState == 0) {
-                myDB.updateData(id_row, eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState), parent_id,String.valueOf(color));
+                myDB.updateData(id_row, eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState), parent_id,String.valueOf(color),location);
             } else {
-                myDB.updateData(id_row, eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState), null,String.valueOf(color));
+                myDB.updateData(id_row, eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState), null,String.valueOf(color),location);
 
             }
         }
@@ -1249,7 +1285,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
     }
 
     private void giveIdToStartAlarmsEvent() {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
 
         Cursor secondRem = myDB.readAllReminder();
 
@@ -1283,7 +1318,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
     }
 
     private void makeAndSaveRepeatUPD() {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
 
         Cursor cursor = myDB.readAllEvents();
 
@@ -1324,7 +1358,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                         LocalTime timeDB = CalendarUtils.dateToLocalTime(repeats_listUPD.get(i));
 
                         myDB.addEvent(cursor.getString(1), cursor.getString(2), dateDB, timeDB, "0",
-                                "0", id_row, String.valueOf(color));
+                                "0", id_row, String.valueOf(color),location);
 
                         list_repeat_for_dbUPD.add(cursor.getString(0));
 
@@ -1350,10 +1384,10 @@ public class Edit_Update_Activity extends AppCompatActivity {
     //IF EDIT ALL_EVENTS
 
     private void updateAndSaveTittleCommentsAllEvents() {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
         Cursor cursorEvent = myDB.readAllEvents();
         String eventTitle = eventNameETUPD.getText().toString();
         String eventComment = eventCommentETUPD.getText().toString();
+        location = locationETUPD.getText().toString().trim();
         if (eventTitle.equals(""))
         {
             eventTitle="(Χώρις τίτλο)";
@@ -1381,7 +1415,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
 
     private void updateAndSaveReminderAllEvents() {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
         Cursor cursorEvent = myDB.readAllEvents();
         Cursor cursorRem = myDB.readAllReminder();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -1522,7 +1555,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
 
     private void updateAndSaveRepeatAllEvents() {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
 
         Cursor cursor = myDB.readAllEvents();
 
@@ -1562,7 +1594,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                         LocalTime timeDB = CalendarUtils.dateToLocalTime(repeats_listUPD.get(i));
 
                         myDB.addEvent(cursor.getString(1), cursor.getString(2), dateDB, timeDB, "0",
-                                "0", id_row,String.valueOf(color));
+                                "0", id_row,String.valueOf(color),location);
 
                         list_repeat_for_dbUPD.add(cursor.getString(0));
 
@@ -1583,7 +1615,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
     }
 
     private void giveIdToStartAlarmsAllEvents(ArrayList<Date> allEventsAlarms)
-    { MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
+    {
 
         Cursor secondRem = myDB.readAllReminder();
 
@@ -1615,7 +1647,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
         }
             }
     private void giveIdToStartAlarmsRepeatingEvent() {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
 
         Cursor secondRem = myDB.readAllReminder();
 
@@ -1678,10 +1709,10 @@ public class Edit_Update_Activity extends AppCompatActivity {
     //-----------------------------------------------------------------------
     //IF EDIT FUTURE_EVENTS
     private void updateAndSaveTittleCommentsFutureEvents() {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
         Cursor cursorEvent = myDB.readAllEvents();
         String eventTitle = eventNameETUPD.getText().toString();
         String eventComment = eventCommentETUPD.getText().toString();
+        location = locationETUPD.getText().toString().trim();
 
         if (eventTitle.equals(""))
         {
@@ -1709,7 +1740,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
     }
 
     private void updateAndSaveDateFutureEvents() {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
         Cursor cursorEvent = myDB.readAllEvents();
 
         if (!editFutureArray.isEmpty()) {
@@ -1748,7 +1778,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
     }
 
     private void updateAndSaveReminderFutureEvents() {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
         Cursor cursorEvent = myDB.readAllEvents();
         Cursor cursorRem = myDB.readAllReminder();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -1855,7 +1884,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
     }
 
     private void updateAndSaveRepeatFutureEvents() {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
         Cursor cursorEvent = myDB.readAllEvents();
         Cursor lastCursorEvent = myDB.readAllEvents();
         String eventTitle = eventNameETUPD.getText().toString();
@@ -1928,7 +1956,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                 for (int i = 0; i < editFutureArray.size(); i++) {
                     if (id_row.equals(editFutureArray.get(i))) {
                         myDB.addEvent(eventTitle, eventComment, date, time, String.valueOf(alarmState),
-                                String.valueOf(repeatState), null,String.valueOf(color));
+                                String.valueOf(repeatState), null,String.valueOf(color),location);
                         while (lastCursorEvent.moveToNext()) {
                             if (lastCursorEvent.moveToLast()) {
                                 head_id = lastCursorEvent.getString(0);
@@ -1937,7 +1965,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                     } else if (!editFutureArray.get(i).equals(id_row)) {
                         for (int j = 0; j < repeats_listUPD.size(); j++) {
                             myDB.addEvent(eventTitle, eventComment, CalendarUtils.dateToLocalDate(repeats_listUPD.get(j)), time, String.valueOf(alarmState),
-                                    String.valueOf(repeatState), head_id,String.valueOf(color));
+                                    String.valueOf(repeatState), head_id,String.valueOf(color),location);
                             if (j == repeats_listUPD.size() - 1) {
                                 break;
                             }
@@ -1972,7 +2000,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
     }
 
     private void startAlarmForRepeats() {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(Edit_Update_Activity.this);
         Cursor cursorEvent = myDB.readAllEvents();
 
         while (cursorEvent.moveToNext()) {
@@ -1991,7 +2018,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
 
     private void updEventAction() {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(getApplicationContext());
 
 
         Cursor eventCursor = myDB.readAllEvents();

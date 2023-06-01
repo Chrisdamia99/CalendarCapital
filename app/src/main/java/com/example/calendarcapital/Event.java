@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Event {
 
@@ -38,8 +39,9 @@ public class Event {
     private String alarm;
     private String parent_id;
     private String color;
+    private String location;
 
-    public Event(String id, String name, String comment, LocalDate date, LocalTime time, String alarm,String repeat,String parent_id,String color) {
+    public Event(String id, String name, String comment, LocalDate date, LocalTime time, String alarm,String repeat,String parent_id,String color,String location) {
         this.id = id;
         this.comment = comment;
         this.name = name;
@@ -48,11 +50,12 @@ public class Event {
         this.alarm = alarm;
         this.parent_id = parent_id;
         this.color = color;
+        this.location = location;
 
 
     }
 
-    public Event(String id, String name, String comment, LocalDate date, LocalTime time, String alarm, String parent_id) {
+    public Event(String id, String name, String comment, LocalDate date, LocalTime time, String alarm, String parent_id,String location) {
         this.id = id;
         this.name = name;
         this.comment = comment;
@@ -60,6 +63,7 @@ public class Event {
         this.time = time;
         this.alarm = alarm;
         this.parent_id = parent_id;
+        this.location=location;
     }
 
     public Event(String name, String comment, LocalDate date, LocalTime time) {
@@ -75,6 +79,14 @@ public class Event {
     @Override
     public String toString() {
         return name + "\n" + comment + "\n" + date + "\n" + CalendarUtils.formattedShortTime(time);
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getColor() {

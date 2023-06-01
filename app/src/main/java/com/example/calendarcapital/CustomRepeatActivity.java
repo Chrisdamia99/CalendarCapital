@@ -57,6 +57,7 @@ public class CustomRepeatActivity extends AppCompatActivity {
         setContentView(R.layout.custom_repeat_layout);
 
         initWidgets();
+
         setDateFromIntent();
         selectDaysOfWeek();
         setCustom_repeat_spinner();
@@ -64,6 +65,7 @@ public class CustomRepeatActivity extends AppCompatActivity {
         radioButtonsClickListeners();
         initBooleansWeekDays();
         setWeekChoiceByDate();
+
         cancelUntil.setVisibility(View.GONE);
 
         customDatesToSaveLocalDate = new ArrayList<>();
@@ -110,6 +112,11 @@ public class CustomRepeatActivity extends AppCompatActivity {
                         String stack = getIntent().getStringExtra("stack");
                         iEU.putExtra("stack", stack);
                     }
+                    if(getIntent().hasExtra("id"))
+                    {String id = getIntent().getStringExtra("id");
+                        iEU.putExtra("id",id);
+
+                    }
                     startActivity(iEU);
                 }
             }
@@ -122,7 +129,7 @@ public class CustomRepeatActivity extends AppCompatActivity {
         custom_repeat_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                customDatesToSaveLocalDate.clear();
+
                 if (!(position == 1)) {
                     daysOfWeekChoice.setVisibility(View.GONE);
                 } else {
@@ -699,7 +706,7 @@ public class CustomRepeatActivity extends AppCompatActivity {
     }
 
     private void dayChoiceUntilRepeat(int repeatSeperateCounterInt) {
-        customDatesToSaveLocalDate.clear();
+
         if (untilRepeatDate == null) {
             Toast.makeText(this, "Εισάγετε ημερομηνία λήξης.", Toast.LENGTH_SHORT).show();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -736,7 +743,6 @@ public class CustomRepeatActivity extends AppCompatActivity {
     }
 
     private void weekChoiceUntilRepeat(int repeatSeperateCounterInt) {
-        customDatesToSaveLocalDate.clear();
         if (untilRepeatDate == null) {
             Toast.makeText(this, "Εισάγετε ημερομηνία λήξης.", Toast.LENGTH_SHORT).show();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -766,7 +772,6 @@ public class CustomRepeatActivity extends AppCompatActivity {
 
 
     private void monthChoiceUntilRepeat(int repeatSeperateCounterInt) {
-        customDatesToSaveLocalDate.clear();
         if (untilRepeatDate == null) {
             Toast.makeText(this, "Εισάγετε ημερομηνία λήξης.", Toast.LENGTH_SHORT).show();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -788,7 +793,7 @@ public class CustomRepeatActivity extends AppCompatActivity {
     }
 
     private void yearChoiceUntilRepeat(int repeatSeperateCounterInt) {
-        customDatesToSaveLocalDate.clear();
+
         if (untilRepeatDate == null) {
             Toast.makeText(this, "Εισάγετε ημερομηνία λήξης.", Toast.LENGTH_SHORT).show();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -824,7 +829,6 @@ public class CustomRepeatActivity extends AppCompatActivity {
 
 
     private void dayChoiceRepeatCounter(int repeatSeperateCounterInt, int repeatCounterIntEnd) {
-        customDatesToSaveLocalDate.clear();
 
 
         flagDate = dateToCustom;
@@ -845,7 +849,6 @@ public class CustomRepeatActivity extends AppCompatActivity {
     }
 
     private void weekChoiceRepeatCounter(int repeatSeperateCounterInt, int repeatCounterIntEnd) {
-        customDatesToSaveLocalDate.clear();
         if (daysOfWeekAllFalse()) {
             customDatesToSaveLocalDate = WeekDaysMonthDaysCustomRepeat.addDaysOfWeekChosenRepeatCounterAllFalse(dateToCustom, repeatSeperateCounterInt, repeatCounterIntEnd);
             textForEventEdit = textForWeek(repeatSeperateCounterInt) + " για " + repeatCounterIntEnd + " επαναλήψεις.";
@@ -861,7 +864,6 @@ public class CustomRepeatActivity extends AppCompatActivity {
     }
 
     private void monthChoiceRepeatCounter(int repeatSeperateCounterInt, int repeatCounterIntEnd) {
-        customDatesToSaveLocalDate.clear();
         customDatesToSaveLocalDate = WeekDaysMonthDaysCustomRepeat.addDaysOfMonthChosenRepeatCounter(dateToCustom, monthSpinnerSelection, repeatSeperateCounterInt - 1, repeatCounterIntEnd);
         textForEventEdit = textForMonth(repeatSeperateCounterInt, monthSpinnerSelection) + " για " + repeatCounterIntEnd + " επαναλήψεις.";
 
@@ -869,7 +871,6 @@ public class CustomRepeatActivity extends AppCompatActivity {
     }
 
     private void yearChoiceRepeatCounter(int repeatSeperateCounterInt, int repeatCounterIntEnd) {
-        customDatesToSaveLocalDate.clear();
 
 
         flagDate = dateToCustom;
@@ -977,7 +978,11 @@ public class CustomRepeatActivity extends AppCompatActivity {
                         iEU.putExtra("stack", stack);
                     }
                     iEU.putExtra("5", "null");
+                    if(getIntent().hasExtra("id"))
+                    {String id = getIntent().getStringExtra("id");
+                        iEU.putExtra("id",id);
 
+                    }
                     startActivity(iEU);
                 }
             }

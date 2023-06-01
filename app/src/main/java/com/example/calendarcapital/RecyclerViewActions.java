@@ -10,8 +10,11 @@ import android.os.Bundle;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class RecyclerViewActions {
@@ -45,6 +48,7 @@ public class RecyclerViewActions {
 
         params.height = 1700;
         marginParams.bottomMargin = 100;
+
 
         calendarRecyclerView.setLayoutParams(params);
         calendarRecyclerView.setLayoutParams(marginParams);

@@ -31,6 +31,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PARENT_ID = "event_parent_id";
 
     public static final String COLUMN_COLOR = "event_color";
+    public static final String COLUMN_LOCATION = "event_location";
 
 
     private static final String TABLE_NAME_REMINDER = "my_reminders_db";
@@ -57,8 +58,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_ALARM + " TEXT, " +
                 COLUMN_REPEAT_ALARM + " TEXT, " +
                 COLUMN_PARENT_ID + " TEXT, " +
-
-                COLUMN_COLOR + " TEXT);";
+                COLUMN_COLOR + " TEXT, " +
+                COLUMN_LOCATION + " TEXT);";
 
 
         String query_reminder = "CREATE TABLE " + TABLE_NAME_REMINDER +
@@ -84,7 +85,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     }
 //------------------------------------------ADD------------------------------------------------------------
 
-    void addEvent(String title, String comment, LocalDate date, LocalTime time, String alarm,String repeat,String parent_id,String color) {
+    void addEvent(String title, String comment, LocalDate date, LocalTime time, String alarm,String repeat,String parent_id,String color,String location) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -96,6 +97,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_REPEAT_ALARM,repeat);
         cv.put(COLUMN_PARENT_ID,parent_id);
         cv.put(COLUMN_COLOR,color);
+        cv.put(COLUMN_LOCATION,location);
 
 
         long result = db.insert(TABLE_NAME, null, cv);
@@ -156,6 +158,22 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
     //------------------------------------------UPDATE------------------------------------------------------------
 
+    void updateLocation(String row_id,String location)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_LOCATION, location);
+
+
+        long result = db.update(TABLE_NAME, cv, "_id=?", new String[]{row_id});
+
+        if (result == -1) {
+            Toast.makeText(context, "Failed to Update", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Successfully Update", Toast.LENGTH_SHORT).show();
+        }
+    }
     void updateColor(String row_id,String color)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -204,7 +222,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    void updateData(String row_id, String title, String comments, LocalDate date, LocalTime time, String alarm,String repeat,String parent_id,String color) {
+    void updateData(String row_id, String title, String comments, LocalDate date, LocalTime time, String alarm,String repeat,String parent_id,String color,String location) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -216,6 +234,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_REPEAT_ALARM, repeat);
         cv.put(COLUMN_PARENT_ID, parent_id);
         cv.put(COLUMN_COLOR,color);
+        cv.put(COLUMN_LOCATION,location);
 
         long result = db.update(TABLE_NAME, cv, "_id=?", new String[]{row_id});
 
@@ -355,7 +374,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public boolean checkNextRowHasParentId(long rowId) {
+    public boolean checkNextRowHasParentId(int rowId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] projection = {COLUMN_ID};
         String selection = COLUMN_ID + " = ? AND EXISTS (SELECT 1 FROM " + TABLE_NAME + " WHERE " + COLUMN_PARENT_ID + " = ?)";

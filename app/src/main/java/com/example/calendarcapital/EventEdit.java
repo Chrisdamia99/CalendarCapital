@@ -51,9 +51,9 @@ import java.util.concurrent.TimeUnit;
 
 public class EventEdit extends AppCompatActivity {
 
-    private EditText eventNameET, eventCommentET, repeatCounter;
+    private EditText eventNameET, eventCommentET, repeatCounter,locationET;
     private Spinner color_spinner;
-    private TextView eventDateTV, eventTimeTV, changeTimeTV, changeDateTV, addAlarmButton, addRepeatButton,changeColorTV;
+    private TextView eventDateTV, eventTimeTV, changeTimeTV, changeDateTV, addAlarmButton, addRepeatButton,locationTV;
     private TextView oneDayBefore, oneHourMinBefore, halfHourMinBefore, fifteenMinBefore, tenMinBefore, fiveMinBefore, customChoice;
     private TextView everyDay, everyWeek, everyMonth, everyYear, customRepeat, repeatCountTv;
     Button btnSave;
@@ -67,6 +67,7 @@ public class EventEdit extends AppCompatActivity {
     private static LocalTime time;
     private Date oneDayBeforeDate, oneHourBeforeDate, halfHourBeforeDate, fifteenMinBeforeDate, tenMinBeforeDate, fiveMinBeforeDate;
     int alarmState, repeatState;
+    private final MyDatabaseHelper myDB = new MyDatabaseHelper(this);
     Calendar cReminder = Calendar.getInstance();
     Calendar cRepeat = Calendar.getInstance();
     Calendar cDatePicker = Calendar.getInstance();
@@ -77,8 +78,9 @@ public class EventEdit extends AppCompatActivity {
     private Activity mCurrentActivity;
     private ScheduledFuture<?> scheduledFuture;
     int repeatCounterInt;
-    String stackNow;
+    static String  stackNow;
     private static int color;
+   static String location;
 
 
     @Override
@@ -103,6 +105,7 @@ public class EventEdit extends AppCompatActivity {
         mCurrentActivity = this;
         setIntentsFromCustomRepeat();
         updateIfEmptyListView();
+        changeColor();
 
         createNotificationChannel();
 
@@ -142,7 +145,7 @@ public class EventEdit extends AppCompatActivity {
             addRepeatButton.setText(R.string.repeat_gr);
             CustomRepeatActivity.customDatesToSaveLocalDate.clear();
         });
-        changeColor();
+
 
 
     }
@@ -166,8 +169,9 @@ public class EventEdit extends AppCompatActivity {
         cancelRepeat = findViewById(R.id.cancelRepeat);
         repeatCountTv = findViewById(R.id.repeatCountTv);
         btnSave = findViewById(R.id.btnSave);
-        changeColorTV=findViewById(R.id.changeColorTV);
         color_spinner = findViewById(R.id.changeColorSpinner);
+        locationET = findViewById(R.id.locationET);
+        locationTV = findViewById(R.id.locationTV);
 
 
     }
@@ -325,6 +329,7 @@ public class EventEdit extends AppCompatActivity {
             }
         });
     }
+
 
     private void showChangeDate(int year, int month, int dayofmonth) {
         ArrayList<Date> reminder_list_date_changed = new ArrayList<>();
@@ -567,7 +572,8 @@ public class EventEdit extends AppCompatActivity {
 
         intent.putExtra("title", strTitle);
         intent.putExtra("comment", strComment);
-
+        intent.putExtra("alarmtime", cc.getTimeInMillis());
+        intent.putExtra("alarmid", alarmId);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(EventEdit.this, alarmId, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -911,19 +917,20 @@ public class EventEdit extends AppCompatActivity {
 
 
     private void makeAndSaveEvent() {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(EventEdit.this);
+
         String eventName = eventNameET.getText().toString();
+        location = locationET.getText().toString().trim();
         if (eventName.equals(""))
         {
             eventName="(Χωρίς τίτλο)";
         }
         String eventComment = eventCommentET.getText().toString();
-        myDB.addEvent(eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState), null, String.valueOf(color));
+        myDB.addEvent(eventName, eventComment, date, time, String.valueOf(alarmState), String.valueOf(repeatState), null, String.valueOf(color),location);
 
     }
 
     private void makeAndSaveReminders() {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(EventEdit.this);
+
         String idForReminder = "";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             reminders_list.sort(Date::compareTo);
@@ -968,7 +975,6 @@ public class EventEdit extends AppCompatActivity {
     }
 
     private void makeAndSaveRepeat() {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(EventEdit.this);
 
         Cursor cursor = myDB.readAllEvents();
 
@@ -1008,7 +1014,7 @@ public class EventEdit extends AppCompatActivity {
                         LocalTime timeDB = CalendarUtils.dateToLocalTime(repeats_list.get(i));
 
                         myDB.addEvent(cursor.getString(1), cursor.getString(2), dateDB, timeDB, "0",
-                                "0", idForRepeat,String.valueOf(color));
+                                "0", idForRepeat,String.valueOf(color),location);
 
                         list_repeat_for_db.add(cursor.getString(0));
 
@@ -1030,7 +1036,6 @@ public class EventEdit extends AppCompatActivity {
     }
 
     public void saveEventAction() {
-        MyDatabaseHelper myDB = new MyDatabaseHelper(getApplicationContext());
 
 
         makeAndSaveEvent();

@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         setNavigationViewListener();
         getIntentFromEventEdit();
         dublicatesInStack();
+        DialogClickedItemAndDelete();
         myDB.removeDuplicateReminders();
         myDB.updateAlarmValueIfIdNotExists();
 
@@ -438,7 +439,7 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
             hourAdapter.notifyDataSetChanged();
         }
 
-        DialogClickedItemAndDelete();
+
 
 
     }
@@ -480,6 +481,7 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
             String myComment = myEvent.getEvents().get(0).getComment();
             String myDate = String.valueOf(myEvent.getEvents().get(0).getDate());
             String myTime = String.valueOf(myEvent.getEvents().get(0).getTime());
+            String location = myEvent.getEvents().get(0).getLocation();
             LocalDate EventDate = myEvent.getEvents().get(0).getDate();
 
 
@@ -491,7 +493,7 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
             AlertDialog builderRepeatingDelete = new AlertDialog.Builder(MainActivity.this).setView(rowView).setTitle("Διαγραφή συμβάντος").create();
 
 
-            viewFinal = CA.setAllFields(view1, myEventId, myTitle, myComment, myDate, myTime);
+            viewFinal = CA.setAllFields(view1, myEventId, myTitle, myComment, myDate, myTime,location);
 
 
             builder.setView(viewFinal).
@@ -504,7 +506,7 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
                             String row_id = hourAdapter.getItem(position).getEvents().get(0).getId();
 
 
-                            if (parent_id_value == null && !myDB.checkNextRowHasParentId(Long.parseLong(row_id))) {
+                            if (parent_id_value == null && !myDB.checkNextRowHasParentId(Integer.parseInt(row_id))) {
                                 deleteEventNotRepeating(position, CA);
                             } else {
                                 deleteEventIfRepeating(builderRepeatingDelete, position, CA, deleteAll, deleteOne, deleteFuture);

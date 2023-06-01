@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,12 +27,23 @@
             android:layout_marginLeft="10dp" />
 
     </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_weight="1"
+        android:layout_weight="0"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -362,37 +372,32 @@
 
 
     </LinearLayout>
+    </LinearLayout>
 
 
-    <LinearLayout
-        android:id="@+id/testLin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_weight="1"
-        android:gravity="bottom|center"
+    </ScrollView>
 
-        android:orientation="vertical">
+
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/lightdarkgrey"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_gravity="bottom|center"
+            android:gravity="bottom|center"
+            android:orientation="vertical">
 
             <Button
                 android:id="@+id/btnSaveCustomRepeat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@null"
+                android:background="@drawable/simple_borders_rounded_lightgray"
                 android:text="@string/save"
+                android:layout_marginBottom="5dp"
+
                 android:textColor="@color/primaryLightTirquiso"
                 android:textSize="20sp"
                  />
         </LinearLayout>
-
-    </LinearLayout>
 
 </LinearLayout>
 

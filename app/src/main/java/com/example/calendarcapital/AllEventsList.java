@@ -53,7 +53,8 @@ public class AllEventsList {
             String repeat = cursor.getString(6);
             String parent_id = cursor.getString(7);
             String color = cursor.getString(8);
-            Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB, alarm,repeat,parent_id,color);
+            String location = cursor.getString(9);
+            Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB, alarm,repeat,parent_id,color,location);
 
             if (Objects.equals(CalendarUtils.formattedDate(selectedDate), CalendarUtils.formattedDate(dateDB))) {
                 ArrayList<Event> eventarrayDB = Event.eventsForDateAndTime(selectedDate, timeDB);
@@ -111,7 +112,8 @@ public class AllEventsList {
                 String repeat = cursor.getString(6);
                 String parent_id = cursor.getString(7);
                 String color = cursor.getString(8);
-                Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB, alarm,repeat,parent_id,color);
+                String location = cursor.getString(9);
+                Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB, alarm,repeat,parent_id,color,location);
 
 
                 ArrayList<Event> eventarrayDB = Event.eventsForDateAndTime(selectedDate, timeDB);
@@ -167,7 +169,9 @@ public class AllEventsList {
                     String repeat = cursor.getString(6);
                     String parent_id = cursor.getString(7);
                     String color = cursor.getString(8);
-                    Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB, alarm, repeat, parent_id,color);
+                    String location = cursor.getString(9);
+
+                    Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB, alarm, repeat, parent_id,color,location);
 
 
                     ArrayList<Event> eventarrayDB = Event.eventsForDateAndTime(selectedDate, timeDB);
@@ -222,7 +226,8 @@ public class AllEventsList {
                     String repeat = cursor.getString(6);
                     String parent_id = cursor.getString(7);
                     String color = cursor.getString(8);
-                    Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB, alarm, repeat, parent_id,color);
+                    String location = cursor.getString(9);
+                    Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB, alarm, repeat, parent_id,color,location);
 
 
                     ArrayList<Event> eventarrayDB = Event.eventsForDateAndTime(selectedDate, timeDB);

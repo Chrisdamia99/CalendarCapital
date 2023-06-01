@@ -3,8 +3,15 @@ package com.example.calendarcapital;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +19,8 @@ import android.widget.CursorAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -50,6 +59,7 @@ public class EventCursorAdapter extends CursorAdapter {
         TextView comment_lv_tv = view.findViewById(R.id.comment_lv_tv);
         TextView date_lv_tv = view.findViewById(R.id.date_lv_tv);
         TextView time_lv_tv = view.findViewById(R.id.time_lv_tv);
+        TextView location_lv_tv = view.findViewById(R.id.location_lv_tv);
 
 
         String id_row = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
@@ -57,17 +67,19 @@ public class EventCursorAdapter extends CursorAdapter {
         String comment = cursor.getString(cursor.getColumnIndexOrThrow("event_comment"));
         String date = cursor.getString(cursor.getColumnIndexOrThrow("event_date"));
         String time = cursor.getString(cursor.getColumnIndexOrThrow("event_time"));
+        String location = cursor.getString(cursor.getColumnIndexOrThrow("event_location"));
 
         id_lv_tv.setText(id_row);
         title_lv_tv.setText(title);
         comment_lv_tv.setText(comment);
         date_lv_tv.setText(date);
         time_lv_tv.setText(time);
+        location_lv_tv.setText(location.trim());
 
     }
 
 
-    public View setAllFields(View view, String id, String title, String comment, String date, String time) {
+    public View setAllFields(View view, String id, String title, String comment, String date, String time,String location) {
         String alarmDate;
 
         TextView id_lv_tv = view.findViewById(R.id.id_lv_tv);
@@ -75,6 +87,8 @@ public class EventCursorAdapter extends CursorAdapter {
         TextView comment_lv_tv = view.findViewById(R.id.comment_lv_tv);
         TextView date_lv_tv = view.findViewById(R.id.date_lv_tv);
         TextView time_lv_tv = view.findViewById(R.id.time_lv_tv);
+        TextView location_lv_tv = view.findViewById(R.id.location_lv_tv);
+        TextView locationView = view.findViewById(R.id.locationView);
         LinearLayout lin_lv_dialog_layout = view.findViewById(R.id.lin_lv_dialog_layout);
         ListView existedRemindersListView = view.findViewById(R.id.existedRemindersListView);
         @SuppressLint("InflateParams") View viewInvalidation = LayoutInflater.from(mContext).inflate(R.layout.show_event_from_listview,null);
@@ -86,6 +100,7 @@ public class EventCursorAdapter extends CursorAdapter {
         comment_lv_tv.setText(comment);
         date_lv_tv.setText(date);
         time_lv_tv.setText(time);
+        location_lv_tv.setText(location);
 
 
         MyDatabaseHelper myDb = new MyDatabaseHelper(mContext);
@@ -194,15 +209,51 @@ public class EventCursorAdapter extends CursorAdapter {
         cursorRem.close();
         myDb.close();
 
+        locationClickListener(location_lv_tv);
 
+        String location_final = location_lv_tv.getText().toString().trim();
+        if (location_final == null || location_final.equals(""))
+        {
+            location_lv_tv.setVisibility(View.GONE);
+            locationView.setVisibility(View.GONE);
 
+        }else {
+            location_lv_tv.setVisibility(View.VISIBLE);
+            locationView.setVisibility(View.VISIBLE);
+        }
 
         EventCursorAdapter.this.notifyDataSetChanged();
 
         return view;
     }
 
+    private void locationClickListener(TextView location)
+    {
+        String location_final = location.getText().toString().trim();
+        if (location_final == null || location_final.equals(""))
+        {
+            location.setVisibility(View.GONE);
 
+
+        }else
+        {
+            location.setVisibility(View.VISIBLE);
+            location.setOnClickListener(v -> {
+
+
+                Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + location_final);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                mapIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mContext.startActivity(mapIntent);
+//                    if (mapIntent.resolveActivity(mContext.getPackageManager()) != null) {
+//                        mContext.startActivity(mapIntent);
+//                    } else {
+//                        Toast.makeText(mContext, "Google Maps is not installed", Toast.LENGTH_SHORT).show();
+//                    }
+            });
+        }
+    }
 
     @Override
     public long getItemId(int position) {

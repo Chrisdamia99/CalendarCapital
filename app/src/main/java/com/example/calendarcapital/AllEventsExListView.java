@@ -22,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ import java.util.Objects;
 
 public class AllEventsExListView extends AppCompatActivity  {
     private MyDatabaseHelper dbHelper;
+    private FloatingActionButton floatAddBtnMonthViewExList;
     private SQLiteDatabase db ;
     private ExpandableListView expandableListView;
     private ExpandableListAdapter listAdapter;
@@ -71,6 +74,16 @@ public class AllEventsExListView extends AppCompatActivity  {
             startActivity(i);
         });
         allEventsRefreshButton.setOnClickListener(v -> AllEventsList.reloadActivity(AllEventsExListView.this));
+        floatAddBtnMonthViewExList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                    Intent saveIntent = new Intent(AllEventsExListView.this, EventEdit.class);
+
+                    startActivity(saveIntent);
+
+            }
+        });
 
     }
 
@@ -78,6 +91,7 @@ public class AllEventsExListView extends AppCompatActivity  {
     {
         allEventsBackButton = findViewById(R.id.allEventsBackButton);
         allEventsRefreshButton = findViewById(R.id.allEventsRefreshButton);
+        floatAddBtnMonthViewExList = findViewById(R.id.floatAddBtnMonthViewExList);
     }
     public static void reloadActivity(Activity activity) {
         activity.finish();
@@ -198,6 +212,7 @@ private void hourAdapterClickActionChild(int groupPosition,int childPosition,Exp
     String myDate = String.valueOf(myEvent.getEvents().get(0).getDate());
     String myTime = String.valueOf(myEvent.getEvents().get(0).getTime());
     String parent_id = myEvent.getEvents().get(0).getParent_id();
+    String location = myEvent.getEvents().get(0).getLocation();
 
     View viewFinal;
 
@@ -206,7 +221,7 @@ private void hourAdapterClickActionChild(int groupPosition,int childPosition,Exp
     AlertDialog builderRepeatingDelete = new AlertDialog.Builder(AllEventsExListView.this).setView(rowView).setTitle("Διαγραφή συμβάντος").create();
 
 
-    viewFinal = CA.setAllFields(view1, myEventId, myTitle, myComment, myDate, myTime);
+    viewFinal = CA.setAllFields(view1, myEventId, myTitle, myComment, myDate, myTime,location);
 
 
     builder.setView(viewFinal).
@@ -219,7 +234,7 @@ private void hourAdapterClickActionChild(int groupPosition,int childPosition,Exp
                     String row_id = myEvent.getEvents().get(0).getId();
                     LocalDate event_date = myEvent.getEvents().get(0).getDate();
 
-                    if (parent_id_value == null && !myDB.checkNextRowHasParentId(Long.parseLong(row_id))) {
+                    if (parent_id_value == null && !myDB.checkNextRowHasParentId(Integer.parseInt(row_id))) {
                         deleteEventNotRepeating(CA,row_id,myTitle,myComment,event_date);
                     } else {
                         deleteEventIfRepeating(builderRepeatingDelete,CA, deleteAll, deleteOne, deleteFuture,row_id,parent_id,event_date);
@@ -269,6 +284,7 @@ private void hourAdapterClickActionGroup(int groupPosition,ExpandableListView pa
     String myDate = String.valueOf(myEvent.getEvents().get(0).getDate());
     String myTime = String.valueOf(myEvent.getEvents().get(0).getTime());
     String parent_id = myEvent.getEvents().get(0).getParent_id();
+    String location = myEvent.getEvents().get(0).getLocation();
 
     View viewFinal;
 
@@ -277,7 +293,7 @@ private void hourAdapterClickActionGroup(int groupPosition,ExpandableListView pa
     AlertDialog builderRepeatingDelete = new AlertDialog.Builder(AllEventsExListView.this).setView(rowView).setTitle("Διαγραφή συμβάντος").create();
 
 
-    viewFinal = CA.setAllFields(view1, myEventId, myTitle, myComment, myDate, myTime);
+    viewFinal = CA.setAllFields(view1, myEventId, myTitle, myComment, myDate, myTime,location);
 
 
     builder.setView(viewFinal).
@@ -290,7 +306,7 @@ private void hourAdapterClickActionGroup(int groupPosition,ExpandableListView pa
                     String row_id = myEvent.getEvents().get(0).getId();
                     LocalDate event_date = myEvent.getEvents().get(0).getDate();
 
-                    if (parent_id_value == null && !myDB.checkNextRowHasParentId(Long.parseLong(row_id))) {
+                    if (parent_id_value == null && !myDB.checkNextRowHasParentId(Integer.parseInt(row_id))) {
                         deleteEventNotRepeating(CA,row_id,myTitle,myComment,event_date);
                     } else {
                         deleteEventIfRepeating(builderRepeatingDelete,CA, deleteAll, deleteOne, deleteFuture,row_id,parent_id,event_date);
@@ -648,8 +664,8 @@ private void hourAdapterClickActionGroup(int groupPosition,ExpandableListView pa
                 }
                 @SuppressLint("Range") String alarm = String.valueOf(cursor.getInt(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_ALARM)));
                 @SuppressLint("Range") String parentId = String.valueOf(cursor.getLong(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_PARENT_ID)));
-
-                Event event = new Event(id, title, comment, date, time, alarm, parentId);
+                @SuppressLint("Range")  String location = String.valueOf(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_LOCATION));
+                Event event = new Event(id, title, comment, date, time, alarm, parentId,location);
 
                 if (parentId.equals("0")) {
                     listDataHeader.add(event);
@@ -694,8 +710,9 @@ private void hourAdapterClickActionGroup(int groupPosition,ExpandableListView pa
                 }
                 @SuppressLint("Range") String alarm = String.valueOf(cursor.getInt(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_ALARM)));
                 @SuppressLint("Range") String parentId = String.valueOf(cursor.getLong(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_PARENT_ID)));
+                @SuppressLint("Range")  String location = String.valueOf(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_LOCATION));
 
-                Event event = new Event(id, title, comment, date, time, alarm, parentId);
+                Event event = new Event(id, title, comment, date, time, alarm, parentId,location);
 
                 if (parentId.equals("0")) {
                     listDataHeader.add(event);
@@ -741,8 +758,9 @@ private void hourAdapterClickActionGroup(int groupPosition,ExpandableListView pa
                 }
                 @SuppressLint("Range") String alarm = String.valueOf(cursor.getInt(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_ALARM)));
                 @SuppressLint("Range") String parentId = String.valueOf(cursor.getLong(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_PARENT_ID)));
+                @SuppressLint("Range")  String location = String.valueOf(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_LOCATION));
 
-                Event event = new Event(id, title, comment, date, time, alarm, parentId);
+                Event event = new Event(id, title, comment, date, time, alarm, parentId,location);
 
                 if (parentId.equals("0")) {
                     listDataHeader.add(event);

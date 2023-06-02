@@ -169,9 +169,8 @@ public class CustomRepeatActivity extends AppCompatActivity {
 
 
         untilDate.setOnClickListener(v -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 showChangeDate(LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
-            }
+
             if (!untilRB.isChecked()) {
                 untilRB.setChecked(true);
             }
@@ -290,11 +289,9 @@ public class CustomRepeatActivity extends AppCompatActivity {
         ArrayList<CharSequence> lastWeek = new ArrayList<>();
         if (WeekDaysMonthDaysCustomRepeat.checkIfIsLastWeekOfMonth(dateToCustom)) {
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 lastWeek.add("Μηνιαία στις " + dateToCustom.getDayOfMonth() + ".");
-            }
+
             lastWeek.add(WeekDaysMonthDaysCustomRepeat.numberOfWeekDateMonth(dateToCustom));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 if (dateToCustom.getDayOfWeek() == DayOfWeek.SATURDAY) {
                     lastWeek.add("Μηνιαία το τελευταίο " + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
 
@@ -302,7 +299,7 @@ public class CustomRepeatActivity extends AppCompatActivity {
                     lastWeek.add("Μηνιαία την τελευταία " + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
 
                 }
-            }
+
 
             ArrayAdapter<CharSequence> custom_monthly_repeat_spinner_adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, lastWeek);
             custom_monthly_repeat_spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -310,9 +307,8 @@ public class CustomRepeatActivity extends AppCompatActivity {
 
 
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 notLastWeek.add("Μηνιαία στις " + dateToCustom.getDayOfMonth());
-            }
+
             notLastWeek.add(WeekDaysMonthDaysCustomRepeat.numberOfWeekDateMonth(dateToCustom));
             ArrayAdapter<CharSequence> custom_monthly_repeat_spinner_adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, notLastWeek);
             custom_monthly_repeat_spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -368,9 +364,8 @@ public class CustomRepeatActivity extends AppCompatActivity {
 
 
                 LocalDate myDD = null;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     myDD = LocalDate.of(year1, trueMonth, dayOfMonth);
-                }
+
                 untilDate.setText(CalendarUtils.formattedDateEventEdit(myDD));
                 cancelUntil.setVisibility(View.VISIBLE);
 
@@ -379,17 +374,15 @@ public class CustomRepeatActivity extends AppCompatActivity {
 
 
                 LocalDate myDD = null;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     myDD = LocalDate.of(year1, trueMonth, dayOfMonth);
-                }
+
                 untilDate.setText(CalendarUtils.formattedDateEventEdit(myDD));
                 cancelUntil.setVisibility(View.VISIBLE);
             } else if (dayOfMonth < 10 && trueMonth >= 10) {
 
                 LocalDate myDD = null;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     myDD = LocalDate.of(year1, trueMonth, dayOfMonth);
-                }
+
 
                 untilDate.setText(CalendarUtils.formattedDateEventEdit(myDD));
                 cancelUntil.setVisibility(View.VISIBLE);
@@ -398,16 +391,14 @@ public class CustomRepeatActivity extends AppCompatActivity {
             } else {
 
                 LocalDate myDD = null;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     myDD = LocalDate.of(year1, trueMonth, dayOfMonth);
-                }
+
                 untilDate.setText(CalendarUtils.formattedDateEventEdit(myDD));
                 cancelUntil.setVisibility(View.VISIBLE);
 
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 untilRepeatDate = LocalDate.of(year1, trueMonth, dayOfMonth);
-            }
+
 
 
         }, year, month, dayofmonth);
@@ -421,7 +412,6 @@ public class CustomRepeatActivity extends AppCompatActivity {
 
     private void setWeekChoiceByDate() {
         DayOfWeek existedDateDayOfWeek;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             existedDateDayOfWeek = dateToCustom.getDayOfWeek();
 
 
@@ -448,7 +438,7 @@ public class CustomRepeatActivity extends AppCompatActivity {
                 sundayFlag = true;
                 sundayChoice.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.simple_borders_rounded_grey));
             }
-        }
+
     }
 
     private void selectDaysOfWeek() {
@@ -575,7 +565,6 @@ public class CustomRepeatActivity extends AppCompatActivity {
     private String textForWeek(int repeatSeperateCounterInt) {
 
         if (repeatSeperateCounterInt > 1) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 textForEventEdit = "Ανά " + repeatSeperateCounterInt + " εβδομάδες ";
                 if (mondayFlag) {
 
@@ -610,11 +599,10 @@ public class CustomRepeatActivity extends AppCompatActivity {
                     textForEventEdit = "Ανά " + repeatSeperateCounterInt + " εβδομάδες.";
 
                 }
-            }
+
             return textForEventEdit;
 
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 textForEventEdit = "Ανά " + repeatSeperateCounterInt + " εβδομάδα ";
                 if (mondayFlag) {
                     textForEventEdit = textForEventEdit.concat("," + DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
@@ -647,7 +635,7 @@ public class CustomRepeatActivity extends AppCompatActivity {
                     textForEventEdit = "Ανά " + repeatSeperateCounterInt + " εβδομάδα";
 
                 }
-            }
+
             return textForEventEdit;
 
         }
@@ -660,14 +648,12 @@ public class CustomRepeatActivity extends AppCompatActivity {
             textForEventEdit = "Ανά " + repeatSeperateCounterInt + " μήνες, ";
 
             if (monthSpinnerSelection == 0) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     textForEventEdit = textForEventEdit + " κάθε " + dateToCustom.getDayOfMonth() + " ";
-                }
+
             } else if (monthSpinnerSelection == 1) {
                 textForEventEdit = textForEventEdit + WeekDaysMonthDaysCustomRepeat.numberOfWeekDateMonthTextEventEdit(dateToCustom);
 
             } else if (monthSpinnerSelection == 2) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     if (dateToCustom.getDayOfWeek() == DayOfWeek.SATURDAY) {
                         textForEventEdit = textForEventEdit + "το τελευταίο" + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR"));
 
@@ -675,22 +661,20 @@ public class CustomRepeatActivity extends AppCompatActivity {
                         textForEventEdit = textForEventEdit + "την τελευταία" + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR"));
 
                     }
-                }
+
             }
             return textForEventEdit;
         } else {
             textForEventEdit = "Ανά " + repeatSeperateCounterInt + " μήνα, ";
 
             if (monthSpinnerSelection == 0) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     textForEventEdit = textForEventEdit + " κάθε " + dateToCustom.getDayOfMonth() + " ";
-                }
+
 
             } else if (monthSpinnerSelection == 1) {
                 textForEventEdit = textForEventEdit + WeekDaysMonthDaysCustomRepeat.numberOfWeekDateMonthTextEventEdit(dateToCustom);
 
             } else if (monthSpinnerSelection == 2) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     if (dateToCustom.getDayOfWeek() == DayOfWeek.SATURDAY) {
                         textForEventEdit = textForEventEdit + "το τελευταίο " + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR"));
 
@@ -698,7 +682,7 @@ public class CustomRepeatActivity extends AppCompatActivity {
                         textForEventEdit = textForEventEdit + "την τελευταία " + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR"));
 
                     }
-                }
+
 
             }
             return textForEventEdit;
@@ -709,11 +693,9 @@ public class CustomRepeatActivity extends AppCompatActivity {
 
         if (untilRepeatDate == null) {
             Toast.makeText(this, "Εισάγετε ημερομηνία λήξης.", Toast.LENGTH_SHORT).show();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 showChangeDate(LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
-            }
+
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 if (untilRepeatDate.isBefore(dateToCustom)) {
                     Toast.makeText(this, "Η ημερομηνία λήξης δε μπορεί να είναι μικρότερητου συμβάντος.", Toast.LENGTH_SHORT).show();
 
@@ -735,7 +717,7 @@ public class CustomRepeatActivity extends AppCompatActivity {
                     Toast.makeText(this, "dayChoice error", Toast.LENGTH_SHORT).show();
 
                 }
-            }
+
         }
 
 
@@ -745,11 +727,9 @@ public class CustomRepeatActivity extends AppCompatActivity {
     private void weekChoiceUntilRepeat(int repeatSeperateCounterInt) {
         if (untilRepeatDate == null) {
             Toast.makeText(this, "Εισάγετε ημερομηνία λήξης.", Toast.LENGTH_SHORT).show();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 showChangeDate(LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
-            }
+
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 if (untilRepeatDate.isBefore(dateToCustom)) {
                     Toast.makeText(this, "Η ημερομηνία λήξης δε μπορεί να είναι μικρότερητου συμβάντος.", Toast.LENGTH_SHORT).show();
 
@@ -764,7 +744,7 @@ public class CustomRepeatActivity extends AppCompatActivity {
                     }
 
                 }
-            }
+
         }
 
         customDatesToSaveLocalDate.size();
@@ -774,11 +754,9 @@ public class CustomRepeatActivity extends AppCompatActivity {
     private void monthChoiceUntilRepeat(int repeatSeperateCounterInt) {
         if (untilRepeatDate == null) {
             Toast.makeText(this, "Εισάγετε ημερομηνία λήξης.", Toast.LENGTH_SHORT).show();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 showChangeDate(LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
-            }
+
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 if (untilRepeatDate.isBefore(dateToCustom)) {
                     Toast.makeText(this, "Η ημερομηνία λήξης δε μπορεί να είναι μικρότερητου συμβάντος.", Toast.LENGTH_SHORT).show();
 
@@ -786,7 +764,7 @@ public class CustomRepeatActivity extends AppCompatActivity {
                     customDatesToSaveLocalDate = WeekDaysMonthDaysCustomRepeat.addDaysOfMonthChosenUntilRepeat(untilRepeatDate, dateToCustom, flagDate, monthSpinnerSelection, repeatSeperateCounterInt - 1);
                     textForEventEdit = textForMonth(repeatSeperateCounterInt, monthSpinnerSelection) + " μέχρι " + untilRepeatDate.toString().trim();
                 }
-            }
+
         }
         customDatesToSaveLocalDate.size();
 
@@ -796,11 +774,9 @@ public class CustomRepeatActivity extends AppCompatActivity {
 
         if (untilRepeatDate == null) {
             Toast.makeText(this, "Εισάγετε ημερομηνία λήξης.", Toast.LENGTH_SHORT).show();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 showChangeDate(LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
-            }
+
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 if (untilRepeatDate.isBefore(dateToCustom)) {
                     Toast.makeText(this, "Η ημερομηνία λήξης δε μπορεί να είναι μικρότερητου συμβάντος.", Toast.LENGTH_SHORT).show();
 
@@ -822,7 +798,7 @@ public class CustomRepeatActivity extends AppCompatActivity {
                     Toast.makeText(this, "dayChoice error", Toast.LENGTH_SHORT).show();
 
                 }
-            }
+
         }
 
     }
@@ -834,9 +810,8 @@ public class CustomRepeatActivity extends AppCompatActivity {
         flagDate = dateToCustom;
         for (int i = 0; i < repeatCounterIntEnd; i++) {
             customDatesToSaveLocalDate.add(flagDate);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 flagDate = flagDate.plusDays(repeatSeperateCounterInt);
-            }
+
         }
 
         if (repeatSeperateCounterInt > 1) {
@@ -876,9 +851,8 @@ public class CustomRepeatActivity extends AppCompatActivity {
         flagDate = dateToCustom;
         for (int i = 0; i < repeatCounterIntEnd; i++) {
             customDatesToSaveLocalDate.add(flagDate);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 flagDate = flagDate.plusYears(repeatSeperateCounterInt);
-            }
+
         }
         if (repeatSeperateCounterInt > 1) {
             textForEventEdit = "Ανά " + repeatSeperateCounterInt + " χρόνια, για " + repeatCounterIntEnd + " επαναλήψεις.";

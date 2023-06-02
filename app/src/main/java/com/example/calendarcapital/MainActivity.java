@@ -38,6 +38,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.jakewharton.threetenabp.AndroidThreeTen;
+
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.ArrayDeque;
@@ -77,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AndroidThreeTen.init(this);
 
 
         setContentView(R.layout.activity_main);
@@ -84,9 +87,8 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
         initWidgets();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             selectedDate = LocalDate.now();
-        }
+
         if (getIntent().hasExtra("tempDate")) {
             String intentTemp = getIntent().getStringExtra("tempDate");
             tempSelectedDate = stringToLocalDate(intentTemp);
@@ -109,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
         refreshMenuBtn.setOnClickListener(v -> {
 
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 selectedDate = LocalDate.now();
                 if (Objects.equals(viewNow, "month"))
                 {
@@ -123,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                 {
                     setMonthView();
                 }
-            }
+
 
 
 
@@ -343,12 +344,11 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
 
                 Objects.requireNonNull(calendarRecyclerView.getAdapter()).notifyDataSetChanged();
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     if (!selectedDate.getMonth().equals(tempStartSeletedDate.getMonth()))
                     {
                         setMonthView();
                     }
-                }
+
 
 
                 clickCounter++;
@@ -449,12 +449,10 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
         hourAdapter = new HourAdapter(getApplicationContext(), AllEventsList.hourEventListFromDatabase(myDB));
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             hourAdapter.sort(Comparator.comparing(o -> o.events.get(0).getDate()));
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
             hourAdapter.sort(Comparator.comparing(o -> o.events.get(0).getTime()));
-        }
+
         monthListView.setDivider(new ColorDrawable(Color.TRANSPARENT));
         monthListView.setAdapter(hourAdapter);
 
@@ -809,9 +807,8 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
                         LocalDate cursorLocalDate = stringToLocalDate(cursorEvent.getString(3));
                         String cursorParentID = cursorEvent.getString(7);
                         int comparisonLocalDates = 0;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             comparisonLocalDates = event_date.compareTo(cursorLocalDate);
-                        }
+
                         if (!(cursorParentID == null) && cursorParentID.equals(parent_id)) {
 
                             if (comparisonLocalDates < 0 || event_date.equals(cursorLocalDate)) {
@@ -970,21 +967,18 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
     public void previousMonthAction() {
         if (calendarRecyclerView.getVisibility() == View.GONE) {
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 selectedDate = selectedDate.minusDays(1);
-            }
+
             setDaily();
         } else if (calendarRecyclerView.getMeasuredHeight() < 301) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 selectedDate = selectedDate.minusWeeks(1);
-            }
+
 
             setWeek();
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 selectedDate = selectedDate.minusMonths(1);
                 setMonthView();
-            }
+
 
 
         }
@@ -995,21 +989,18 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
     public void nextMonthAction() {
 
         if (calendarRecyclerView.getVisibility() == View.GONE) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 selectedDate = selectedDate.plusDays(1);
-            }
+
             setDaily();
         } else if (calendarRecyclerView.getMeasuredHeight() < 301) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 selectedDate = selectedDate.plusWeeks(1);
-            }
+
 
             setWeek();
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 selectedDate = selectedDate.plusMonths(1);
 
-            }
+
             setMonthView();
             }
 
@@ -1025,9 +1016,8 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
         if (getIntent().hasExtra("date")) {
             Bundle b = getIntent().getExtras();
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 selectedDate = (LocalDate) b.get("date");
-            }
+
             getIntent().removeExtra("date");
 
         }
@@ -1142,9 +1132,8 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
         Locale locale = new Locale("el", "GR");
         monthYearText.setText(CalendarUtils.monthDayFromDate(selectedDate));
         String dayOfWeekmain = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             dayOfWeekmain = selectedDate.getDayOfWeek().getDisplayName(TextStyle.FULL, locale);
-        }
+
         daysOfWeekDaily.setText(dayOfWeekmain);
     setParamsMonthListViewDaily();
 
@@ -1166,6 +1155,7 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             backMenuBtn.setForegroundGravity(Gravity.START);
         }
+
         monthListView.setVisibility(View.VISIBLE);
         monthYearText.setVisibility(View.VISIBLE);
         daysOfWeekDaily.setVisibility(View.VISIBLE);

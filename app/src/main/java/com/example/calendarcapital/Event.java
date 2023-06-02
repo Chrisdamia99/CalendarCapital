@@ -19,13 +19,11 @@ public class Event {
 
         for (Event event : eventsList) {
             int eventHour = 0;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 eventHour = event.time.getHour();
-            }
+
             int cellHour = 0;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 cellHour = time.getHour();
-            }
+
             if (event.getDate().equals(date) && eventHour == cellHour)
                 events.add(event);
         }

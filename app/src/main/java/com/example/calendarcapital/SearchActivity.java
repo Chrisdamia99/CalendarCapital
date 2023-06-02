@@ -419,9 +419,8 @@ public class SearchActivity extends AppCompatActivity {
                         LocalDate cursorLocalDate = stringToLocalDate(cursorEvent.getString(3));
                         String cursorParentID = cursorEvent.getString(7);
                         int comparisonLocalDates = 0;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             comparisonLocalDates = event_date.compareTo(cursorLocalDate);
-                        }
+
                         if (!(cursorParentID == null) && cursorParentID.equals(parent_id)) {
 
                             if (comparisonLocalDates < 0 || event_date.equals(cursorLocalDate)) {

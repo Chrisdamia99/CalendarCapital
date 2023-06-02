@@ -70,19 +70,19 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
 
                 if (cursor.getString(0).equals(id)) {
                     Event eventDB = null;
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
                         eventDB = new Event(cursor.getString(0), cursor.getString(1), cursor.getString(2),
                                 CalendarUtils.stringToLocalDate(cursor.getString(3)), LocalTime.parse(cursor.getString(4)),
                                 cursor.getString(5), cursor.getString(6),
                                 cursor.getString(7),cursor.getString(8),cursor.getString(9));
-                    }
+
                     ArrayList<Event> eventArrayDB = new ArrayList<>();
 
 
                     LocalTime cursorTime = null;
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
                         cursorTime = LocalTime.parse(cursor.getString(4));
-                    }
+
 
                     String cursorId = cursor.getString(0);
                     eventArrayDB.add(eventDB);

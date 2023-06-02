@@ -22,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 
@@ -109,9 +111,13 @@ public class EventCursorAdapter extends CursorAdapter {
         Cursor cursor = myDb.readAllEvents();
         Cursor cursorRem = myDb.readAllReminder();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            existedReminders.sort(Date::compareTo);
-        }
+//            existedReminders.sort(Date::compareTo);
+        Collections.sort(existedReminders, new Comparator<Date>() {
+            @Override
+            public int compare(Date item1, Date item2) {
+                return item1.compareTo(item2);
+            }
+        });
         cursor.moveToPosition(-1);
         while (cursor.moveToNext()) {
             if (cursor.getString(0).equals(id)) {

@@ -2,6 +2,7 @@ package com.example.calendarcapital;
 
 
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -46,11 +47,11 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         if (vibrator != null && vibrator.hasVibrator()) {
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 vibrator.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE));
-            } else {
-                vibrator.vibrate(1000);
             }
+
         }
 
         if (b != null) {
@@ -98,7 +99,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -159,9 +160,15 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         // Set the snooze alarm using the AlarmManager
         if (alarmManager != null) {
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, snoozeTimeMillis, pendingIntent);
+            }else
+            {
+                alarmManager.set(AlarmManager.RTC_WAKEUP, snoozeTimeMillis, pendingIntent);
+
             }
+
         }
     }
 

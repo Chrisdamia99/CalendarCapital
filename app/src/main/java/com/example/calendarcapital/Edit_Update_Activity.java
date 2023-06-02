@@ -36,6 +36,9 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.jakewharton.threetenabp.AndroidThreeTen;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -45,6 +48,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -104,6 +110,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_update);
+        AndroidThreeTen.init(this);
         initWidgets();
         getSetIntentData();
         showExistedRemindersFromDB();
@@ -155,9 +162,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
             }
         });
         changeTimeTV.setOnClickListener(v -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 showChangeTime(LocalTime.now().getHour(), LocalTime.now().getMinute());
-            }
+
         });
 
         changeDateTV.setOnClickListener(v -> showChangeDate(cDatePicker.get(Calendar.YEAR), cDatePicker.get(Calendar.MONTH), cDatePicker.get(Calendar.DAY_OF_MONTH)));
@@ -379,9 +385,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
                     title = eventCursor.getString(1);
                     comment = eventCursor.getString(2);
                     date = stringToLocalDate(eventCursor.getString(3));
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         time = LocalTime.parse(eventCursor.getString(4));
-                    }
+
                     alarmState = Integer.parseInt(eventCursor.getString(5));
                     repeatState = Integer.parseInt(eventCursor.getString(6));
                     if (eventCursor.getString(7) == null) {
@@ -509,9 +514,13 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
                         }
                     }
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        reminders_upd_list.sort(Date::compareTo);
-                    }
+//                    reminders_upd_list.sort(Date::compareTo);
+                    Collections.sort(reminders_upd_list, new Comparator<Date>() {
+                        @Override
+                        public int compare(Date item1, Date item2) {
+                            return item1.compareTo(item2);
+                        }
+                    });
 
 
 
@@ -530,9 +539,13 @@ public class Edit_Update_Activity extends AppCompatActivity {
                         }
                     }
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        reminders_upd_list.sort(Date::compareTo);
-                    }
+//                        reminders_upd_list.sort(Date::compareTo);
+                    Collections.sort(reminders_upd_list, new Comparator<Date>() {
+                        @Override
+                        public int compare(Date item1, Date item2) {
+                            return item1.compareTo(item2);
+                        }
+                    });
                     remindersAdapter = new RemindersAdapter(Edit_Update_Activity.this, reminders_upd_list);
 
                     remindersListViewUPD.setVisibility(View.VISIBLE);
@@ -581,16 +594,24 @@ public class Edit_Update_Activity extends AppCompatActivity {
 //                            remindersAdapter.notifyDataSetChanged();
                     remindersListViewUPD.setVisibility(View.GONE);
                 } else if (reminders_upd_list.size() == 1) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        reminders_upd_list.sort(Date::compareTo);
-                    }
+//                        reminders_upd_list.sort(Date::compareTo);
+                    Collections.sort(reminders_upd_list, new Comparator<Date>() {
+                        @Override
+                        public int compare(Date item1, Date item2) {
+                            return item1.compareTo(item2);
+                        }
+                    });
                     ViewGroup.LayoutParams paramsListView = remindersListViewUPD.getLayoutParams();
                     paramsListView.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                     remindersListViewUPD.setLayoutParams(paramsListView);
                 } else {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        reminders_upd_list.sort(Date::compareTo);
-                    }
+//                        reminders_upd_list.sort(Date::compareTo);
+                    Collections.sort(reminders_upd_list, new Comparator<Date>() {
+                        @Override
+                        public int compare(Date item1, Date item2) {
+                            return item1.compareTo(item2);
+                        }
+                    });
                     ViewGroup.LayoutParams paramsListView = remindersListViewUPD.getLayoutParams();
                     paramsListView.height = 500;
                     remindersListViewUPD.setLayoutParams(paramsListView);
@@ -657,9 +678,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
     private void alertDialogCountRepeatIfDateChange(LocalDate date) {
         cRepeat.clear();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             cRepeat.set(date.getYear(), date.getMonthValue() - 1, date.getDayOfMonth());
-        }
+
         cRepeat.set(Calendar.HOUR_OF_DAY, 8);
         cRepeat.set(Calendar.MINUTE, 0);
         cRepeat.set(Calendar.SECOND, 0);
@@ -705,17 +725,15 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
 
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 myDD = LocalDate.of(year1, trueMonth, dayOfMonth);
 
-            }
+
 
             eventDateTV.setText(CalendarUtils.formattedDateEventEdit(myDD));
 
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 date = LocalDate.of(year1, trueMonth, dayOfMonth);
-            }
+
 
             if (!(myDD == null))
             {
@@ -726,19 +744,15 @@ public class Edit_Update_Activity extends AppCompatActivity {
                         cRemChanged.clear();
                         Date cRemBefore = reminders_upd_list.get(i);
                         int yearTEST = 0;
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                             yearTEST = myDD.getYear();
-                        }
-                        int monthTEST = 0;
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                            monthTEST = myDD.getMonth().getValue()-1;
-                        }
-                        int dayTest = 0;
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                            dayTest = myDD.getDayOfMonth();
-                        }
 
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        int monthTEST = 0;
+                            monthTEST = myDD.getMonth().getValue()-1;
+
+                        int dayTest = 0;
+                            dayTest = myDD.getDayOfMonth();
+
+
                             cRemChanged.set(Calendar.YEAR, yearTEST);
                             cRemChanged.set(Calendar.MONTH, monthTEST);
                             cRemChanged.set(Calendar.DAY_OF_MONTH, dayTest);
@@ -748,7 +762,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                             cRemChanged.set(Calendar.MILLISECOND, 0);
                             Date testD = cRemChanged.getTime();
                             reminder_list_date_changed.add(testD);
-                        }
+
 
 
                     }
@@ -786,9 +800,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
                 String allTime = hourStr + ":" + minStr;
 
                 eventTimeTV.setText(hourStr + ":" + minStr);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     time = LocalTime.parse(allTime, DateTimeFormatter.ISO_TIME);
-                }
+
 
 
             } else if (hour < 10 && min >= 10) {
@@ -796,27 +809,24 @@ public class Edit_Update_Activity extends AppCompatActivity {
                 String allTime = hourStr + ":" + min;
 
                 eventTimeTV.setText(hourStr + ":" + min);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     time = LocalTime.parse(allTime, DateTimeFormatter.ISO_TIME);
-                }
+
             } else if (hour >= 10 && min < 10) {
                 @SuppressLint("DefaultLocale") String minStr = String.format("%02d", min);
 
                 String allTime = hour + ":" + minStr;
 
                 eventTimeTV.setText(hour + ":" + minStr);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     time = LocalTime.parse(allTime, DateTimeFormatter.ISO_TIME);
-                }
+
 
 
             } else {
                 String allTime = hour + ":" + min;
 
                 eventTimeTV.setText(hour + ":" + min);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     time = LocalTime.parse(allTime, DateTimeFormatter.ISO_TIME);
-                }
+
 
             }
 
@@ -938,8 +948,12 @@ public class Edit_Update_Activity extends AppCompatActivity {
         cc.set(Calendar.MILLISECOND, 0);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(Edit_Update_Activity.this, alarmId, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(), pendingIntent);
+        }else
+        {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, cc.getTimeInMillis(), pendingIntent);
+
         }
 
 
@@ -969,19 +983,17 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
         hideAdReminderDynamically();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
         cReminder.set(Calendar.YEAR, date.getYear());
             cReminder.set(Calendar.MONTH, date.getMonth().getValue() - 1);
         cReminder.set(Calendar.DAY_OF_MONTH, date.getDayOfMonth());
-        }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
 
         cReminder.set(Calendar.HOUR_OF_DAY, time.getHour());
         cReminder.set(Calendar.MINUTE, time.getMinute());
         cReminder.set(Calendar.SECOND, time.getSecond());
-    }
+
 
 
         final AlertDialog dialog = new AlertDialog.Builder(this).setView(rowView)
@@ -991,13 +1003,12 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
             oneDayBefore.setOnClickListener(v -> {
                 alarmState = 1;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
                     date.minusDays(1);
                     cReminder.setTime(Date.from(date.minusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()));
                     cReminder.set(Calendar.HOUR_OF_DAY, time.getHour());
                     cReminder.set(Calendar.MINUTE, time.getMinute());
-                }
+
                 cReminder.set(Calendar.MILLISECOND, 0);
                 oneDayBeforeDate = cReminder.getTime();
                 reminders_upd_list.add(oneDayBeforeDate);
@@ -1007,9 +1018,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
             oneHourMinBefore.setOnClickListener(v -> {
                 alarmState = 1;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     cReminder.set(Calendar.HOUR_OF_DAY, time.getHour() - 1);
-                }
+
                 cReminder.set(Calendar.MILLISECOND, 0);
                 oneHourBeforeDate = cReminder.getTime();
                 reminders_upd_list.add(oneHourBeforeDate);
@@ -1019,9 +1029,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
             halfHourMinBefore.setOnClickListener(v -> {
                 alarmState = 1;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     cReminder.set(Calendar.MINUTE, time.getMinute() - 30);
-                }
+
                 cReminder.set(Calendar.MILLISECOND, 0);
                 halfHourBeforeDate = cReminder.getTime();
                 reminders_upd_list.add(halfHourBeforeDate);
@@ -1032,9 +1041,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
             fifteenMinBefore.setOnClickListener(v -> {
                 alarmState = 1;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     cReminder.set(Calendar.MINUTE, time.getMinute() - 15);
-                }
+
                 cReminder.set(Calendar.MILLISECOND, 0);
                 fifteenMinBeforeDate = cReminder.getTime();
                 reminders_upd_list.add(fifteenMinBeforeDate);
@@ -1046,9 +1054,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
 
                 alarmState = 1;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     cReminder.set(Calendar.MINUTE, time.getMinute() - 10);
-                }
+
                 cReminder.set(Calendar.MILLISECOND, 0);
 
                 tenMinBeforeDate = cReminder.getTime();
@@ -1061,9 +1068,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
 
                 alarmState = 1;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     cReminder.set(Calendar.MINUTE, time.getMinute() - 5);
-                }
+
                 cReminder.set(Calendar.MILLISECOND, 0);
                 fiveMinBeforeDate = cReminder.getTime();
                 reminders_upd_list.add(fiveMinBeforeDate);
@@ -1112,13 +1118,12 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
     private void addRepeat() {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             cRepeat.set(Calendar.YEAR, date.getYear());
 
         cRepeat.set(Calendar.MONTH, date.getMonth().getValue() - 1);
         cRepeat.set(Calendar.DAY_OF_MONTH, date.getDayOfMonth());
 
-        }
+
         cRepeat.set(Calendar.HOUR_OF_DAY, 8);
         cRepeat.set(Calendar.MINUTE, 0);
         cRepeat.set(Calendar.SECOND, 0);
@@ -1207,16 +1212,25 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
 
     private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "myandroidReminderChannel";
             String description = "Channel for Alarm Manager";
             int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel("myandroid", name, importance);
+        NotificationChannel channel = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            channel = new NotificationChannel("myandroid", name, importance);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             channel.setDescription(description);
+        }
 
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        NotificationManager notificationManager = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            notificationManager = getSystemService(NotificationManager.class);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationManager.createNotificationChannel(channel);
         }
+
     }
 
 
@@ -1231,9 +1245,14 @@ public class Edit_Update_Activity extends AppCompatActivity {
             eventName="(Χώρις τίτλο)";
         }
         Cursor cursorRem = myDB.readAllReminder();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            reminders_upd_list.sort(Date::compareTo);
-        }
+//            reminders_upd_list.sort(Date::compareTo);
+        Collections.sort(reminders_upd_list, new Comparator<Date>() {
+            @Override
+            public int compare(Date item1, Date item2) {
+                return item1.compareTo(item2);
+            }
+        });
+
 
 
         if (reminders_upd_list.size() > 0) {
@@ -1322,19 +1341,21 @@ public class Edit_Update_Activity extends AppCompatActivity {
         Cursor cursor = myDB.readAllEvents();
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            repeats_listUPD.sort(Date::compareTo);
-        }
-
+//            repeats_listUPD.sort(Date::compareTo);
+        Collections.sort(repeats_listUPD, new Comparator<Date>() {
+            @Override
+            public int compare(Date element, Date t1) {
+                return element.compareTo(t1);
+            }
+        });
         if (repeatState == 5) {
             for (LocalDate localDate : CustomRepeatActivity.customDatesToSaveLocalDate) {
                 Calendar cForCustom = Calendar.getInstance();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
                     cForCustom.set(Calendar.YEAR, localDate.getYear());
                     cForCustom.set(Calendar.MONTH, localDate.getMonth().getValue() - 1);
                     cForCustom.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
-                }
+
 
                 cForCustom.set(Calendar.HOUR_OF_DAY, 8);
                 cForCustom.set(Calendar.MINUTE, 0);
@@ -1417,9 +1438,13 @@ public class Edit_Update_Activity extends AppCompatActivity {
     private void updateAndSaveReminderAllEvents() {
         Cursor cursorEvent = myDB.readAllEvents();
         Cursor cursorRem = myDB.readAllReminder();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            reminders_upd_list.sort(Date::compareTo);
-        }
+//            reminders_upd_list.sort(Date::compareTo);
+        Collections.sort(reminders_upd_list, new Comparator<Date>() {
+            @Override
+            public int compare(Date item1, Date item2) {
+                return item1.compareTo(item2);
+            }
+        });
 
 
         if (!(editAllArray.isEmpty())) {
@@ -1450,7 +1475,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
                     {reminders_upd_list_all_events.clear();
                         LocalDate cursorLocalDate = stringToLocalDate(cursorEvent.getString(3));
                         Date cursorDate = null;
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                             cursorDate = Date.from(cursorLocalDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
 
                         cAllEventsReminder.setTime(cursorDate);
@@ -1470,7 +1494,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
                             reminders_upd_list_all_events.add(cAllEventsReminder.getTime());
                         }
-                        }
+
                         for (int j = 0; j < reminders_upd_list_all_events.size(); j++) {
 
 
@@ -1496,7 +1520,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
                         reminders_upd_list_all_events.clear();
                         LocalDate cursorLocalDate = stringToLocalDate(cursorEvent.getString(3));
                         Date cursorDate = null;
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                             cursorDate = Date.from(cursorLocalDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
 
                         cAllEventsReminder.setTime(cursorDate);
@@ -1517,7 +1540,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
                             reminders_upd_list_all_events.add(cAllEventsReminder.getTime());
 
                         }
-                        }
+
                             for (int j = 0; j < reminders_upd_list_all_events.size(); j++) {
 
 
@@ -1559,18 +1582,22 @@ public class Edit_Update_Activity extends AppCompatActivity {
         Cursor cursor = myDB.readAllEvents();
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            repeats_listUPD.sort(Date::compareTo);
-        }
+//            repeats_listUPD.sort(Date::compareTo);
+        Collections.sort(repeats_listUPD, new Comparator<Date>() {
+            @Override
+            public int compare(Date item1, Date item2) {
+                return item1.compareTo(item2);
+            }
+        });
+
         if (repeatState == 5) {
             for (LocalDate localDate : CustomRepeatActivity.customDatesToSaveLocalDate) {
                 Calendar cForCustom = Calendar.getInstance();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
                     cForCustom.set(Calendar.YEAR, localDate.getYear());
                     cForCustom.set(Calendar.MONTH, localDate.getMonth().getValue() - 1);
                     cForCustom.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
-                }
+
 
                 cForCustom.set(Calendar.HOUR_OF_DAY, 8);
                 cForCustom.set(Calendar.MINUTE, 0);
@@ -1748,9 +1775,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
                 while (cursorEvent.moveToNext()) {
                     if (id_row.equals(cursorEvent.getString(0)) && !date.equals(stringToLocalDate(cursorEvent.getString(3)))) {
                         LocalDate oldDate = stringToLocalDate(cursorEvent.getString(3));
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             daysBetween = ChronoUnit.DAYS.between(oldDate, date);
-                        }
+
                         myDB.updateEventDate(id_row, date);
                         myDB.updateEventTime(id_row, time);
                     }
@@ -1758,9 +1784,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
                         LocalDate newDate = stringToLocalDate(cursorEvent.getString(3));
                         LocalDate newDateDB = null;
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                             newDateDB = newDate.plusDays(daysBetween);
-                        }
+
                         myDB.updateEventDate(editFutureArray.get(i), newDateDB);
                         myDB.updateEventTime(editFutureArray.get(i), time);
 
@@ -1780,9 +1805,13 @@ public class Edit_Update_Activity extends AppCompatActivity {
     private void updateAndSaveReminderFutureEvents() {
         Cursor cursorEvent = myDB.readAllEvents();
         Cursor cursorRem = myDB.readAllReminder();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            reminders_upd_list.sort(Date::compareTo);
-        }
+//            reminders_upd_list.sort(Date::compareTo);
+        Collections.sort(reminders_upd_list, new Comparator<Date>() {
+            @Override
+            public int compare(Date item1, Date item2) {
+                return item1.compareTo(item2);
+            }
+        });
 
 
         if (!(editFutureArray.isEmpty())) {
@@ -1820,7 +1849,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
                             reminders_upd_list_all_events.clear();
                             LocalDate cursorLocalDate = stringToLocalDate(cursorEvent.getString(3));
                             Date cursorDate = null;
-                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                                 cursorDate = Date.from(cursorLocalDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
 
                             cAllEventsReminder.setTime(cursorDate);
@@ -1840,7 +1868,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
                                 reminders_upd_list_all_events.add(cAllEventsReminder.getTime());
                             }
-                            }
+
 
                                 for (int j = 0; j < reminders_upd_list_all_events.size(); j++) {
 
@@ -1890,9 +1918,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
         String eventComment = eventCommentETUPD.getText().toString();
 
         cRepeat.clear();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             cRepeat.set(date.getYear(), date.getMonthValue() - 1, date.getDayOfMonth());
-        }
+
         cRepeat.set(Calendar.HOUR_OF_DAY, 8);
         cRepeat.set(Calendar.MINUTE, 0);
         cRepeat.set(Calendar.SECOND, 0);
@@ -1931,12 +1958,11 @@ public class Edit_Update_Activity extends AppCompatActivity {
         } else if (repeatState == 5) {
             for (LocalDate localDate : CustomRepeatActivity.customDatesToSaveLocalDate) {
                 Calendar cForCustom = Calendar.getInstance();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
                     cForCustom.set(Calendar.YEAR, localDate.getYear());
                     cForCustom.set(Calendar.MONTH, localDate.getMonth().getValue() - 1);
                     cForCustom.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
-                }
+
 
                 cForCustom.set(Calendar.HOUR_OF_DAY, 8);
                 cForCustom.set(Calendar.MINUTE, 0);
@@ -2076,9 +2102,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
         myDB.close();
 
         Intent i1 = new Intent(Edit_Update_Activity.this, MainActivity.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             i1.putExtra("date", date);
-        }
+
 
         String myTemp = CalendarUtils.selectedDate.toString();
         i1.putExtra("tempDate",myTemp);

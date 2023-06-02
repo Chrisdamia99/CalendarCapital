@@ -24,9 +24,8 @@ public class RecyclerViewActions {
         if (activity.getIntent().hasExtra("date")) {
             Bundle b = activity.getIntent().getExtras();
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 selectedDate = (LocalDate) b.get("date");
-            }
+
             activity.getIntent().removeExtra("date");
 
         }

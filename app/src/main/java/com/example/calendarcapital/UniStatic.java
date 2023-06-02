@@ -69,9 +69,8 @@ public class UniStatic {
                 LocalDate cursorLocalDate = stringToLocalDate(cursorEvent.getString(3));
                 String cursorParentID = cursorEvent.getString(7);
                 int comparisonLocalDates = 0;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                     comparisonLocalDates = selectedDate.compareTo(cursorLocalDate);
-                }
+
                 if (!(cursorParentID == null) && cursorParentID.equals(parent_id)) {
 
                     if (comparisonLocalDates < 0 || selectedDate.equals(cursorLocalDate)) {

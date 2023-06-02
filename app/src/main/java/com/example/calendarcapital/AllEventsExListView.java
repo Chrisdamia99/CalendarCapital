@@ -529,9 +529,9 @@ private void hourAdapterClickActionGroup(int groupPosition,ExpandableListView pa
                         LocalDate cursorLocalDate = stringToLocalDate(cursorEvent.getString(3));
                         String cursorParentID = cursorEvent.getString(7);
                         int comparisonLocalDates = 0;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
                             comparisonLocalDates = event_date.compareTo(cursorLocalDate);
-                        }
+
                         if (!(cursorParentID == null) && cursorParentID.equals(parent_id)) {
 
                             if (comparisonLocalDates < 0 || event_date.equals(cursorLocalDate)) {
@@ -659,9 +659,9 @@ private void hourAdapterClickActionGroup(int groupPosition,ExpandableListView pa
                 @SuppressLint("Range") String comment = cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_COMMENT));
                 @SuppressLint("Range") LocalDate date = CalendarUtils.stringToLocalDate(cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_DATE)));
                 @SuppressLint("Range") LocalTime time = null;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
                     time = LocalTime.parse(cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_TIME)));
-                }
+
                 @SuppressLint("Range") String alarm = String.valueOf(cursor.getInt(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_ALARM)));
                 @SuppressLint("Range") String parentId = String.valueOf(cursor.getLong(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_PARENT_ID)));
                 @SuppressLint("Range")  String location = String.valueOf(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_LOCATION));
@@ -705,9 +705,8 @@ private void hourAdapterClickActionGroup(int groupPosition,ExpandableListView pa
                 @SuppressLint("Range") String comment = cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_COMMENT));
                 @SuppressLint("Range") LocalDate date = CalendarUtils.stringToLocalDate(cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_DATE)));
                 @SuppressLint("Range") LocalTime time = null;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                     time = LocalTime.parse(cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_TIME)));
-                }
+
                 @SuppressLint("Range") String alarm = String.valueOf(cursor.getInt(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_ALARM)));
                 @SuppressLint("Range") String parentId = String.valueOf(cursor.getLong(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_PARENT_ID)));
                 @SuppressLint("Range")  String location = String.valueOf(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_LOCATION));
@@ -752,10 +751,8 @@ private void hourAdapterClickActionGroup(int groupPosition,ExpandableListView pa
                 @SuppressLint("Range") String title = cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_TITLE));
                 @SuppressLint("Range") String comment = cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_COMMENT));
                 @SuppressLint("Range") LocalDate date = CalendarUtils.stringToLocalDate(cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_DATE)));
-                @SuppressLint("Range") LocalTime time = null;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                    time = LocalTime.parse(cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_TIME)));
-                }
+                @SuppressLint("Range") LocalTime time = LocalTime.parse(cursor.getString(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_TIME)));
+
                 @SuppressLint("Range") String alarm = String.valueOf(cursor.getInt(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_ALARM)));
                 @SuppressLint("Range") String parentId = String.valueOf(cursor.getLong(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_PARENT_ID)));
                 @SuppressLint("Range")  String location = String.valueOf(cursor.getColumnIndex(MyDatabaseHelper.COLUMN_LOCATION));

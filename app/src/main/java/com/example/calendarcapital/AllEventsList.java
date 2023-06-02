@@ -43,9 +43,9 @@ public class AllEventsList {
             String myDateTest = cursor.getString(3);
             LocalDate dateDB = CalendarUtils.stringToLocalDate(myDateTest);
             LocalTime timeDB = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
                 timeDB = LocalTime.parse(cursor.getString(4));
-            }
+
             String titleDB = cursor.getString(1);
             String commentDB = cursor.getString(2);
             String id_event = cursor.getString(0);
@@ -64,16 +64,15 @@ public class AllEventsList {
 
                 eventsDB.add(hourEventDB);
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
-                }
+
 
 
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
                 Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
-            }
+
 
 
         }
@@ -82,9 +81,9 @@ public class AllEventsList {
     cursor.close();
         myDB.close();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
             Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
-        }
+
         return eventsDB;
     }
 
@@ -102,9 +101,9 @@ public class AllEventsList {
             while (cursor.moveToNext()) {
                 LocalDate dateDB = CalendarUtils.stringToLocalDate(cursor.getString(3));
                 LocalTime timeDB = null;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
                     timeDB = LocalTime.parse(cursor.getString(4));
-                }
+
                 String titleDB = cursor.getString(1);
                 String commentDB = cursor.getString(2);
                 String id_event = cursor.getString(0);
@@ -124,21 +123,20 @@ public class AllEventsList {
                 eventsDB.add(hourEventDB);
 
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
                     Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
-                }
+
 
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
-            }
 
-        }
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
+
+
         }
+
+
+            Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
+
 
         cursor.close();
         myDB.close();
@@ -159,9 +157,9 @@ public class AllEventsList {
                 if (!(cursor.getString(7) == null)) {
                     LocalDate dateDB = CalendarUtils.stringToLocalDate(cursor.getString(3));
                     LocalTime timeDB = null;
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
                         timeDB = LocalTime.parse(cursor.getString(4));
-                    }
+
                     String titleDB = cursor.getString(1);
                     String commentDB = cursor.getString(2);
                     String id_event = cursor.getString(0);
@@ -182,21 +180,21 @@ public class AllEventsList {
                     eventsDB.add(hourEventDB);
 
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
                         Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
-                    }
+
                 }
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
                 Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
-            }
+
 
         }
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
             Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
-        }
+
 
         cursor.close();
         myDB.close();
@@ -216,9 +214,8 @@ public class AllEventsList {
                 if (cursor.getString(7)==null || !(cursor.getString(7)==null)) {
                     LocalDate dateDB = CalendarUtils.stringToLocalDate(cursor.getString(3));
                     LocalTime timeDB = null;
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                         timeDB = LocalTime.parse(cursor.getString(4));
-                    }
+
                     String titleDB = cursor.getString(1);
                     String commentDB = cursor.getString(2);
                     String id_event = cursor.getString(0);
@@ -238,21 +235,18 @@ public class AllEventsList {
                     eventsDB.add(hourEventDB);
 
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
-                    }
+
                 }
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
-            }
+
 
         }
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
-        }
+
 
         cursor.close();
         myDB.close();

@@ -16,6 +16,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -170,8 +172,13 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
         numEvents=0;
         numRepeatingEvents=0;
 
-            myEvents.sort((o1, o2) -> o2.getName().compareTo(o1.getName()));
-
+//            myEvents.sort((o1, o2) -> o2.getName().compareTo(o1.getName()));
+        Collections.sort(myEvents, new Comparator<Event>() {
+            @Override
+            public int compare(Event item1, Event item2) {
+                return item1.getName().compareTo(item2.getName());
+            }
+        });
         cursor.moveToPosition(-1);
         for (int i=0; i<days.size(); i++)
         {

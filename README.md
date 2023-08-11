@@ -1,9 +1,9 @@
 # CalendarCapital
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![GitHub stars](https://img.shields.io/github/stars/YourUsername/YourRepo.svg)](https://github.com/YourUsername/YourRepo/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/YourUsername/YourRepo.svg)](https://github.com/YourUsername/YourRepo/network)
-[![GitHub issues](https://img.shields.io/github/issues/YourUsername/YourRepo.svg)](https://github.com/YourUsername/YourRepo/issues)
+[![GitHub stars](https://img.shields.io/github/stars/Chrisdamia99/CalendarCapital.svg)]([https://github.com/YourUsername/YourRepo/stargazers](https://github.com/Chrisdamia99/CalendarCapital/stargazers))
+[![GitHub forks](https://img.shields.io/github/forks/Chrisdamia99/CalendarCapital.svg)]([https://github.com/YourUsername/YourRepo/network](https://github.com/Chrisdamia99/CalendarCapital/forks))
+[![GitHub issues](https://img.shields.io/github/issues/Chrisdamia99/CalendarCapital.svg)]([https://github.com/YourUsername/YourRepo/issues](https://github.com/Chrisdamia99/CalendarCapital/issues))
 
 A simple and effective calendar application that users can schedule their events.
 

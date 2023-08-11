@@ -96,6 +96,43 @@ configurations.implementation {
     exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
 }
 
+## Usage Examples
+
+### Adding an Event
+
+1. Open the Calendar app.
+2. Click on the "+" button to add a new event.
+3. Fill in the event details, including title, date, time, and location.
+4. Choose the event color to categorize it.
+5. Click "Save" to add the event to your calendar.
+
+
+## Troubleshooting
+
+### Issue: App crashes on startup
+- **Solution:** Make sure you have the latest version of the app installed. If the issue persists, try clearing app data or reinstalling the app.
+
+### Issue: Reminders not working
+- **Solution:** Check if you have enabled notifications for the app in your device settings. Also, ensure that the app has necessary permissions to send notifications.
+
+## Security and Privacy
+
+We take user privacy seriously. Here's how we handle security:
+
+- Your data is stored securely and encrypted in your own device.
+- I follow best practices to protect your information from unauthorized access.
+- The app only requests necessary permissions to function properly.
+- I do not share your personal information with third parties.
+
+For more details, refer to our [Privacy Policy](PRIVACY_POLICY).
+
+## Installation
+
+1. Clone the repository:
+git clone https://github.com/Chrisdamia99/CalendarCapital.git
+2. Open the project in Android Studio.
+3. Build and run the app on an emulator or a physical device.
+
 
 ## Contact
 

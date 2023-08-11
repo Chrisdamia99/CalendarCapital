@@ -2,10 +2,9 @@ package com.example.calendarcapital;
 
 import static com.example.calendarcapital.CalendarUtils.selectedDate;
 
-import android.app.Activity;
+
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Build;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,13 +19,7 @@ import java.util.Objects;
 
 public class AllEventsList {
 
-    public static void reloadActivity(Activity activity) {
-        activity.finish();
-        activity.overridePendingTransition(0, 0);
-        activity.startActivity(activity.getIntent());
-        activity.overridePendingTransition(0, 0);
 
-    }
 
 
     @NonNull
@@ -35,17 +28,11 @@ public class AllEventsList {
 
         Cursor cursor = myDB.readAllEvents();
 
-
-
-
-
         while (cursor.moveToNext()) {
             String myDateTest = cursor.getString(3);
             LocalDate dateDB = CalendarUtils.stringToLocalDate(myDateTest);
             LocalTime timeDB = null;
-
                 timeDB = LocalTime.parse(cursor.getString(4));
-
             String titleDB = cursor.getString(1);
             String commentDB = cursor.getString(2);
             String id_event = cursor.getString(0);
@@ -57,7 +44,8 @@ public class AllEventsList {
             Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB, alarm,repeat,parent_id,color,location);
 
             if (Objects.equals(CalendarUtils.formattedDate(selectedDate), CalendarUtils.formattedDate(dateDB))) {
-                ArrayList<Event> eventarrayDB = Event.eventsForDateAndTime(selectedDate, timeDB);
+
+                ArrayList<Event> eventarrayDB = new ArrayList<>();
 
                 eventarrayDB.add(eventDB);
                 HourEvent hourEventDB = new HourEvent(timeDB, eventarrayDB,id_event);
@@ -65,23 +53,11 @@ public class AllEventsList {
                 eventsDB.add(hourEventDB);
 
                     Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
-
-
-
             }
-
-
                 Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
-
-
-
         }
-
-
     cursor.close();
         myDB.close();
-
-
             Collections.sort(eventsDB, Comparator.comparing(a -> a.events.get(0).getDate()));
 
         return eventsDB;
@@ -115,7 +91,7 @@ public class AllEventsList {
                 Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB, alarm,repeat,parent_id,color,location);
 
 
-                ArrayList<Event> eventarrayDB = Event.eventsForDateAndTime(selectedDate, timeDB);
+                ArrayList<Event> eventarrayDB = new ArrayList<>();
 
                 eventarrayDB.add(eventDB);
                 HourEvent hourEventDB = new HourEvent(timeDB, eventarrayDB,id_event);
@@ -172,7 +148,7 @@ public class AllEventsList {
                     Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB, alarm, repeat, parent_id,color,location);
 
 
-                    ArrayList<Event> eventarrayDB = Event.eventsForDateAndTime(selectedDate, timeDB);
+                    ArrayList<Event> eventarrayDB = new ArrayList<>();
 
                     eventarrayDB.add(eventDB);
                     HourEvent hourEventDB = new HourEvent(timeDB, eventarrayDB, id_event);
@@ -227,7 +203,7 @@ public class AllEventsList {
                     Event eventDB = new Event(id_event, titleDB, commentDB, dateDB, timeDB, alarm, repeat, parent_id,color,location);
 
 
-                    ArrayList<Event> eventarrayDB = Event.eventsForDateAndTime(selectedDate, timeDB);
+                    ArrayList<Event> eventarrayDB = new ArrayList<>();
 
                     eventarrayDB.add(eventDB);
                     HourEvent hourEventDB = new HourEvent(timeDB, eventarrayDB, id_event);

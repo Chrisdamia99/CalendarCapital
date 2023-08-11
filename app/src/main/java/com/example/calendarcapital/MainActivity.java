@@ -13,6 +13,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -36,6 +37,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.jakewharton.threetenabp.AndroidThreeTen;
@@ -62,18 +64,14 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     private ListView monthListView;
     HourAdapter hourAdapter;
     ImageButton prevMonth, nextMonth;
-    ImageView imageMenu, backMenuBtn, refreshMenuBtn,searchMenuBtn;
+    ImageView imageMenu, backMenuBtn, refreshMenuBtn, searchMenuBtn;
     private final MyDatabaseHelper myDB = new MyDatabaseHelper(this);
     DrawerLayout drawerLayout;
-    public static ArrayDeque<String> stack = new ArrayDeque<>();
-    public static String getSaveStack;
-    public static LocalDate tempSelectedDate;
-    public static String viewNow;
+    private static ArrayDeque<String> stack = new ArrayDeque<>();
+    private static String getSaveStack;
+    private static LocalDate tempSelectedDate;
+    private static String viewNow;
     private boolean isSearchViewExpanded = false;
-
-
-
-
 
 
     @Override
@@ -87,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
         initWidgets();
 
-            selectedDate = LocalDate.now();
+        selectedDate = LocalDate.now();
 
         if (getIntent().hasExtra("tempDate")) {
             String intentTemp = getIntent().getStringExtra("tempDate");
@@ -111,21 +109,16 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
         refreshMenuBtn.setOnClickListener(v -> {
 
-                selectedDate = LocalDate.now();
-                if (Objects.equals(viewNow, "month"))
-                {
-                    setMonthView();
-                }else if (Objects.equals(viewNow, "week"))
-                {
-                    setWeek();
-                } else if (Objects.equals(viewNow, "daily")) {
-                    setDaily();
-                }else
-                {
-                    setMonthView();
-                }
-
-
+            selectedDate = LocalDate.now();
+            if (Objects.equals(viewNow, "month")) {
+                setMonthView();
+            } else if (Objects.equals(viewNow, "week")) {
+                setWeek();
+            } else if (Objects.equals(viewNow, "daily")) {
+                setDaily();
+            } else {
+                setMonthView();
+            }
 
 
         });
@@ -144,15 +137,14 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
         imageMenu.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
         searchMenuBtn.setOnClickListener(v -> {
-            Intent i = new Intent(MainActivity.this,SearchActivity.class);
+            Intent i = new Intent(MainActivity.this, SearchActivity.class);
             String stackNow = stack.peekFirst();
-            i.putExtra("stack",stackNow);
+            i.putExtra("stack", stackNow);
             startActivity(i);
         });
-prevMonth.setOnClickListener(v -> previousMonthAction());
+        prevMonth.setOnClickListener(v -> previousMonthAction());
 
-nextMonth.setOnClickListener(v -> nextMonthAction());
-
+        nextMonth.setOnClickListener(v -> nextMonthAction());
 
 
         NavigationView navigationView = findViewById(R.id.navigationView);
@@ -179,9 +171,7 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
         searchMenuBtn = findViewById(R.id.searchMenuBtn);
 
 
-
     }
-
 
 
     //----------Stacks--------------------
@@ -226,7 +216,7 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
                     break;
                 case "month":
                     setMonthView();
-                stack.clear();
+                    stack.clear();
                     break;
 
             }
@@ -273,8 +263,7 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
 
     private void onMyBackPressed() {
 
-        if (!stack.isEmpty())
-        {
+        if (!stack.isEmpty()) {
             stack.removeFirst();
         }
 
@@ -287,8 +276,7 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
         }
         if (previousViewType == null) {
             setMonthView();
-        } else
-        {
+        } else {
             switch (previousViewType) {
                 case "daily":
                 case "double-click-month":
@@ -313,7 +301,7 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
                     break;
 
             }
-    }
+        }
     }
 
 
@@ -344,11 +332,9 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
 
                 Objects.requireNonNull(calendarRecyclerView.getAdapter()).notifyDataSetChanged();
 
-                    if (!selectedDate.getMonth().equals(tempStartSeletedDate.getMonth()))
-                    {
-                        setMonthView();
-                    }
-
+                if (!selectedDate.getMonth().equals(tempStartSeletedDate.getMonth())) {
+                    setMonthView();
+                }
 
 
                 clickCounter++;
@@ -402,7 +388,7 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
     public void onBackPressed() {
 
 
-        if (calendarRecyclerView.getMeasuredHeight() > 401 && calendarRecyclerView.getVisibility() == View.VISIBLE) {
+        if (calendarRecyclerView.getVisibility() == View.VISIBLE && calendarRecyclerView.getMeasuredHeight() > 401 && calendarRecyclerView.getVisibility() == View.VISIBLE) {
 
             if (backButtonPressedOnce) {
                 super.onBackPressed();
@@ -424,7 +410,6 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 
 
-
         } else {
 
         }
@@ -440,8 +425,6 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
         }
 
 
-
-
     }
 
     //---------Set HourAdapter Events--------------
@@ -449,9 +432,9 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
         hourAdapter = new HourAdapter(getApplicationContext(), AllEventsList.hourEventListFromDatabase(myDB));
 
 
-            hourAdapter.sort(Comparator.comparing(o -> o.events.get(0).getDate()));
+        hourAdapter.sort(Comparator.comparing(o -> o.events.get(0).getDate()));
 
-            hourAdapter.sort(Comparator.comparing(o -> o.events.get(0).getTime()));
+        hourAdapter.sort(Comparator.comparing(o -> o.events.get(0).getTime()));
 
         monthListView.setDivider(new ColorDrawable(Color.TRANSPARENT));
         monthListView.setAdapter(hourAdapter);
@@ -491,15 +474,15 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
             AlertDialog builderRepeatingDelete = new AlertDialog.Builder(MainActivity.this).setView(rowView).setTitle("Διαγραφή συμβάντος").create();
 
 
-            viewFinal = CA.setAllFields(view1, myEventId, myTitle, myComment, myDate, myTime,location);
+            viewFinal = CA.setAllFields(view1, myEventId, myTitle, myComment, myDate, myTime, location);
 
 
             builder.setView(viewFinal).
 
-                    setPositiveButton("Delete", (dialog, which) -> {
+                    setPositiveButton("Διαγραφη", (dialog, which) -> {
 
                         AlertDialog.Builder builderDel = new AlertDialog.Builder(MainActivity.this);
-                        builderDel.setPositiveButton("Yes", (dialog1, which1) -> {
+                        builderDel.setPositiveButton("ναι", (dialog1, which1) -> {
                             String parent_id_value = hourAdapter.getItem(position).getEvents().get(0).getParent_id();
                             String row_id = hourAdapter.getItem(position).getEvents().get(0).getId();
 
@@ -512,7 +495,7 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
                             }
 
 
-                        }).setNegativeButton("No", (dialog12, which12) -> {
+                        }).setNegativeButton("οχι", (dialog12, which12) -> {
                             String previousViewType = stack.peekFirst();
                             switch (Objects.requireNonNull(previousViewType)) {
                                 case "all":
@@ -541,11 +524,11 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
                                     break;
                             }
 
-                        }).setTitle("Are you sure you want to delete event " + title_upd + " ?");
+                        }).setTitle("Οριστική διαγραφή του " + title_upd + " ?");
                         builderDel.show();
 
 
-                    }).setNegativeButton("Exit", (dialog, which) -> dialog.cancel()).setNeutralButton("Edit", (dialog, which) -> {
+                    }).setNegativeButton("εξοδος", (dialog, which) -> dialog.cancel()).setNeutralButton("επεξεργασια", (dialog, which) -> {
                         Intent i = new Intent(MainActivity.this, Edit_Update_Activity.class);
 
                         String row_id = hourAdapter.getItem(position).getEvents().get(0).getId();
@@ -658,9 +641,8 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
 
 
                 String previousViewType = stack.peekFirst();
-                if (previousViewType==null)
-                {
-                    previousViewType="daily";
+                if (previousViewType == null) {
+                    previousViewType = "daily";
                 }
                 switch (Objects.requireNonNull(previousViewType)) {
                     case "all":
@@ -704,19 +686,15 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
                 Cursor remCursor = myDB.readAllReminder();
                 int tempIdForNewParent = 0;
                 int repeat = 0;
-                if (event_rep_parent_id==null)
-                {
+                if (event_rep_parent_id == null) {
                     eventCursor.moveToPosition(-1);
-                    while(eventCursor.moveToNext())
-                    {
-                        if (eventCursor.getString(0).equals(event_repeating_id))
-                        {
-                            repeat= Integer.parseInt(eventCursor.getString(6));
+                    while (eventCursor.moveToNext()) {
+                        if (eventCursor.getString(0).equals(event_repeating_id)) {
+                            repeat = Integer.parseInt(eventCursor.getString(6));
                         }
-                        if (!(eventCursor.getString(7)==null) && eventCursor.getString(7).equals(event_repeating_id))
-                        {
+                        if (!(eventCursor.getString(7) == null) && eventCursor.getString(7).equals(event_repeating_id)) {
                             tempIdForNewParent = Integer.parseInt(eventCursor.getString(0));
-                            myDB.updateEventParentId(String.valueOf(tempIdForNewParent),null);
+                            myDB.updateEventParentId(String.valueOf(tempIdForNewParent), null);
                             myDB.updateEventRepeat(String.valueOf(tempIdForNewParent), String.valueOf(repeat));
                             myDB.deleteOneRow(event_repeating_id);
                             break;
@@ -724,16 +702,13 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
                     }
 
                     newEventCursor.moveToPosition(-1);
-                    while(newEventCursor.moveToNext())
-                    {
-                        if (!(newEventCursor.getString(7)==null) && newEventCursor.getString(7).equals(event_repeating_id))
-                        {
+                    while (newEventCursor.moveToNext()) {
+                        if (!(newEventCursor.getString(7) == null) && newEventCursor.getString(7).equals(event_repeating_id)) {
                             myDB.updateEventParentId(newEventCursor.getString(0), String.valueOf(tempIdForNewParent));
                             myDB.updateEventRepeat(newEventCursor.getString(0), String.valueOf(0));
                         }
                     }
-                }else
-                {
+                } else {
                     myDB.deleteOneRow(event_repeating_id);
                 }
 
@@ -754,9 +729,8 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
                 myDB.close();
 
                 String previousViewType = stack.peekFirst();
-                if (previousViewType==null)
-                {
-                    previousViewType="daily";
+                if (previousViewType == null) {
+                    previousViewType = "daily";
                 }
                 switch (Objects.requireNonNull(previousViewType)) {
                     case "all":
@@ -807,7 +781,7 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
                         LocalDate cursorLocalDate = stringToLocalDate(cursorEvent.getString(3));
                         String cursorParentID = cursorEvent.getString(7);
                         int comparisonLocalDates = 0;
-                            comparisonLocalDates = event_date.compareTo(cursorLocalDate);
+                        comparisonLocalDates = event_date.compareTo(cursorLocalDate);
 
                         if (!(cursorParentID == null) && cursorParentID.equals(parent_id)) {
 
@@ -835,9 +809,8 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
                 myDB.close();
 
                 String previousViewType = stack.peekFirst();
-                if (previousViewType==null)
-                {
-                    previousViewType="daily";
+                if (previousViewType == null) {
+                    previousViewType = "daily";
                 }
                 switch (Objects.requireNonNull(previousViewType)) {
                     case "all":
@@ -914,9 +887,8 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
         myDB.close();
 
         String previousViewType = stack.peekFirst();
-        if (previousViewType==null)
-        {
-            previousViewType="daily";
+        if (previousViewType == null) {
+            previousViewType = "daily";
         }
         switch (Objects.requireNonNull(previousViewType)) {
             case "all":
@@ -957,7 +929,7 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, alarmId, intent, PendingIntent.FLAG_IMMUTABLE);
 
         alarmManager.cancel(pendingIntent);
-        Toast.makeText(this, "Alarm Cancelled", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Alarm Cancelled", Toast.LENGTH_SHORT).show();
 
 
     }
@@ -967,18 +939,17 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
     public void previousMonthAction() {
         if (calendarRecyclerView.getVisibility() == View.GONE) {
 
-                selectedDate = selectedDate.minusDays(1);
+            selectedDate = selectedDate.minusDays(1);
 
             setDaily();
-        } else if (calendarRecyclerView.getMeasuredHeight() < 301) {
-                selectedDate = selectedDate.minusWeeks(1);
+        } else if (calendarRecyclerView.getMeasuredHeight() < 321) {
+            selectedDate = selectedDate.minusWeeks(1);
 
 
             setWeek();
         } else {
-                selectedDate = selectedDate.minusMonths(1);
-                setMonthView();
-
+            selectedDate = selectedDate.minusMonths(1);
+            setMonthView();
 
 
         }
@@ -988,42 +959,37 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
 
     public void nextMonthAction() {
 
+
         if (calendarRecyclerView.getVisibility() == View.GONE) {
-                selectedDate = selectedDate.plusDays(1);
+            selectedDate = selectedDate.plusDays(1);
 
             setDaily();
-        } else if (calendarRecyclerView.getMeasuredHeight() < 301) {
-                selectedDate = selectedDate.plusWeeks(1);
-
+        } else if (calendarRecyclerView.getMeasuredHeight() < 321) {
+            selectedDate = selectedDate.plusWeeks(1);
 
             setWeek();
         } else {
-                selectedDate = selectedDate.plusMonths(1);
-
+            selectedDate = selectedDate.plusMonths(1);
 
             setMonthView();
-            }
-
         }
 
-
-
+    }
 
 
     //--------------Set Views--------------------------------
-    public void removeExtraDateIntent()
-    {
+    public void removeExtraDateIntent() {
         if (getIntent().hasExtra("date")) {
             Bundle b = getIntent().getExtras();
 
-                selectedDate = (LocalDate) b.get("date");
+            selectedDate = (LocalDate) b.get("date");
 
             getIntent().removeExtra("date");
 
         }
     }
-    public void setCalendarRecyclerViewMonth()
-    {
+
+    public void setCalendarRecyclerViewMonth() {
         ArrayList<LocalDate> daysInMonth = daysInMonthArray();
         CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, this, getApplicationContext());
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 7);
@@ -1041,8 +1007,8 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
         calendarRecyclerView.setLayoutParams(params);
         calendarRecyclerView.setLayoutParams(marginParams);
     }
-    private void setCalendarRecyclerViewWeek()
-    {
+
+    private void setCalendarRecyclerViewWeek() {
         ArrayList<LocalDate> days = daysInWeekArray(selectedDate);
 
         CalendarAdapter calendarAdapter = new CalendarAdapter(days, this, getApplicationContext());
@@ -1060,38 +1026,40 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
         calendarRecyclerView.setLayoutParams(marginParams);
     }
 
+
     //MonthView
     private void setMonthView() {
-        viewNow ="month";
+        viewNow = "month";
         RecyclerViewActions.removeExtraDateIntent(this);
         monthYearText.setText(monthYearFromDate(selectedDate));
-        RecyclerViewActions.setCalendarRecyclerViewMonth(this,getApplicationContext(),calendarRecyclerView);
+        RecyclerViewActions.setCalendarRecyclerViewMonth(this, getApplicationContext(),
+                calendarRecyclerView);
         setVisibilityMonth();
 
     }
 
-    public void setVisibilityMonth()
-    {
-    imageMenu.setVisibility(View.VISIBLE);
-    monthListView.setVisibility(View.GONE);
-    monthYearText.setVisibility(View.VISIBLE);
-    daysOfWeekDaily.setVisibility(View.GONE);
-    daysOfWeek.setVisibility(View.VISIBLE);
-    prevMonth.setVisibility(View.VISIBLE);
-    nextMonth.setVisibility(View.VISIBLE);
-    calendarRecyclerView.setVisibility(View.VISIBLE);
-    backMenuBtn.setVisibility(View.GONE);
-}
+
+    public void setVisibilityMonth() {
+        imageMenu.setVisibility(View.VISIBLE);
+        monthListView.setVisibility(View.GONE);
+        monthYearText.setVisibility(View.VISIBLE);
+        daysOfWeekDaily.setVisibility(View.GONE);
+        daysOfWeek.setVisibility(View.VISIBLE);
+        prevMonth.setVisibility(View.VISIBLE);
+        nextMonth.setVisibility(View.VISIBLE);
+        calendarRecyclerView.setVisibility(View.VISIBLE);
+        backMenuBtn.setVisibility(View.GONE);
+    }
 
 
     //WeeekView
 
     private void setWeek() {
 
-        viewNow="week";
+        viewNow = "week";
         RecyclerViewActions.removeExtraDateIntent(this);
         monthYearText.setText(monthYearFromDate(selectedDate));
-        RecyclerViewActions.setCalendarRecyclerViewWeek(this,getApplicationContext(),calendarRecyclerView);
+        RecyclerViewActions.setCalendarRecyclerViewWeek(this, getApplicationContext(), calendarRecyclerView);
         setParamsMonthListViewWeek();
 
 
@@ -1100,15 +1068,13 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
 
     }
 
-    private void setParamsMonthListViewWeek()
-    {
+    private void setParamsMonthListViewWeek() {
         ViewGroup.LayoutParams paramsListView = monthListView.getLayoutParams();
         paramsListView.height = 1200;
         monthListView.setLayoutParams(paramsListView);
     }
 
-    public void setVisibilityWeek()
-    {
+    public void setVisibilityWeek() {
         backMenuBtn.setVisibility(View.VISIBLE);
         imageMenu.setVisibility(View.GONE);
         daysOfWeekDaily.setVisibility(View.GONE);
@@ -1125,31 +1091,30 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
 
     @SuppressLint("RtlHardcoded")
     private void setDaily() {
-        viewNow="daily";
+        viewNow = "daily";
 
         RecyclerViewActions.removeExtraDateIntent(this);
 
         Locale locale = new Locale("el", "GR");
         monthYearText.setText(CalendarUtils.monthDayFromDate(selectedDate));
         String dayOfWeekmain = null;
-            dayOfWeekmain = selectedDate.getDayOfWeek().getDisplayName(TextStyle.FULL, locale);
+        dayOfWeekmain = selectedDate.getDayOfWeek().getDisplayName(TextStyle.FULL, locale);
 
         daysOfWeekDaily.setText(dayOfWeekmain);
-    setParamsMonthListViewDaily();
+        setParamsMonthListViewDaily();
 
         setVisibilityDaily();
         setEventListView();
     }
-    private void setParamsMonthListViewDaily()
-    {
+
+    private void setParamsMonthListViewDaily() {
         ViewGroup.LayoutParams paramsListView = monthListView.getLayoutParams();
         paramsListView.height = 1500;
 
         monthListView.setLayoutParams(paramsListView);
     }
 
-    public void setVisibilityDaily()
-    {
+    public void setVisibilityDaily() {
         backMenuBtn.setVisibility(View.VISIBLE);
         imageMenu.setVisibility(View.GONE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -1174,7 +1139,6 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
         startActivity(i);
 
     }
-
 
 
     //---------Add Event-------------------------------------
@@ -1217,9 +1181,7 @@ nextMonth.setOnClickListener(v -> nextMonthAction());
             // Handle refreshItem
             finish();
             startActivity(getIntent());
-        } else if (itemId == R.id.syncItem) {
-            Toast.makeText(this, "SYNCING...", Toast.LENGTH_SHORT).show();
-        } else {
+        }  else {
             Toast.makeText(this, "ERROR NAVIGATION", Toast.LENGTH_SHORT).show();
         }
 

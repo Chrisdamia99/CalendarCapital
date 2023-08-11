@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -134,7 +133,6 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                 holder.parentView.setBackgroundColor(Color.LTGRAY);
 
             }else {
-//                holder.parentView.setBackground(defaultBackgroundDrawable);
                 holder.parentView.setBackgroundResource(R.drawable.back);
             }
 
@@ -173,12 +171,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
         numRepeatingEvents=0;
 
 //            myEvents.sort((o1, o2) -> o2.getName().compareTo(o1.getName()));
-        Collections.sort(myEvents, new Comparator<Event>() {
-            @Override
-            public int compare(Event item1, Event item2) {
-                return item1.getName().compareTo(item2.getName());
-            }
-        });
+        Collections.sort(myEvents, (item1, item2) -> item1.getName().compareTo(item2.getName()));
         cursor.moveToPosition(-1);
         for (int i=0; i<days.size(); i++)
         {
@@ -203,32 +196,33 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                 holder.eventDayText.setVisibility(View.VISIBLE);
                 holder.eventDayText.setText(eventNames.get(0));
                 holder.eventDayText.setTextColor(ContextCompat.getColor(context, R.color.white));
-                if (eventColor.get(0).equals("0"))
-                {
-                    holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner);
-                }else if (eventColor.get(0).equals("1"))
-                {
-                    holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner_red);
+                switch (eventColor.get(0)) {
+                    case "0":
+                        holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner);
+                        break;
+                    case "1":
+                        holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner_red);
 
-                }else if (eventColor.get(0).equals("2"))
-                {
-                    holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner_yellow);
+                        break;
+                    case "2":
+                        holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner_yellow);
 
-                }else if (eventColor.get(0).equals("3"))
-                {
-                    holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner_green);
+                        break;
+                    case "3":
+                        holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner_green);
 
-                }else if (eventColor.get(0).equals("4"))
-                {
-                    holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner_blue);
+                        break;
+                    case "4":
+                        holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner_blue);
 
-                }else if (eventColor.get(0).equals("5"))
-                {
-                    holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner_purple);
-                }else
-                {
-                    holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner);
+                        break;
+                    case "5":
+                        holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner_purple);
+                        break;
+                    default:
+                        holder.eventDayText.setBackgroundResource(R.drawable.rounded_corner);
 
+                        break;
                 }
 
             }
@@ -238,32 +232,33 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                 holder.eventDayText2.setText(eventNames.get(1));
                 holder.eventDayText2.setTextColor(ContextCompat.getColor(context, R.color.white));
 
-                if (eventColor.get(1).equals("0"))
-                {
-                    holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner);
-                }else if (eventColor.get(1).equals("1"))
-                {
-                    holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner_red);
+                switch (eventColor.get(1)) {
+                    case "0":
+                        holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner);
+                        break;
+                    case "1":
+                        holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner_red);
 
-                }else if (eventColor.get(1).equals("2"))
-                {
-                    holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner_yellow);
+                        break;
+                    case "2":
+                        holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner_yellow);
 
-                }else if (eventColor.get(1).equals("3"))
-                {
-                    holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner_green);
+                        break;
+                    case "3":
+                        holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner_green);
 
-                }else if (eventColor.get(1).equals("4"))
-                {
-                    holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner_blue);
+                        break;
+                    case "4":
+                        holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner_blue);
 
-                }else if (eventColor.get(1).equals("5"))
-                {
-                    holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner_purple);
-                }else
-                {
-                    holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner);
+                        break;
+                    case "5":
+                        holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner_purple);
+                        break;
+                    default:
+                        holder.eventDayText2.setBackgroundResource(R.drawable.rounded_corner);
 
+                        break;
                 }
             }
 
@@ -272,32 +267,33 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                 holder.eventDayText3.setText(eventNames.get(2));
                 holder.eventDayText3.setTextColor(ContextCompat.getColor(context, R.color.white));
 
-                if (eventColor.get(2).equals("0"))
-                {
-                    holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner);
-                }else if (eventColor.get(2).equals("1"))
-                {
-                    holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner_red);
+                switch (eventColor.get(2)) {
+                    case "0":
+                        holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner);
+                        break;
+                    case "1":
+                        holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner_red);
 
-                }else if (eventColor.get(2).equals("2"))
-                {
-                    holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner_yellow);
+                        break;
+                    case "2":
+                        holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner_yellow);
 
-                }else if (eventColor.get(2).equals("3"))
-                {
-                    holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner_green);
+                        break;
+                    case "3":
+                        holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner_green);
 
-                }else if (eventColor.get(2).equals("4"))
-                {
-                    holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner_blue);
+                        break;
+                    case "4":
+                        holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner_blue);
 
-                }else if (eventColor.get(2).equals("5"))
-                {
-                    holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner_purple);
-                }else
-                {
-                    holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner);
+                        break;
+                    case "5":
+                        holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner_purple);
+                        break;
+                    default:
+                        holder.eventDayText3.setBackgroundResource(R.drawable.rounded_corner);
 
+                        break;
                 }
             }
 
@@ -327,32 +323,33 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                     holder.eventRepeatText1.setVisibility(View.VISIBLE);
                     holder.eventRepeatText1.setText(eventNamesRepeating.get(0));
                     holder.eventRepeatText1.setTextColor(ContextCompat.getColor(context, R.color.white));
-                    if (eventColorRepeating.get(0).equals("0"))
-                    {
-                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
-                    }else if (eventColorRepeating.get(0).equals("1"))
-                    {
-                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner_red);
+                    switch (eventColorRepeating.get(0)) {
+                        case "0":
+                            holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+                            break;
+                        case "1":
+                            holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner_red);
 
-                    }else if (eventColorRepeating.get(0).equals("2"))
-                    {
-                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner_yellow);
+                            break;
+                        case "2":
+                            holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner_yellow);
 
-                    }else if (eventColorRepeating.get(0).equals("3"))
-                    {
-                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner_green);
+                            break;
+                        case "3":
+                            holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner_green);
 
-                    }else if (eventColorRepeating.get(0).equals("4"))
-                    {
-                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner_blue);
+                            break;
+                        case "4":
+                            holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner_blue);
 
-                    }else if (eventColorRepeating.get(0).equals("5"))
-                    {
-                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner_purple);
-                    }else
-                    {
-                        holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
+                            break;
+                        case "5":
+                            holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner_purple);
+                            break;
+                        default:
+                            holder.eventRepeatText1.setBackgroundResource(R.drawable.rounded_corner);
 
+                            break;
                     }
                 }
 
@@ -360,32 +357,33 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                     holder.eventRepeatText2.setVisibility(View.VISIBLE);
                     holder.eventRepeatText2.setText(eventNamesRepeating.get(1));
                     holder.eventRepeatText2.setTextColor(ContextCompat.getColor(context, R.color.white));
-                    if (eventColorRepeating.get(1).equals("0"))
-                    {
-                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
-                    }else if (eventColorRepeating.get(1).equals("1"))
-                    {
-                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner_red);
+                    switch (eventColorRepeating.get(1)) {
+                        case "0":
+                            holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
+                            break;
+                        case "1":
+                            holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner_red);
 
-                    }else if (eventColorRepeating.get(1).equals("2"))
-                    {
-                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner_yellow);
+                            break;
+                        case "2":
+                            holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner_yellow);
 
-                    }else if (eventColorRepeating.get(1).equals("3"))
-                    {
-                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner_green);
+                            break;
+                        case "3":
+                            holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner_green);
 
-                    }else if (eventColorRepeating.get(1).equals("4"))
-                    {
-                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner_blue);
+                            break;
+                        case "4":
+                            holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner_blue);
 
-                    }else if (eventColorRepeating.get(1).equals("5"))
-                    {
-                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner_purple);
-                    }else
-                    {
-                        holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
+                            break;
+                        case "5":
+                            holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner_purple);
+                            break;
+                        default:
+                            holder.eventRepeatText2.setBackgroundResource(R.drawable.rounded_corner);
 
+                            break;
                     }
                 }
 
@@ -393,32 +391,33 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> //Extends
                     holder.eventRepeatText3.setVisibility(View.VISIBLE);
                     holder.eventRepeatText3.setText(eventNamesRepeating.get(2));
                     holder.eventRepeatText3.setTextColor(ContextCompat.getColor(context, R.color.white));
-                    if (eventColorRepeating.get(2).equals("0"))
-                    {
-                        holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner);
-                    }else if (eventColorRepeating.get(2).equals("1"))
-                    {
-                        holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner_red);
+                    switch (eventColorRepeating.get(2)) {
+                        case "0":
+                            holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner);
+                            break;
+                        case "1":
+                            holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner_red);
 
-                    }else if (eventColorRepeating.get(2).equals("2"))
-                    {
-                        holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner_yellow);
+                            break;
+                        case "2":
+                            holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner_yellow);
 
-                    }else if (eventColorRepeating.get(2).equals("3"))
-                    {
-                        holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner_green);
+                            break;
+                        case "3":
+                            holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner_green);
 
-                    }else if (eventColorRepeating.get(2).equals("4"))
-                    {
-                        holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner_blue);
+                            break;
+                        case "4":
+                            holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner_blue);
 
-                    }else if (eventColorRepeating.get(2).equals("5"))
-                    {
-                        holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner_purple);
-                    }else
-                    {
-                        holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner);
+                            break;
+                        case "5":
+                            holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner_purple);
+                            break;
+                        default:
+                            holder.eventRepeatText3.setBackgroundResource(R.drawable.rounded_corner);
 
+                            break;
                     }
                 }
 

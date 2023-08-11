@@ -5,7 +5,6 @@ import androidx.core.content.ContextCompat;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,11 +19,14 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 
 public class CustomRepeatActivity extends AppCompatActivity {
@@ -94,6 +96,15 @@ public class CustomRepeatActivity extends AppCompatActivity {
                         String stack = getIntent().getStringExtra("stack");
                         iEE.putExtra("stack", stack);
                     }
+                    if (getIntent().hasExtra("color")) {
+                        String color = getIntent().getStringExtra("color");
+                        iEE.putExtra("color", color);
+                    }
+                    if (getIntent().hasExtra("location")) {
+                        String location = getIntent().getStringExtra("location");
+                        iEE.putExtra("location", location);
+                    }
+
                     startActivity(iEE);
                 } else if (getIntent().getStringExtra("flagBack").equals("1")) {
 
@@ -112,10 +123,19 @@ public class CustomRepeatActivity extends AppCompatActivity {
                         String stack = getIntent().getStringExtra("stack");
                         iEU.putExtra("stack", stack);
                     }
-                    if(getIntent().hasExtra("id"))
-                    {String id = getIntent().getStringExtra("id");
-                        iEU.putExtra("id",id);
+                    if (getIntent().hasExtra("id")) {
+                        String id = getIntent().getStringExtra("id");
+                        iEU.putExtra("id", id);
 
+                    }
+                    if (getIntent().hasExtra("color")) {
+                        String color = getIntent().getStringExtra("color");
+                        iEU.putExtra("color", color);
+                    }
+
+                    if (getIntent().hasExtra("color")) {
+                        String location = getIntent().getStringExtra("location");
+                        iEU.putExtra("location", location);
                     }
                     startActivity(iEU);
                 }
@@ -124,7 +144,7 @@ public class CustomRepeatActivity extends AppCompatActivity {
 
         });
 
-        custom_repeat_refresh_button.setOnClickListener(v -> AllEventsList.reloadActivity(CustomRepeatActivity.this));
+        custom_repeat_refresh_button.setOnClickListener(v -> CalendarUtils.reloadActivity(CustomRepeatActivity.this));
 
         custom_repeat_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -169,7 +189,7 @@ public class CustomRepeatActivity extends AppCompatActivity {
 
 
         untilDate.setOnClickListener(v -> {
-                showChangeDate(LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
+            showChangeDate(LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
 
             if (!untilRB.isChecked()) {
                 untilRB.setChecked(true);
@@ -289,16 +309,16 @@ public class CustomRepeatActivity extends AppCompatActivity {
         ArrayList<CharSequence> lastWeek = new ArrayList<>();
         if (WeekDaysMonthDaysCustomRepeat.checkIfIsLastWeekOfMonth(dateToCustom)) {
 
-                lastWeek.add("Μηνιαία στις " + dateToCustom.getDayOfMonth() + ".");
+            lastWeek.add("Μηνιαία στις " + dateToCustom.getDayOfMonth() + ".");
 
             lastWeek.add(WeekDaysMonthDaysCustomRepeat.numberOfWeekDateMonth(dateToCustom));
-                if (dateToCustom.getDayOfWeek() == DayOfWeek.SATURDAY) {
-                    lastWeek.add("Μηνιαία το τελευταίο " + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
+            if (dateToCustom.getDayOfWeek() == DayOfWeek.SATURDAY) {
+                lastWeek.add("Μηνιαία το τελευταίο " + WeekDaysMonthDaysCustomRepeat.dayOfWeekForMonth(dateToCustom.getDayOfWeek()));
 
-                } else {
-                    lastWeek.add("Μηνιαία την τελευταία " + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
+            } else {
+                lastWeek.add("Μηνιαία την τελευταία " + WeekDaysMonthDaysCustomRepeat.dayOfWeekForMonth(dateToCustom.getDayOfWeek()));
 
-                }
+            }
 
 
             ArrayAdapter<CharSequence> custom_monthly_repeat_spinner_adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, lastWeek);
@@ -307,7 +327,7 @@ public class CustomRepeatActivity extends AppCompatActivity {
 
 
         } else {
-                notLastWeek.add("Μηνιαία στις " + dateToCustom.getDayOfMonth());
+            notLastWeek.add("Μηνιαία στις " + dateToCustom.getDayOfMonth());
 
             notLastWeek.add(WeekDaysMonthDaysCustomRepeat.numberOfWeekDateMonth(dateToCustom));
             ArrayAdapter<CharSequence> custom_monthly_repeat_spinner_adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, notLastWeek);
@@ -364,7 +384,7 @@ public class CustomRepeatActivity extends AppCompatActivity {
 
 
                 LocalDate myDD = null;
-                    myDD = LocalDate.of(year1, trueMonth, dayOfMonth);
+                myDD = LocalDate.of(year1, trueMonth, dayOfMonth);
 
                 untilDate.setText(CalendarUtils.formattedDateEventEdit(myDD));
                 cancelUntil.setVisibility(View.VISIBLE);
@@ -374,14 +394,14 @@ public class CustomRepeatActivity extends AppCompatActivity {
 
 
                 LocalDate myDD = null;
-                    myDD = LocalDate.of(year1, trueMonth, dayOfMonth);
+                myDD = LocalDate.of(year1, trueMonth, dayOfMonth);
 
                 untilDate.setText(CalendarUtils.formattedDateEventEdit(myDD));
                 cancelUntil.setVisibility(View.VISIBLE);
             } else if (dayOfMonth < 10 && trueMonth >= 10) {
 
                 LocalDate myDD = null;
-                    myDD = LocalDate.of(year1, trueMonth, dayOfMonth);
+                myDD = LocalDate.of(year1, trueMonth, dayOfMonth);
 
 
                 untilDate.setText(CalendarUtils.formattedDateEventEdit(myDD));
@@ -391,14 +411,13 @@ public class CustomRepeatActivity extends AppCompatActivity {
             } else {
 
                 LocalDate myDD = null;
-                    myDD = LocalDate.of(year1, trueMonth, dayOfMonth);
+                myDD = LocalDate.of(year1, trueMonth, dayOfMonth);
 
                 untilDate.setText(CalendarUtils.formattedDateEventEdit(myDD));
                 cancelUntil.setVisibility(View.VISIBLE);
 
             }
-                untilRepeatDate = LocalDate.of(year1, trueMonth, dayOfMonth);
-
+            untilRepeatDate = LocalDate.of(year1, trueMonth, dayOfMonth);
 
 
         }, year, month, dayofmonth);
@@ -412,32 +431,32 @@ public class CustomRepeatActivity extends AppCompatActivity {
 
     private void setWeekChoiceByDate() {
         DayOfWeek existedDateDayOfWeek;
-            existedDateDayOfWeek = dateToCustom.getDayOfWeek();
+        existedDateDayOfWeek = dateToCustom.getDayOfWeek();
 
 
-            if (existedDateDayOfWeek == DayOfWeek.MONDAY) {
-                mondayFlag = true;
-                mondayChoice.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.simple_borders_rounded_grey));
-            } else if (existedDateDayOfWeek == DayOfWeek.TUESDAY) {
-                tuesdayFlag = true;
-                tuesdayChoice.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.simple_borders_rounded_grey));
-            } else if (existedDateDayOfWeek == DayOfWeek.WEDNESDAY) {
-                wednesdayFlag = true;
-                wednesdayChoice.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.simple_borders_rounded_grey));
+        if (existedDateDayOfWeek == DayOfWeek.MONDAY) {
+            mondayFlag = true;
+            mondayChoice.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.simple_borders_rounded_grey));
+        } else if (existedDateDayOfWeek == DayOfWeek.TUESDAY) {
+            tuesdayFlag = true;
+            tuesdayChoice.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.simple_borders_rounded_grey));
+        } else if (existedDateDayOfWeek == DayOfWeek.WEDNESDAY) {
+            wednesdayFlag = true;
+            wednesdayChoice.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.simple_borders_rounded_grey));
 
-            } else if (existedDateDayOfWeek == DayOfWeek.THURSDAY) {
-                thursdayFlag = true;
-                thursdayChoice.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.simple_borders_rounded_grey));
-            } else if (existedDateDayOfWeek == DayOfWeek.FRIDAY) {
-                fridayFlag = true;
-                fridayChoice.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.simple_borders_rounded_grey));
-            } else if (existedDateDayOfWeek == DayOfWeek.SATURDAY) {
-                saturdayFlag = true;
-                saturdayChoice.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.simple_borders_rounded_grey));
-            } else if (existedDateDayOfWeek == DayOfWeek.SUNDAY) {
-                sundayFlag = true;
-                sundayChoice.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.simple_borders_rounded_grey));
-            }
+        } else if (existedDateDayOfWeek == DayOfWeek.THURSDAY) {
+            thursdayFlag = true;
+            thursdayChoice.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.simple_borders_rounded_grey));
+        } else if (existedDateDayOfWeek == DayOfWeek.FRIDAY) {
+            fridayFlag = true;
+            fridayChoice.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.simple_borders_rounded_grey));
+        } else if (existedDateDayOfWeek == DayOfWeek.SATURDAY) {
+            saturdayFlag = true;
+            saturdayChoice.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.simple_borders_rounded_grey));
+        } else if (existedDateDayOfWeek == DayOfWeek.SUNDAY) {
+            sundayFlag = true;
+            sundayChoice.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.simple_borders_rounded_grey));
+        }
 
     }
 
@@ -563,78 +582,87 @@ public class CustomRepeatActivity extends AppCompatActivity {
     }
 
     private String textForWeek(int repeatSeperateCounterInt) {
-
+        Map<DayOfWeek, String> greekDayNames = new HashMap<>();
+        greekDayNames.put(DayOfWeek.MONDAY, "Δευτέρα");
+        greekDayNames.put(DayOfWeek.TUESDAY, "Τρίτη");
+        greekDayNames.put(DayOfWeek.WEDNESDAY, "Τετάρτη");
+        greekDayNames.put(DayOfWeek.THURSDAY, "Πέμπτη");
+        greekDayNames.put(DayOfWeek.FRIDAY, "Παρασκευή");
+        greekDayNames.put(DayOfWeek.SATURDAY, "Σάββατο");
+        greekDayNames.put(DayOfWeek.SUNDAY, "Κυριακή");
         if (repeatSeperateCounterInt > 1) {
-                textForEventEdit = "Ανά " + repeatSeperateCounterInt + " εβδομάδες ";
-                if (mondayFlag) {
+            textForEventEdit = "Ανά " + repeatSeperateCounterInt + " εβδομάδες ";
+            if (mondayFlag) {
 
-                    textForEventEdit = textForEventEdit.concat("," + DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
+                textForEventEdit = textForEventEdit.concat("," + DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
 
-                }
-                if (tuesdayFlag) {
-                    textForEventEdit = textForEventEdit.concat("," + DayOfWeek.TUESDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
+            }
+            if (tuesdayFlag) {
+                textForEventEdit = textForEventEdit.concat("," + DayOfWeek.TUESDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
 
-                }
-                if (wednesdayFlag) {
-                    textForEventEdit = textForEventEdit.concat("," + DayOfWeek.WEDNESDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
+            }
+            if (wednesdayFlag) {
+                textForEventEdit = textForEventEdit.concat("," + DayOfWeek.WEDNESDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
 
-                }
-                if (thursdayFlag) {
-                    textForEventEdit = textForEventEdit.concat("," + DayOfWeek.THURSDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
+            }
+            if (thursdayFlag) {
+                textForEventEdit = textForEventEdit.concat("," + DayOfWeek.THURSDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
 
-                }
-                if (fridayFlag) {
-                    textForEventEdit = textForEventEdit.concat("," + DayOfWeek.FRIDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
+            }
+            if (fridayFlag) {
+                textForEventEdit = textForEventEdit.concat("," + DayOfWeek.FRIDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
 
-                }
-                if (saturdayFlag) {
-                    textForEventEdit = textForEventEdit.concat("," + DayOfWeek.SATURDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
+            }
+            if (saturdayFlag) {
+                textForEventEdit = textForEventEdit.concat("," + DayOfWeek.SATURDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
 
-                }
-                if (sundayFlag) {
-                    textForEventEdit = textForEventEdit.concat("," + DayOfWeek.SUNDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
+            }
+            if (sundayFlag) {
+                textForEventEdit = textForEventEdit.concat("," + DayOfWeek.SUNDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
 
-                }
-                if (daysOfWeekAllFalse()) {
-                    textForEventEdit = "Ανά " + repeatSeperateCounterInt + " εβδομάδες.";
+            }
+            if (daysOfWeekAllFalse()) {
+                textForEventEdit = "Ανά " + repeatSeperateCounterInt + " εβδομάδες.";
 
-                }
+            }
 
             return textForEventEdit;
 
         } else {
-                textForEventEdit = "Ανά " + repeatSeperateCounterInt + " εβδομάδα ";
-                if (mondayFlag) {
-                    textForEventEdit = textForEventEdit.concat("," + DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
-                }
-                if (tuesdayFlag) {
-                    textForEventEdit = textForEventEdit.concat("," + DayOfWeek.TUESDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
+            textForEventEdit = "Ανά " + repeatSeperateCounterInt + " εβδομάδα ";
+            if (mondayFlag) {
+                textForEventEdit = textForEventEdit.concat("," + greekDayNames.get(DayOfWeek.MONDAY));
 
-                }
-                if (wednesdayFlag) {
-                    textForEventEdit = textForEventEdit.concat("," + DayOfWeek.WEDNESDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
 
-                }
-                if (thursdayFlag) {
-                    textForEventEdit = textForEventEdit.concat("," + DayOfWeek.THURSDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
+            }
+            if (tuesdayFlag) {
+                textForEventEdit = textForEventEdit.concat("," + greekDayNames.get(DayOfWeek.TUESDAY));
 
-                }
-                if (fridayFlag) {
-                    textForEventEdit = textForEventEdit.concat("," + DayOfWeek.FRIDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
+            }
+            if (wednesdayFlag) {
+                textForEventEdit = textForEventEdit.concat("," + greekDayNames.get(DayOfWeek.WEDNESDAY));
 
-                }
-                if (saturdayFlag) {
-                    textForEventEdit = textForEventEdit.concat("," + DayOfWeek.SATURDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
+            }
+            if (thursdayFlag) {
+                textForEventEdit = textForEventEdit.concat("," + greekDayNames.get(DayOfWeek.THURSDAY));
 
-                }
-                if (sundayFlag) {
-                    textForEventEdit = textForEventEdit.concat("," + DayOfWeek.SUNDAY.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")));
+            }
+            if (fridayFlag) {
+                textForEventEdit = textForEventEdit.concat("," + greekDayNames.get(DayOfWeek.FRIDAY));
 
-                }
-                if (daysOfWeekAllFalse()) {
-                    textForEventEdit = "Ανά " + repeatSeperateCounterInt + " εβδομάδα";
+            }
+            if (saturdayFlag) {
+                textForEventEdit = textForEventEdit.concat("," + greekDayNames.get(DayOfWeek.SATURDAY));
 
-                }
+            }
+            if (sundayFlag) {
+                textForEventEdit = textForEventEdit.concat("," + greekDayNames.get(DayOfWeek.SUNDAY));
+
+            }
+            if (daysOfWeekAllFalse()) {
+                textForEventEdit = "Ανά " + repeatSeperateCounterInt + " εβδομάδα";
+
+            }
 
             return textForEventEdit;
 
@@ -648,19 +676,19 @@ public class CustomRepeatActivity extends AppCompatActivity {
             textForEventEdit = "Ανά " + repeatSeperateCounterInt + " μήνες, ";
 
             if (monthSpinnerSelection == 0) {
-                    textForEventEdit = textForEventEdit + " κάθε " + dateToCustom.getDayOfMonth() + " ";
+                textForEventEdit = textForEventEdit + " κάθε " + dateToCustom.getDayOfMonth() + " ";
 
             } else if (monthSpinnerSelection == 1) {
                 textForEventEdit = textForEventEdit + WeekDaysMonthDaysCustomRepeat.numberOfWeekDateMonthTextEventEdit(dateToCustom);
 
             } else if (monthSpinnerSelection == 2) {
-                    if (dateToCustom.getDayOfWeek() == DayOfWeek.SATURDAY) {
-                        textForEventEdit = textForEventEdit + "το τελευταίο" + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR"));
+                if (dateToCustom.getDayOfWeek() == DayOfWeek.SATURDAY) {
+                    textForEventEdit = textForEventEdit + "το τελευταίο" + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR"));
 
-                    } else {
-                        textForEventEdit = textForEventEdit + "την τελευταία" + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR"));
+                } else {
+                    textForEventEdit = textForEventEdit + "την τελευταία" + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR"));
 
-                    }
+                }
 
             }
             return textForEventEdit;
@@ -668,20 +696,20 @@ public class CustomRepeatActivity extends AppCompatActivity {
             textForEventEdit = "Ανά " + repeatSeperateCounterInt + " μήνα, ";
 
             if (monthSpinnerSelection == 0) {
-                    textForEventEdit = textForEventEdit + " κάθε " + dateToCustom.getDayOfMonth() + " ";
+                textForEventEdit = textForEventEdit + " κάθε " + dateToCustom.getDayOfMonth() + " ";
 
 
             } else if (monthSpinnerSelection == 1) {
                 textForEventEdit = textForEventEdit + WeekDaysMonthDaysCustomRepeat.numberOfWeekDateMonthTextEventEdit(dateToCustom);
 
             } else if (monthSpinnerSelection == 2) {
-                    if (dateToCustom.getDayOfWeek() == DayOfWeek.SATURDAY) {
-                        textForEventEdit = textForEventEdit + "το τελευταίο " + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR"));
+                if (dateToCustom.getDayOfWeek() == DayOfWeek.SATURDAY) {
+                    textForEventEdit = textForEventEdit + "το τελευταίο " + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR"));
 
-                    } else {
-                        textForEventEdit = textForEventEdit + "την τελευταία " + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR"));
+                } else {
+                    textForEventEdit = textForEventEdit + "την τελευταία " + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR"));
 
-                    }
+                }
 
 
             }
@@ -693,57 +721,55 @@ public class CustomRepeatActivity extends AppCompatActivity {
 
         if (untilRepeatDate == null) {
             Toast.makeText(this, "Εισάγετε ημερομηνία λήξης.", Toast.LENGTH_SHORT).show();
-                showChangeDate(LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
+            showChangeDate(LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
 
         } else {
-                if (untilRepeatDate.isBefore(dateToCustom)) {
-                    Toast.makeText(this, "Η ημερομηνία λήξης δε μπορεί να είναι μικρότερητου συμβάντος.", Toast.LENGTH_SHORT).show();
+            if (untilRepeatDate.isBefore(dateToCustom)) {
+                Toast.makeText(this, "Η ημερομηνία λήξης δε μπορεί να είναι μικρότερητου συμβάντος.", Toast.LENGTH_SHORT).show();
 
-                } else if (untilRepeatDate.isAfter(dateToCustom)) {
-                    flagDate = dateToCustom;
+            } else if (untilRepeatDate.isAfter(dateToCustom)) {
+                flagDate = dateToCustom;
 
-                    while (flagDate.isBefore(untilRepeatDate)) {
-                        customDatesToSaveLocalDate.add(flagDate);
-                        flagDate = flagDate.plusDays(repeatSeperateCounterInt);
-                    }
-                    if (repeatSeperateCounterInt > 1) {
-                        textForEventEdit = "Ανά " + repeatSeperateCounterInt + " μέρες, μέχρι " + untilRepeatDate.toString().trim();
+                while (flagDate.isBefore(untilRepeatDate)) {
+                    customDatesToSaveLocalDate.add(flagDate);
+                    flagDate = flagDate.plusDays(repeatSeperateCounterInt);
+                }
+                if (repeatSeperateCounterInt > 1) {
+                    textForEventEdit = "Ανά " + repeatSeperateCounterInt + " μέρες, μέχρι " + untilRepeatDate.toString().trim();
 
-                    } else {
-                        textForEventEdit = "Ανά " + repeatSeperateCounterInt + " μέρα, μέχρι " + untilRepeatDate.toString().trim();
-
-                    }
                 } else {
-                    Toast.makeText(this, "dayChoice error", Toast.LENGTH_SHORT).show();
+                    textForEventEdit = "Ανά " + repeatSeperateCounterInt + " μέρα, μέχρι " + untilRepeatDate.toString().trim();
 
                 }
+            } else {
+                Toast.makeText(this, "dayChoice error", Toast.LENGTH_SHORT).show();
+
+            }
 
         }
 
-
-        customDatesToSaveLocalDate.size();
     }
 
     private void weekChoiceUntilRepeat(int repeatSeperateCounterInt) {
         if (untilRepeatDate == null) {
             Toast.makeText(this, "Εισάγετε ημερομηνία λήξης.", Toast.LENGTH_SHORT).show();
-                showChangeDate(LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
+            showChangeDate(LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
 
         } else {
-                if (untilRepeatDate.isBefore(dateToCustom)) {
-                    Toast.makeText(this, "Η ημερομηνία λήξης δε μπορεί να είναι μικρότερητου συμβάντος.", Toast.LENGTH_SHORT).show();
+            if (untilRepeatDate.isBefore(dateToCustom)) {
+                Toast.makeText(this, "Η ημερομηνία λήξης δε μπορεί να είναι μικρότερητου συμβάντος.", Toast.LENGTH_SHORT).show();
 
+            } else {
+                if (daysOfWeekAllFalse()) {
+                    customDatesToSaveLocalDate = WeekDaysMonthDaysCustomRepeat.addDaysOfWeekChosenUntilRepeatAllFalse(untilRepeatDate, dateToCustom, flagDate, repeatSeperateCounterInt);
+                    textForEventEdit = textForWeek(repeatSeperateCounterInt) + " μέχρι " + untilRepeatDate.toString().trim();
                 } else {
-                    if (daysOfWeekAllFalse()) {
-                        customDatesToSaveLocalDate = WeekDaysMonthDaysCustomRepeat.addDaysOfWeekChosenUntilRepeatAllFalse(untilRepeatDate, dateToCustom, flagDate, repeatSeperateCounterInt);
-                        textForEventEdit = textForWeek(repeatSeperateCounterInt) + " μέχρι " + untilRepeatDate.toString().trim();
-                    } else {
-                        customDatesToSaveLocalDate = WeekDaysMonthDaysCustomRepeat.addDaysOfWeekChosenUntilRepeat(mondayFlag, tuesdayFlag, wednesdayFlag, thursdayFlag, fridayFlag, saturdayFlag, sundayFlag, untilRepeatDate, dateToCustom, flagDate, repeatSeperateCounterInt - 1);
-                        textForEventEdit = textForWeek(repeatSeperateCounterInt) + " μέχρι " + untilRepeatDate.toString().trim();
-
-                    }
+                    customDatesToSaveLocalDate = WeekDaysMonthDaysCustomRepeat.addDaysOfWeekChosenUntilRepeat(mondayFlag, tuesdayFlag, wednesdayFlag, thursdayFlag, fridayFlag, saturdayFlag, sundayFlag, untilRepeatDate, dateToCustom, flagDate, repeatSeperateCounterInt - 1);
+                    textForEventEdit = textForWeek(repeatSeperateCounterInt) + " μέχρι " + untilRepeatDate.toString().trim();
 
                 }
+
+            }
 
         }
 
@@ -754,16 +780,16 @@ public class CustomRepeatActivity extends AppCompatActivity {
     private void monthChoiceUntilRepeat(int repeatSeperateCounterInt) {
         if (untilRepeatDate == null) {
             Toast.makeText(this, "Εισάγετε ημερομηνία λήξης.", Toast.LENGTH_SHORT).show();
-                showChangeDate(LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
+            showChangeDate(LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
 
         } else {
-                if (untilRepeatDate.isBefore(dateToCustom)) {
-                    Toast.makeText(this, "Η ημερομηνία λήξης δε μπορεί να είναι μικρότερητου συμβάντος.", Toast.LENGTH_SHORT).show();
+            if (untilRepeatDate.isBefore(dateToCustom)) {
+                Toast.makeText(this, "Η ημερομηνία λήξης δε μπορεί να είναι μικρότερητου συμβάντος.", Toast.LENGTH_SHORT).show();
 
-                } else {
-                    customDatesToSaveLocalDate = WeekDaysMonthDaysCustomRepeat.addDaysOfMonthChosenUntilRepeat(untilRepeatDate, dateToCustom, flagDate, monthSpinnerSelection, repeatSeperateCounterInt - 1);
-                    textForEventEdit = textForMonth(repeatSeperateCounterInt, monthSpinnerSelection) + " μέχρι " + untilRepeatDate.toString().trim();
-                }
+            } else {
+                customDatesToSaveLocalDate = WeekDaysMonthDaysCustomRepeat.addDaysOfMonthChosenUntilRepeat(untilRepeatDate, dateToCustom, flagDate, monthSpinnerSelection, repeatSeperateCounterInt - 1);
+                textForEventEdit = textForMonth(repeatSeperateCounterInt, monthSpinnerSelection) + " μέχρι " + untilRepeatDate.toString().trim();
+            }
 
         }
         customDatesToSaveLocalDate.size();
@@ -774,30 +800,30 @@ public class CustomRepeatActivity extends AppCompatActivity {
 
         if (untilRepeatDate == null) {
             Toast.makeText(this, "Εισάγετε ημερομηνία λήξης.", Toast.LENGTH_SHORT).show();
-                showChangeDate(LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
+            showChangeDate(LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
 
         } else {
-                if (untilRepeatDate.isBefore(dateToCustom)) {
-                    Toast.makeText(this, "Η ημερομηνία λήξης δε μπορεί να είναι μικρότερητου συμβάντος.", Toast.LENGTH_SHORT).show();
+            if (untilRepeatDate.isBefore(dateToCustom)) {
+                Toast.makeText(this, "Η ημερομηνία λήξης δε μπορεί να είναι μικρότερητου συμβάντος.", Toast.LENGTH_SHORT).show();
 
-                } else if (untilRepeatDate.isAfter(dateToCustom)) {
-                    flagDate = dateToCustom;
+            } else if (untilRepeatDate.isAfter(dateToCustom)) {
+                flagDate = dateToCustom;
 
-                    while (flagDate.isBefore(untilRepeatDate)) {
-                        customDatesToSaveLocalDate.add(flagDate);
-                        flagDate = flagDate.plusYears(repeatSeperateCounterInt);
-                    }
-                    if (repeatSeperateCounterInt > 1) {
-                        textForEventEdit = "Ανά " + repeatSeperateCounterInt + " χρόνια, μέχρι " + untilRepeatDate.toString().trim();
+                while (flagDate.isBefore(untilRepeatDate)) {
+                    customDatesToSaveLocalDate.add(flagDate);
+                    flagDate = flagDate.plusYears(repeatSeperateCounterInt);
+                }
+                if (repeatSeperateCounterInt > 1) {
+                    textForEventEdit = "Ανά " + repeatSeperateCounterInt + " χρόνια, μέχρι " + untilRepeatDate.toString().trim();
 
-                    } else {
-                        textForEventEdit = "Ανά " + repeatSeperateCounterInt + " χρόνο, μέχρι " + untilRepeatDate.toString().trim();
-
-                    }
                 } else {
-                    Toast.makeText(this, "dayChoice error", Toast.LENGTH_SHORT).show();
+                    textForEventEdit = "Ανά " + repeatSeperateCounterInt + " χρόνο, μέχρι " + untilRepeatDate.toString().trim();
 
                 }
+            } else {
+                Toast.makeText(this, "dayChoice error", Toast.LENGTH_SHORT).show();
+
+            }
 
         }
 
@@ -810,7 +836,7 @@ public class CustomRepeatActivity extends AppCompatActivity {
         flagDate = dateToCustom;
         for (int i = 0; i < repeatCounterIntEnd; i++) {
             customDatesToSaveLocalDate.add(flagDate);
-                flagDate = flagDate.plusDays(repeatSeperateCounterInt);
+            flagDate = flagDate.plusDays(repeatSeperateCounterInt);
 
         }
 
@@ -851,7 +877,7 @@ public class CustomRepeatActivity extends AppCompatActivity {
         flagDate = dateToCustom;
         for (int i = 0; i < repeatCounterIntEnd; i++) {
             customDatesToSaveLocalDate.add(flagDate);
-                flagDate = flagDate.plusYears(repeatSeperateCounterInt);
+            flagDate = flagDate.plusYears(repeatSeperateCounterInt);
 
         }
         if (repeatSeperateCounterInt > 1) {
@@ -922,7 +948,6 @@ public class CustomRepeatActivity extends AppCompatActivity {
                         String tittle = getIntent().getStringExtra("tittle");
                         String comment = getIntent().getStringExtra("comment");
 
-
                         iEE.putExtra("tittle", tittle);
                         iEE.putExtra("comment", comment);
 
@@ -933,6 +958,13 @@ public class CustomRepeatActivity extends AppCompatActivity {
                         iEE.putExtra("stack", stack);
                     }
                     iEE.putExtra("5", "null");
+
+                    String color = getIntent().getStringExtra("color");
+                    iEE.putExtra("color", color);
+                    if (getIntent().hasExtra("location")) {
+                        String location = getIntent().getStringExtra("location");
+                        iEE.putExtra("location", location);
+                    }
                     startActivity(iEE);
                 } else if (getIntent().getStringExtra("flagBack").equals("1")) {
 
@@ -952,10 +984,17 @@ public class CustomRepeatActivity extends AppCompatActivity {
                         iEU.putExtra("stack", stack);
                     }
                     iEU.putExtra("5", "null");
-                    if(getIntent().hasExtra("id"))
-                    {String id = getIntent().getStringExtra("id");
-                        iEU.putExtra("id",id);
+                    if (getIntent().hasExtra("id")) {
+                        String id = getIntent().getStringExtra("id");
+                        iEU.putExtra("id", id);
 
+                    }
+
+                    String color = getIntent().getStringExtra("color");
+                    iEU.putExtra("color", color);
+                    if (getIntent().hasExtra("location")) {
+                        String location = getIntent().getStringExtra("location");
+                        iEU.putExtra("location", location);
                     }
                     startActivity(iEU);
                 }

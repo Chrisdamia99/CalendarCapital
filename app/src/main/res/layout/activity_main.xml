@@ -37,7 +37,7 @@
                     android:id="@+id/imageMenu"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_gravity="left|center"
+                    android:layout_gravity="start|center"
                     android:contentDescription="@string/app_name"
                     android:src="@drawable/ic_menu"
                     app:tint="@color/white" />
@@ -63,7 +63,7 @@
 
                 <View
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
 
@@ -71,7 +71,7 @@
 
                 <View
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
 
@@ -79,7 +79,7 @@
                     android:id="@+id/refreshMenuBtn"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_gravity="right|center"
+                    android:layout_gravity="end|center"
                     app:srcCompat="@drawable/calendar_today"
                     app:tint="@color/white" />
                 <ImageView
@@ -88,7 +88,7 @@
                     android:layout_height="30dp"
                     app:srcCompat="@drawable/search_event"
                     android:background="@drawable/search_view_bg"
-                    android:layout_gravity="right|center"
+                    android:layout_gravity="end|center"
                     app:tint="@color/white"/>
 
 

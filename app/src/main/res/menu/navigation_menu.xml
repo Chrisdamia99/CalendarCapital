@@ -43,7 +43,7 @@
     </item>
 
     <group
-        android:id="@+id/refSyncGroup"
+        android:id="@+id/refGroup"
         android:checkableBehavior="single">
 
         <item
@@ -51,10 +51,7 @@
             android:title="Ανανέωση"
             android:icon="@drawable/refresh"/>
 
-        <item
-            android:id="@+id/syncItem"
-            android:title="Συγχρονισμός"
-            android:icon="@drawable/sync"/>
+
 
 
     </group>

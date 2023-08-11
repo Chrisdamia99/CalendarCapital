@@ -32,37 +32,37 @@ android:background="@drawable/rounded_alertdialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal">-->
 
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="28dp"
-            android:text="@string/id"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:layout_marginLeft="10dp" />
+<!--        <TextView-->
+<!--            android:id="@+id/textView"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="10dp"-->
+<!--            android:layout_marginTop="28dp"-->
+<!--            android:text="@string/id"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textSize="20sp"-->
+<!--            android:layout_marginLeft="10dp" />-->
 
-        <TextView
-            android:id="@+id/id_lv_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
-            android:layout_marginStart="120dp"
-            android:text="@string/id"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:layout_marginLeft="150dp" />
+<!--        <TextView-->
+<!--            android:id="@+id/id_lv_tv"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="28dp"-->
+<!--            android:layout_marginStart="120dp"-->
+<!--            android:text="@string/id"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textSize="20sp"-->
+<!--            android:layout_marginLeft="150dp" />-->
 
 
 
-    </LinearLayout>
+<!--    </LinearLayout>-->
 
 
     <LinearLayout
@@ -78,7 +78,7 @@ android:background="@drawable/rounded_alertdialog"
             android:layout_marginStart="10dp"
 
             android:layout_marginTop="28dp"
-            android:text="@string/title"
+            android:text="Τίτλος"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:layout_marginLeft="10dp" />
@@ -116,7 +116,7 @@ android:background="@drawable/rounded_alertdialog"
             android:layout_marginStart="10dp"
 
             android:layout_marginTop="24dp"
-            android:text="@string/date_info"
+            android:text="Ημερομηνία"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:layout_marginLeft="10dp" />
@@ -127,7 +127,7 @@ android:background="@drawable/rounded_alertdialog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
-            android:layout_marginStart="99dp"
+            android:layout_marginStart="53dp"
 
             android:text="@string/date_info"
             android:textColor="@color/black"
@@ -156,7 +156,7 @@ android:background="@drawable/rounded_alertdialog"
             android:layout_marginStart="10dp"
 
             android:layout_marginTop="24dp"
-            android:text="@string/time_info"
+            android:text="Ώρα"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:layout_marginLeft="10dp" />
@@ -168,7 +168,7 @@ android:background="@drawable/rounded_alertdialog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
-            android:layout_marginStart="94dp"
+            android:layout_marginStart="124dp"
             android:text="@string/time_info"
             android:textColor="@color/black"
             android:textSize="20sp"
@@ -192,7 +192,7 @@ android:background="@drawable/rounded_alertdialog"
             android:layout_marginStart="10dp"
 
             android:layout_marginTop="28dp"
-            android:text="@string/comment_info"
+            android:text="Σχόλια"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:layout_marginLeft="10dp" />
@@ -203,7 +203,7 @@ android:background="@drawable/rounded_alertdialog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
-            android:layout_marginStart="50dp"
+            android:layout_marginStart="95dp"
 
             android:text="@string/comment_info"
             android:textColor="@color/black"
@@ -228,7 +228,7 @@ android:background="@drawable/rounded_alertdialog"
                 android:layout_marginStart="10dp"
 
                 android:layout_marginTop="28dp"
-                android:text="Location:"
+                android:text="Τοποθεσία"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:layout_marginLeft="10dp" />
@@ -239,7 +239,7 @@ android:background="@drawable/rounded_alertdialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
-                android:layout_marginStart="50dp"
+                android:layout_marginStart="60dp"
                 android:text="Location:"
                 android:textColor="@color/blue"
                 android:textSize="20sp"

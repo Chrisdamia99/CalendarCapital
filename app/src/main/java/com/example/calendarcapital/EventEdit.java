@@ -80,7 +80,7 @@ public class EventEdit extends AppCompatActivity {
     private Activity mCurrentActivity;
     private ScheduledFuture<?> scheduledFuture;
     int repeatCounterInt;
-    static String stackNow;
+    private static String stackNow;
     private static int color;
     static String location;
 
@@ -99,7 +99,7 @@ public class EventEdit extends AppCompatActivity {
             eventDateTV.setText(date.toString().trim());
         }
 
-
+        color=0;
         alarmState = 0;
         repeatState = 0;
         mCurrentActivity = this;
@@ -112,10 +112,7 @@ public class EventEdit extends AppCompatActivity {
 
         btnSave.setOnClickListener(v -> saveEventAction());
 
-        changeTimeTV.setOnClickListener(v -> {
-            showChangeTime(LocalTime.now().getHour(), LocalTime.now().getMinute());
-
-        });
+        changeTimeTV.setOnClickListener(v -> showChangeTime(LocalTime.now().getHour(), LocalTime.now().getMinute()));
 
         changeDateTV.setOnClickListener(v -> showChangeDate(cDatePicker.get(Calendar.YEAR), cDatePicker.get(Calendar.MONTH), cDatePicker.get(Calendar.DAY_OF_MONTH)));
         eventEditBackButton.setOnClickListener(v -> {
@@ -130,7 +127,7 @@ public class EventEdit extends AppCompatActivity {
             startActivity(i);
         });
 
-        eventEditRefreshButton.setOnClickListener(v -> AllEventsList.reloadActivity(EventEdit.this));
+        eventEditRefreshButton.setOnClickListener(v -> CalendarUtils.reloadActivity(EventEdit.this));
 
 
         addAlarmButton.setOnClickListener(v -> addAlarm());
@@ -202,6 +199,12 @@ public class EventEdit extends AppCompatActivity {
         if (getIntent().hasExtra("stack")) {
             stackNow = getIntent().getStringExtra("stack");
         }
+        if (getIntent().hasExtra("color")) {
+            color = Integer.parseInt(getIntent().getStringExtra("color"));
+        }
+        if (getIntent().hasExtra("location")) {
+            locationET.setText(getIntent().getStringExtra("location"));
+        }
     }
 
     private void hideAdReminderDynamically() {
@@ -264,23 +267,13 @@ public class EventEdit extends AppCompatActivity {
                     remindersListView.setVisibility(View.GONE);
                 } else if (reminders_list.size() == 1) {
 //                    reminders_list.sort(Date::compareTo);
-                    Collections.sort(reminders_list, new Comparator<Date>() {
-                        @Override
-                        public int compare(Date item1, Date item2) {
-                            return item1.compareTo(item2);
-                        }
-                    });
+                    Collections.sort(reminders_list, (item1, item2) -> item1.compareTo(item2));
                     ViewGroup.LayoutParams paramsListView = remindersListView.getLayoutParams();
                     paramsListView.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                     remindersListView.setLayoutParams(paramsListView);
                 } else {
 //                    reminders_list.sort(Date::compareTo);
-                    Collections.sort(reminders_list, new Comparator<Date>() {
-                        @Override
-                        public int compare(Date item1, Date item2) {
-                            return item1.compareTo(item2);
-                        }
-                    });
+                    Collections.sort(reminders_list, (item1, item2) -> item1.compareTo(item2));
                     ViewGroup.LayoutParams paramsListView = remindersListView.getLayoutParams();
                     paramsListView.height = 500;
                     remindersListView.setLayoutParams(paramsListView);
@@ -325,9 +318,24 @@ public class EventEdit extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                color = 0;
+
             }
         });
+
+        if (color==0)
+        {
+            color_spinner.setSelection(0);
+        } else if (color==1) {
+            color_spinner.setSelection(1);
+        } else if (color==2) {
+            color_spinner.setSelection(2);
+        } else if (color==3) {
+            color_spinner.setSelection(3);
+        } else if (color==4) {
+            color_spinner.setSelection(4);
+        } else if (color==5) {
+            color_spinner.setSelection(5);
+        }
     }
 
 
@@ -367,8 +375,16 @@ public class EventEdit extends AppCompatActivity {
                         cRemChanged.set(Calendar.YEAR, yearTEST);
                         cRemChanged.set(Calendar.MONTH, monthTEST);
                         cRemChanged.set(Calendar.DAY_OF_MONTH, dayTest);
-                        cRemChanged.set(Calendar.HOUR, cRemBefore.getHours());
-                        cRemChanged.set(Calendar.MINUTE, cRemBefore.getMinutes());
+
+
+                        Calendar cRemBeforeCalendar = Calendar.getInstance();
+                        cRemBeforeCalendar.setTime(cRemBefore);
+
+                        int hour = cRemBeforeCalendar.get(Calendar.HOUR_OF_DAY);
+                        int minute = cRemBeforeCalendar.get(Calendar.MINUTE);
+
+                        cRemChanged.set(Calendar.HOUR_OF_DAY, hour);
+                        cRemChanged.set(Calendar.MINUTE, minute);
                         cRemChanged.set(Calendar.SECOND, 0);
                         cRemChanged.set(Calendar.MILLISECOND, 0);
                         Date testD = cRemChanged.getTime();
@@ -392,7 +408,10 @@ public class EventEdit extends AppCompatActivity {
         StartTime.show();
     }
 
+    @SuppressLint("SetTextI18n")
     public void showChangeTime(int hours, int minute) {
+        ArrayList<Date> reminder_list_hour_changed = new ArrayList<>();
+
         TimePickerDialog timePickerDialog;
         timePickerDialog = new TimePickerDialog(EventEdit.this, R.style.TimePickerTheme, (timePicker, selectedHour, selectedMinute) -> {
             hour = selectedHour;
@@ -432,6 +451,21 @@ public class EventEdit extends AppCompatActivity {
 
             }
 
+        if (!reminders_list.isEmpty())
+        {
+            for (int i=0; i<reminders_list.size(); i++)
+            {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(reminders_list.get(i));
+
+                cal.set(Calendar.HOUR_OF_DAY, hour);
+                reminder_list_hour_changed.add(cal.getTime());
+            }
+            reminders_list.clear();
+            reminders_list.addAll(reminder_list_hour_changed);
+            remindersAdapter.notifyDataSetChanged();
+
+        }
 
         }, hours, minute, true);//Yes 24 hour time
 
@@ -568,7 +602,7 @@ public class EventEdit extends AppCompatActivity {
 
 
 
-        Toast.makeText(EventEdit.this, "Alarm set at: " + cc.getTime().toString(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(EventEdit.this, "Alarm set at: " + cc.getTime().toString(), Toast.LENGTH_SHORT).show();
 
 
     }
@@ -674,6 +708,9 @@ public class EventEdit extends AppCompatActivity {
                 iCustomRepeat.putExtra("tittle", eventNameET.getText().toString());
                 iCustomRepeat.putExtra("comment", eventCommentET.getText().toString());
                 iCustomRepeat.putExtra("stack", stackNow);
+                iCustomRepeat.putExtra("color",String.valueOf(color));
+                String locTest = locationET.getText().toString();
+                iCustomRepeat.putExtra("location",locTest);
                 startActivity(iCustomRepeat);
                 dialog1.dismiss();
             });
@@ -814,14 +851,16 @@ public class EventEdit extends AppCompatActivity {
         dialog.setOnDismissListener(dialog12 -> {
             for (int i = 0; i < reminders_list.size(); i++) {
                 for (int j = i + 1; j < reminders_list.size(); j++) {
-                    if (reminders_list.get(i).getMonth() == reminders_list.get(j).getMonth() &&
-                            reminders_list.get(i).getYear() == reminders_list.get(j).getYear() &&
-                            reminders_list.get(i).getDay() == reminders_list.get(j).getDay() &&
-                            reminders_list.get(i).getHours() == reminders_list.get(j).getHours() &&
-                            reminders_list.get(i).getMinutes() == reminders_list.get(j).getMinutes()) {
-                        reminders_list.remove(i);
+                    Calendar calendar1 = Calendar.getInstance();
+                    calendar1.setTime(reminders_list.get(i));
 
+                    Calendar calendar2 = Calendar.getInstance();
+                    calendar2.setTime(reminders_list.get(j));
+
+                    if (isSameDateTime(calendar1, calendar2)) {
+                        reminders_list.remove(i);
                         Toast.makeText(EventEdit.this, "Σφάλμα, η υπενθύμιση υπάρχει.", Toast.LENGTH_SHORT).show();
+
                     }
                 }
             }
@@ -913,12 +952,7 @@ public class EventEdit extends AppCompatActivity {
 
         String idForReminder = "";
 //        reminders_list.sort(Date::compareTo);
-        Collections.sort(reminders_list, new Comparator<Date>() {
-            @Override
-            public int compare(Date item1, Date item2) {
-                return item1.compareTo(item2);
-            }
-        });
+        Collections.sort(reminders_list, (item1, item2) -> item1.compareTo(item2));
         Cursor cursor = myDB.readAllEvents();
         Cursor cursorRem = myDB.readAllReminder();
         if (reminders_list.size() > 0) {
@@ -964,12 +998,7 @@ public class EventEdit extends AppCompatActivity {
 
         String idForRepeat;
 //        repeats_list.sort(Date::compareTo);
-        Collections.sort(repeats_list, new Comparator<Date>() {
-            @Override
-            public int compare(Date item1, Date item2) {
-                return item1.compareTo(item2);
-            }
-        });
+        Collections.sort(repeats_list, (item1, item2) -> item1.compareTo(item2));
         if (repeatState == 5) {
             for (LocalDate localDate : CustomRepeatActivity.customDatesToSaveLocalDate) {
                 Calendar cForCustom = Calendar.getInstance();
@@ -1039,6 +1068,7 @@ public class EventEdit extends AppCompatActivity {
         i1.putExtra("tempDate", myTemp);
         i1.putExtra("stack", stackNow);
         myDB.removeDuplicateReminders();
+        myDB.close();
         overridePendingTransition(0, 0);
         startActivity(i1);
         overridePendingTransition(0, 0);

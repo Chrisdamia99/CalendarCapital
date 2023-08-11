@@ -5,13 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +15,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 
 
@@ -56,7 +52,7 @@ public class EventCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
-        TextView id_lv_tv = view.findViewById(R.id.id_lv_tv);
+//        TextView id_lv_tv = view.findViewById(R.id.id_lv_tv);
         TextView title_lv_tv = view.findViewById(R.id.title_lv_tv);
         TextView comment_lv_tv = view.findViewById(R.id.comment_lv_tv);
         TextView date_lv_tv = view.findViewById(R.id.date_lv_tv);
@@ -71,7 +67,7 @@ public class EventCursorAdapter extends CursorAdapter {
         String time = cursor.getString(cursor.getColumnIndexOrThrow("event_time"));
         String location = cursor.getString(cursor.getColumnIndexOrThrow("event_location"));
 
-        id_lv_tv.setText(id_row);
+//        id_lv_tv.setText(id_row);
         title_lv_tv.setText(title);
         comment_lv_tv.setText(comment);
         date_lv_tv.setText(date);
@@ -84,7 +80,7 @@ public class EventCursorAdapter extends CursorAdapter {
     public View setAllFields(View view, String id, String title, String comment, String date, String time,String location) {
         String alarmDate;
 
-        TextView id_lv_tv = view.findViewById(R.id.id_lv_tv);
+//        TextView id_lv_tv = view.findViewById(R.id.id_lv_tv);
         TextView title_lv_tv = view.findViewById(R.id.title_lv_tv);
         TextView comment_lv_tv = view.findViewById(R.id.comment_lv_tv);
         TextView date_lv_tv = view.findViewById(R.id.date_lv_tv);
@@ -97,7 +93,7 @@ public class EventCursorAdapter extends CursorAdapter {
 
 
         EventCursorAdapter.this.notifyDataSetChanged();
-        id_lv_tv.setText(id);
+//        id_lv_tv.setText(id);
         title_lv_tv.setText(title);
         comment_lv_tv.setText(comment);
         date_lv_tv.setText(date);
@@ -112,12 +108,7 @@ public class EventCursorAdapter extends CursorAdapter {
         Cursor cursorRem = myDb.readAllReminder();
 
 //            existedReminders.sort(Date::compareTo);
-        Collections.sort(existedReminders, new Comparator<Date>() {
-            @Override
-            public int compare(Date item1, Date item2) {
-                return item1.compareTo(item2);
-            }
-        });
+        Collections.sort(existedReminders, (item1, item2) -> item1.compareTo(item2));
         cursor.moveToPosition(-1);
         while (cursor.moveToNext()) {
             if (cursor.getString(0).equals(id)) {
@@ -129,15 +120,24 @@ public class EventCursorAdapter extends CursorAdapter {
                     EventCursorAdapter.this.notifyDataSetChanged();
 
 
+
                     cursorRem.moveToPosition(-1);
                     //----Problem here maybe--------//
                     while (cursorRem.moveToNext()) {
 
                         if (cursorRem.getString(1).equals(id)) {
 
-                            long mytestLong = Date.parse(cursorRem.getString(2));
-                            Date lastDate = new Date(mytestLong);
+//                            long mytestLong = Date.parse(cursorRem.getString(2));
+//                            Date lastDate = new Date(mytestLong);
+                            String dateString = cursorRem.getString(2);
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
 
+                            Date lastDate = null;
+                            try {
+                                lastDate = dateFormat.parse(dateString);
+                            } catch (ParseException e) {
+                                throw new RuntimeException(e);
+                            }
                             existedReminders.add(lastDate);
 
 
@@ -147,29 +147,22 @@ public class EventCursorAdapter extends CursorAdapter {
 
                     for (int i = 0; i < existedReminders.size(); i++) {
                         for (int j = i + 1; j < existedReminders.size(); j++) {
-                            if (existedReminders.get(i).getMonth() == existedReminders.get(j).getMonth() &&
-                                    existedReminders.get(i).getYear() == existedReminders.get(j).getYear() &&
-                                    existedReminders.get(i).getDay() == existedReminders.get(j).getDay() &&
-                                    existedReminders.get(i).getHours() == existedReminders.get(j).getHours() &&
-                                    existedReminders.get(i).getMinutes() == existedReminders.get(j).getMinutes()) {
+                            Calendar calendar1 = Calendar.getInstance();
+                            calendar1.setTime(existedReminders.get(i));
+
+                            Calendar calendar2 = Calendar.getInstance();
+                            calendar2.setTime(existedReminders.get(j));
+
+                            if (isSameDateTime(calendar1, calendar2)) {
                                 existedReminders.remove(i);
+                                Toast.makeText(mContext, "Σφάλμα, η υπενθύμιση υπάρχει.", Toast.LENGTH_SHORT).show();
 
                             }
+
                         }
                     }
 
-                    for (int i = 0; i < existedReminders.size(); i++) {
-                        for (int j = i + 1; j < existedReminders.size(); j++) {
-                            if (existedReminders.get(i).getMonth() == existedReminders.get(j).getMonth() &&
-                                    existedReminders.get(i).getYear() == existedReminders.get(j).getYear() &&
-                                    existedReminders.get(i).getDay() == existedReminders.get(j).getDay() &&
-                                    existedReminders.get(i).getHours() == existedReminders.get(j).getHours() &&
-                                    existedReminders.get(i).getMinutes() == existedReminders.get(j).getMinutes()) {
-                                existedReminders.remove(i);
 
-                            }
-                        }
-                    }
                     remindersAdapter = new RemindersAdapter(mContext, existedReminders);
                     remindersAdapter.notifyDataSetChanged();
                     EventCursorAdapter.this.notifyDataSetChanged();
@@ -185,8 +178,17 @@ public class EventCursorAdapter extends CursorAdapter {
 
                         if (cursorRem.getString(1).equals(id)) {
 
-                            long mytestLong = Date.parse(cursorRem.getString(2));
-                            Date lastDate = new Date(mytestLong);
+//                            long mytestLong = Date.parse(cursorRem.getString(2));
+//                            Date lastDate = new Date(mytestLong);
+                            String dateString = cursorRem.getString(2);
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
+
+                            Date lastDate = null;
+                            try {
+                                lastDate = dateFormat.parse(dateString);
+                            } catch (ParseException e) {
+                                throw new RuntimeException(e);
+                            }
 
                             existedReminders.add(lastDate);
 
@@ -260,7 +262,13 @@ public class EventCursorAdapter extends CursorAdapter {
             });
         }
     }
-
+    private boolean isSameDateTime(Calendar calendar1, Calendar calendar2) {
+        return calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) &&
+                calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH) &&
+                calendar1.get(Calendar.DAY_OF_MONTH) == calendar2.get(Calendar.DAY_OF_MONTH) &&
+                calendar1.get(Calendar.HOUR_OF_DAY) == calendar2.get(Calendar.HOUR_OF_DAY) &&
+                calendar1.get(Calendar.MINUTE) == calendar2.get(Calendar.MINUTE);
+    }
     @Override
     public long getItemId(int position) {
         return position;

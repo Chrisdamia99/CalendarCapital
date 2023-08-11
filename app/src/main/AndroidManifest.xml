@@ -79,7 +79,12 @@
             android:enabled="true"
             android:exported="true"
             android:label="AlarmReceiver"
-            android:permission="TODO" />
+            android:permission="TODO">
+        <intent-filter>
+            <action android:name="android.intent.action.BOOT_COMPLETED" />
+        </intent-filter>
+            </receiver>
+
         <receiver
             android:name=".AlarmReceiver$StopReceiver"
             android:enabled="true"

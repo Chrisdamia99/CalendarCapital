@@ -5,30 +5,13 @@ import androidx.annotation.NonNull;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Objects;
 
 public class Event {
 
 
-    public static ArrayList<Event> eventsList = new ArrayList<>();
 
 
-    public static ArrayList<Event> eventsForDateAndTime(LocalDate date, LocalTime time) {
-        ArrayList<Event> events = new ArrayList<>();
 
-        for (Event event : eventsList) {
-            int eventHour = 0;
-                eventHour = event.time.getHour();
-
-            int cellHour = 0;
-                cellHour = time.getHour();
-
-            if (event.getDate().equals(date) && eventHour == cellHour)
-                events.add(event);
-        }
-        return events;
-    }
 
     private String id;
     private String name, comment;

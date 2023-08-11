@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.time.LocalDate;
@@ -247,32 +246,33 @@ public class EventExpandableListAdapter extends BaseExpandableListAdapter {
             textView.setText(event.getName());
             textView.setVisibility(View.VISIBLE);
         }
-        if (color.equals("0"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner);
-        }else if (color.equals("1"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner_red);
+        switch (color) {
+            case "0":
+                textView.setBackgroundResource(R.drawable.rounded_corner);
+                break;
+            case "1":
+                textView.setBackgroundResource(R.drawable.rounded_corner_red);
 
-        }else if (color.equals("2"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner_yellow);
+                break;
+            case "2":
+                textView.setBackgroundResource(R.drawable.rounded_corner_yellow);
 
-        }else if (color.equals("3"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner_green);
+                break;
+            case "3":
+                textView.setBackgroundResource(R.drawable.rounded_corner_green);
 
-        }else if (color.equals("4"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner_blue);
+                break;
+            case "4":
+                textView.setBackgroundResource(R.drawable.rounded_corner_blue);
 
-        }else if (color.equals("5"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner_purple);
-        }else
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner);
+                break;
+            case "5":
+                textView.setBackgroundResource(R.drawable.rounded_corner_purple);
+                break;
+            default:
+                textView.setBackgroundResource(R.drawable.rounded_corner);
 
+                break;
         }
         notifyDataSetChanged();
 
@@ -289,32 +289,33 @@ public class EventExpandableListAdapter extends BaseExpandableListAdapter {
             textView.setVisibility(View.VISIBLE);
         }
 
-        if (color.equals("0"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner);
-        }else if (color.equals("1"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner_red);
+        switch (color) {
+            case "0":
+                textView.setBackgroundResource(R.drawable.rounded_corner);
+                break;
+            case "1":
+                textView.setBackgroundResource(R.drawable.rounded_corner_red);
 
-        }else if (color.equals("2"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner_yellow);
+                break;
+            case "2":
+                textView.setBackgroundResource(R.drawable.rounded_corner_yellow);
 
-        }else if (color.equals("3"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner_green);
+                break;
+            case "3":
+                textView.setBackgroundResource(R.drawable.rounded_corner_green);
 
-        }else if (color.equals("4"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner_blue);
+                break;
+            case "4":
+                textView.setBackgroundResource(R.drawable.rounded_corner_blue);
 
-        }else if (color.equals("5"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner_purple);
-        }else
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner);
+                break;
+            case "5":
+                textView.setBackgroundResource(R.drawable.rounded_corner_purple);
+                break;
+            default:
+                textView.setBackgroundResource(R.drawable.rounded_corner);
 
+                break;
         }
         notifyDataSetChanged();
     }

@@ -1,7 +1,6 @@
 package com.example.calendarcapital;
 
 
-import android.os.Build;
 import android.view.View;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -47,7 +46,9 @@ public class CalendarViewHolder extends RecyclerView.ViewHolder implements View.
     public void onClick(View view) {
 
         view.setSelected(true);
+
         int adapterPosition = getAdapterPosition();
+
         if (adapterPosition<0)
         {
 

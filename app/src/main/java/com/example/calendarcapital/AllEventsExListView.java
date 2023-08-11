@@ -12,7 +12,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,16 +72,13 @@ public class AllEventsExListView extends AppCompatActivity  {
 
             startActivity(i);
         });
-        allEventsRefreshButton.setOnClickListener(v -> AllEventsList.reloadActivity(AllEventsExListView.this));
-        floatAddBtnMonthViewExList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        allEventsRefreshButton.setOnClickListener(v -> CalendarUtils.reloadActivity(AllEventsExListView.this));
+        floatAddBtnMonthViewExList.setOnClickListener(v -> {
 
-                    Intent saveIntent = new Intent(AllEventsExListView.this, EventEdit.class);
+                Intent saveIntent = new Intent(AllEventsExListView.this, EventEdit.class);
 
-                    startActivity(saveIntent);
+                startActivity(saveIntent);
 
-            }
         });
 
     }
@@ -172,15 +168,12 @@ if (listAdapter.isEmpty())
     {
 
 
-            expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-                @Override
-                public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                    groupPos=groupPosition;
-                    childPos=childPosition;
-                    hourAdapterClickActionChild( groupPosition, childPosition, parent);
+            expandableListView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+                groupPos=groupPosition;
+                childPos=childPosition;
+                hourAdapterClickActionChild( groupPosition, childPosition, parent);
 
-                    return false;
-                }
+                return false;
             });
 
 
@@ -226,10 +219,10 @@ private void hourAdapterClickActionChild(int groupPosition,int childPosition,Exp
 
     builder.setView(viewFinal).
 
-            setPositiveButton("Delete", (dialog, which) -> {
+            setPositiveButton("διαγραφη", (dialog, which) -> {
 
                 AlertDialog.Builder builderDel = new AlertDialog.Builder(AllEventsExListView.this);
-                builderDel.setPositiveButton("Yes", (dialog1, which1) -> {
+                builderDel.setPositiveButton("ναι", (dialog1, which1) -> {
                     String parent_id_value = myEvent.getEvents().get(0).getParent_id();
                     String row_id = myEvent.getEvents().get(0).getId();
                     LocalDate event_date = myEvent.getEvents().get(0).getDate();
@@ -242,11 +235,11 @@ private void hourAdapterClickActionChild(int groupPosition,int childPosition,Exp
                     }
 
 
-                }).setNegativeButton("No", (dialog12, which12) -> dialog12.cancel()).setTitle("Are you sure you want to delete event " + myTitle + " ?");
+                }).setNegativeButton("οχι", (dialog12, which12) -> dialog12.cancel()).setTitle("Οριστική διαγραφή του " + myTitle + " ?");
                 builderDel.show();
 
 
-            }).setNegativeButton("Exit", (dialog, which) -> dialog.dismiss()).setNeutralButton("Edit", (dialog, which) -> {
+            }).setNegativeButton("εξοδος", (dialog, which) -> dialog.dismiss()).setNeutralButton("επεξεργασια", (dialog, which) -> {
                 Intent i = new Intent(AllEventsExListView.this, Edit_Update_Activity.class);
 
                 String row_id = ((HourEvent) parent.getAdapter().getItem(childPosition)).getEvents().get(0).getId();
@@ -298,10 +291,10 @@ private void hourAdapterClickActionGroup(int groupPosition,ExpandableListView pa
 
     builder.setView(viewFinal).
 
-            setPositiveButton("Delete", (dialog, which) -> {
+            setPositiveButton("διαγραφη", (dialog, which) -> {
 
                 AlertDialog.Builder builderDel = new AlertDialog.Builder(AllEventsExListView.this);
-                builderDel.setPositiveButton("Yes", (dialog1, which1) -> {
+                builderDel.setPositiveButton("ναι", (dialog1, which1) -> {
                     String parent_id_value = myEvent.getEvents().get(0).getParent_id();
                     String row_id = myEvent.getEvents().get(0).getId();
                     LocalDate event_date = myEvent.getEvents().get(0).getDate();
@@ -314,11 +307,11 @@ private void hourAdapterClickActionGroup(int groupPosition,ExpandableListView pa
                     }
 
 
-                }).setNegativeButton("No", (dialog12, which12) -> dialog12.cancel()).setTitle("Are you sure you want to delete event " + myTitle + " ?");
+                }).setNegativeButton("οχι", (dialog12, which12) -> dialog12.cancel()).setTitle("Οριστική διαγραφή του " + myTitle + " ?");
                 builderDel.show();
 
 
-            }).setNegativeButton("Exit", (dialog, which) -> dialog.dismiss()).setNeutralButton("Edit", (dialog, which) -> {
+            }).setNegativeButton("εξοδος", (dialog, which) -> dialog.dismiss()).setNeutralButton("επεξεργασια", (dialog, which) -> {
                 Intent i = new Intent(AllEventsExListView.this, Edit_Update_Activity.class);
 
 
@@ -621,7 +614,7 @@ private void hourAdapterClickActionGroup(int groupPosition,ExpandableListView pa
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, alarmId, intent, PendingIntent.FLAG_IMMUTABLE);
 
         alarmManager.cancel(pendingIntent);
-        Toast.makeText(this, "Alarm Cancelled", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Alarm Cancelled", Toast.LENGTH_SHORT).show();
 
 
     }

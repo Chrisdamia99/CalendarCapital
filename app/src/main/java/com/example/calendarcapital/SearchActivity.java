@@ -1,6 +1,5 @@
 package com.example.calendarcapital;
 
-import static com.example.calendarcapital.CalendarUtils.selectedDate;
 import static com.example.calendarcapital.CalendarUtils.stringToLocalDate;
 
 import androidx.appcompat.app.AlertDialog;
@@ -15,7 +14,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +26,6 @@ import android.widget.Toast;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 public class SearchActivity extends AppCompatActivity {
     SearchView searchView;
@@ -90,12 +86,7 @@ public class SearchActivity extends AppCompatActivity {
             startActivity(i);
 
         });
-        refreshMenuBtnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AllEventsExListView.reloadActivity(SearchActivity.this);
-            }
-        });
+        refreshMenuBtnSearch.setOnClickListener(v -> AllEventsExListView.reloadActivity(SearchActivity.this));
 
     }
 
@@ -188,10 +179,10 @@ public class SearchActivity extends AppCompatActivity {
 
                 builder.setView(viewFinal).
 
-                        setPositiveButton("Delete", (dialog, which) -> {
+                        setPositiveButton("διαγραφη", (dialog, which) -> {
 
                             AlertDialog.Builder builderDel = new AlertDialog.Builder(SearchActivity.this);
-                            builderDel.setPositiveButton("Yes", (dialog1, which1) -> {
+                            builderDel.setPositiveButton("ναι", (dialog1, which1) -> {
                                 String parent_id_value = hourAdapter.getItem(position).getEvents().get(0).getParent_id();
                                 String row_id = hourAdapter.getItem(position).getEvents().get(0).getId();
 
@@ -204,14 +195,14 @@ public class SearchActivity extends AppCompatActivity {
                                 }
 
 
-                            }).setNegativeButton("No", (dialog12, which12) -> {
+                            }).setNegativeButton("οχι", (dialog12, which12) -> {
 
 
-                            }).setTitle("Are you sure you want to delete event " + title_upd + " ?");
+                            }).setTitle("Οριστική διαγραφή του " + title_upd + " ?");
                             builderDel.show();
 
 
-                        }).setNegativeButton("Exit", (dialog, which) -> dialog.cancel()).setNeutralButton("Edit", (dialog, which) -> {
+                        }).setNegativeButton("εξοδος", (dialog, which) -> dialog.cancel()).setNeutralButton("επεξεργασια", (dialog, which) -> {
                             Intent i = new Intent(SearchActivity.this, Edit_Update_Activity.class);
 
                             String row_id = hourAdapter.getItem(position).getEvents().get(0).getId();

@@ -5,19 +5,19 @@ import static com.example.calendarcapital.CalendarUtils.daysInWeekArray;
 import static com.example.calendarcapital.CalendarUtils.selectedDate;
 import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
 
 public class RecyclerViewActions {
+
+
+
 
     public static void removeExtraDateIntent(Activity activity)
     {
@@ -32,7 +32,8 @@ public class RecyclerViewActions {
     }
 
 
-    public static void setCalendarRecyclerViewMonth(CalendarAdapter.OnItemListener activity, Context context,RecyclerView calendarRecyclerView)
+    public static void setCalendarRecyclerViewMonth(CalendarAdapter.OnItemListener activity,
+                                                    Context context,RecyclerView calendarRecyclerView)
     {
         ArrayList<LocalDate> daysInMonth = daysInMonthArray();
         CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, activity, context);
@@ -68,7 +69,7 @@ public class RecyclerViewActions {
         ViewGroup.LayoutParams params = calendarRecyclerView.getLayoutParams();
         ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) calendarRecyclerView.getLayoutParams();
 
-        params.height = 300;
+        params.height = 320;
         marginParams.bottomMargin = 0;
 
         calendarRecyclerView.setLayoutParams(params);

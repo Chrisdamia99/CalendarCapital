@@ -1,18 +1,16 @@
 package com.example.calendarcapital;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class WeekDaysMonthDaysCustomRepeat {
-public static int weekEventsCounterRepeatCounter;
+private static int weekEventsCounterRepeatCounter=0;
 
     //--------------------------------------Repeat Until End-------------------------------------------------------------------------
     public static ArrayList<LocalDate> mondayChosenUntilRepeat(LocalDate untilRepeatDate, LocalDate dateToCustom, LocalDate flagDate, int repeatSeperateCounterInt) {
@@ -25,9 +23,9 @@ public static int weekEventsCounterRepeatCounter;
                 {
                     mondaysList.add(flagDate);
                 }
-                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY && repeatSeperateCounterInt>1)
                 {
-                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
+                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt-1);
                 }
                 flagDate =flagDate.plusDays(1);
             }
@@ -46,9 +44,9 @@ public static int weekEventsCounterRepeatCounter;
                 {
                     tuesdayList.add(flagDate);
                 }
-                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY && repeatSeperateCounterInt>1)
                 {
-                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
+                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt-1);
                 }
                 flagDate =flagDate.plusDays(1);
             }
@@ -67,9 +65,9 @@ public static int weekEventsCounterRepeatCounter;
                 {
                     wednesdayList.add(flagDate);
                 }
-                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY && repeatSeperateCounterInt>1)
                 {
-                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
+                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt-1);
                 }
                 flagDate =flagDate.plusDays(1);
             }
@@ -87,9 +85,9 @@ public static int weekEventsCounterRepeatCounter;
                 {
                     thursdayList.add(flagDate);
                 }
-                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY && repeatSeperateCounterInt>1)
                 {
-                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
+                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt-1);
                 }
                 flagDate =flagDate.plusDays(1);
             }
@@ -107,9 +105,9 @@ public static int weekEventsCounterRepeatCounter;
                 {
                     fridayList.add(flagDate);
                 }
-                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY && repeatSeperateCounterInt>1)
                 {
-                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
+                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt-1);
                 }
                 flagDate =flagDate.plusDays(1);
             }
@@ -130,9 +128,9 @@ public static int weekEventsCounterRepeatCounter;
                     saturdayList.add(flagDate);
                 }
 
-                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY && repeatSeperateCounterInt>1)
                 {
-                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
+                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt-1);
                 }
                     flagDate =flagDate.plusDays(1);
 
@@ -153,9 +151,9 @@ public static int weekEventsCounterRepeatCounter;
                 {
                     sundayList.add(flagDate);
                 }
-                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY && repeatSeperateCounterInt>1)
                 {
-                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
+                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt-1);
                 }
                 flagDate =flagDate.plusDays(1);
             }
@@ -240,11 +238,11 @@ public static int weekEventsCounterRepeatCounter;
 
             if (dateToCustom.getDayOfWeek() == DayOfWeek.SATURDAY)
             {
-                return "Μηνιαία κάθε " + weekOfMonth +"ο" + " " + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")) + ".";
+                return "Μηνιαία κάθε " + weekOfMonth +"ο" + " " + dayOfWeekForMonth(dateToCustom.getDayOfWeek()) + ".";
 
             }else
             {
-                return "Μηνιαία κάθε " + weekOfMonth +"η" + " " + dateToCustom.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("el", "GR")) + ".";
+                return "Μηνιαία κάθε " + weekOfMonth +"η" + " " +  dayOfWeekForMonth(dateToCustom.getDayOfWeek()) + ".";
 
             }
 
@@ -272,6 +270,38 @@ public static int weekEventsCounterRepeatCounter;
 
             }
 
+    }
+
+    public static String dayOfWeekForMonth(DayOfWeek day)
+    {   String textMonth = null;
+        Map<DayOfWeek, String> greekDayNames = new HashMap<>();
+        greekDayNames.put(DayOfWeek.MONDAY, "Δευτέρα");
+        greekDayNames.put(DayOfWeek.TUESDAY, "Τρίτη");
+        greekDayNames.put(DayOfWeek.WEDNESDAY, "Τετάρτη");
+        greekDayNames.put(DayOfWeek.THURSDAY, "Πέμπτη");
+        greekDayNames.put(DayOfWeek.FRIDAY, "Παρασκευή");
+        greekDayNames.put(DayOfWeek.SATURDAY, "Σάββατο");
+        greekDayNames.put(DayOfWeek.SUNDAY, "Κυριακή");
+
+        if (day == DayOfWeek.MONDAY)
+        {
+            textMonth = greekDayNames.get(day);
+        } else if (day == DayOfWeek.TUESDAY) {
+            textMonth = greekDayNames.get(day);
+        } else if (day == DayOfWeek.WEDNESDAY) {
+            textMonth = greekDayNames.get(day);
+        }else if (day == DayOfWeek.THURSDAY) {
+            textMonth = greekDayNames.get(day);
+        }else if (day == DayOfWeek.FRIDAY) {
+            textMonth = greekDayNames.get(day);
+        }else if (day == DayOfWeek.SATURDAY) {
+            textMonth = greekDayNames.get(day);
+        }else if (day == DayOfWeek.SUNDAY) {
+            textMonth = greekDayNames.get(day);
+        }
+
+
+        return textMonth;
     }
 
     public static ArrayList<LocalDate> addDaysOfMonthChosenUntilRepeat(LocalDate untilRepeatDate, LocalDate dateToCustom, LocalDate flagDate,
@@ -469,6 +499,7 @@ public static int weekEventsCounterRepeatCounter;
     {
         ArrayList<LocalDate> customDatesToSaveLocalDate = new ArrayList<>();
         LocalDate flagDate = dateToCustom;
+        weekEventsCounterRepeatCounter=0;
         while (weekEventsCounterRepeatCounter!=repeatCounterIntEnd) {
             if (mondayFlag) {
                 customDatesToSaveLocalDate.addAll(mondayChosenRepeatCounter(flagDate));
@@ -497,9 +528,9 @@ public static int weekEventsCounterRepeatCounter;
             if (sundayFlag) {
                 customDatesToSaveLocalDate.addAll(sundayChosenRepeatCounter(flagDate));
             }
-                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY && repeatSeperateCounterInt>1)
                 {
-                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
+                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt-1);
                 }
 
                 flagDate = flagDate.plusDays(1);
@@ -514,6 +545,7 @@ public static int weekEventsCounterRepeatCounter;
         ArrayList<LocalDate> monthDaysChoice = new ArrayList<>();
 
         LocalDate flagDate;
+        weekEventsCounterRepeatCounter =0;
         if (monthSpinnerSelection==0)
         {
             flagDate = dateToCustom;
@@ -693,7 +725,7 @@ public static int weekEventsCounterRepeatCounter;
     {
         ArrayList<LocalDate> customDatesToSaveLocalDate = new ArrayList<>();
         LocalDate flagDate = dateToCustom;
-
+        weekEventsCounterRepeatCounter =0;
         boolean mondayFlag=false;
         boolean tuesdayFlag=false;
         boolean wednesdayFlag=false;
@@ -752,14 +784,16 @@ public static int weekEventsCounterRepeatCounter;
             if (sundayFlag) {
                 customDatesToSaveLocalDate.addAll(sundayChosenRepeatCounter(flagDate));
             }
-                if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY)
-                {
-                    flagDate = flagDate.plusWeeks(repeatSeperateCounterInt);
-                }
+            if (flagDate.getDayOfWeek() == DayOfWeek.SUNDAY && repeatSeperateCounterInt>1)
+            {
+                flagDate = flagDate.plusWeeks(repeatSeperateCounterInt-1);
+            }
 
-                flagDate = flagDate.plusDays(1);
+            flagDate = flagDate.plusDays(1);
 
         }
+
         return customDatesToSaveLocalDate;
+
     }
 }

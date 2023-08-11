@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -71,8 +73,19 @@ public class RemindersAdapter extends ArrayAdapter<Date>  {
         cancelBTN.setOnClickListener(v -> {
 
             while (remCursor.moveToNext()) {
-                long mytestLong = Date.parse(remCursor.getString(2));
-                Date lastDate = new Date(mytestLong);
+//                long mytestLong = Date.parse(remCursor.getString(2));
+//                Date lastDate = new Date(mytestLong);
+                String dateString = remCursor.getString(2);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
+
+                Date lastDate = null;
+                try {
+                    lastDate = dateFormat.parse(dateString);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+
+                assert lastDate != null;
                 if (lastDate.equals(myTest.get(position))) {
 
                     myDB.deleteOneRowReminder(remCursor.getString(0));

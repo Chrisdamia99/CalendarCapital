@@ -1,9 +1,7 @@
 package com.example.calendarcapital;
 
-import static com.example.calendarcapital.CalendarUtils.selectedDate;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -153,32 +151,33 @@ private void setEvents(View convertView, ArrayList<Event> events,String color) {
             textView.setText(event.getName());
             textView.setVisibility(View.VISIBLE);
         }
-        if (color.equals("0"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner);
-        }else if (color.equals("1"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner_red);
+        switch (color) {
+            case "0":
+                textView.setBackgroundResource(R.drawable.rounded_corner);
+                break;
+            case "1":
+                textView.setBackgroundResource(R.drawable.rounded_corner_red);
 
-        }else if (color.equals("2"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner_yellow);
+                break;
+            case "2":
+                textView.setBackgroundResource(R.drawable.rounded_corner_yellow);
 
-        }else if (color.equals("3"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner_green);
+                break;
+            case "3":
+                textView.setBackgroundResource(R.drawable.rounded_corner_green);
 
-        }else if (color.equals("4"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner_blue);
+                break;
+            case "4":
+                textView.setBackgroundResource(R.drawable.rounded_corner_blue);
 
-        }else if (color.equals("5"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner_purple);
-        }else
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner);
+                break;
+            case "5":
+                textView.setBackgroundResource(R.drawable.rounded_corner_purple);
+                break;
+            default:
+                textView.setBackgroundResource(R.drawable.rounded_corner);
 
+                break;
         }
         notifyDataSetChanged();
 
@@ -194,32 +193,33 @@ private void setEvents(View convertView, ArrayList<Event> events,String color) {
             textView.setVisibility(View.VISIBLE);
         }
 
-        if (color.equals("0"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner);
-        }else if (color.equals("1"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner_red);
+        switch (color) {
+            case "0":
+                textView.setBackgroundResource(R.drawable.rounded_corner);
+                break;
+            case "1":
+                textView.setBackgroundResource(R.drawable.rounded_corner_red);
 
-        }else if (color.equals("2"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner_yellow);
+                break;
+            case "2":
+                textView.setBackgroundResource(R.drawable.rounded_corner_yellow);
 
-        }else if (color.equals("3"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner_green);
+                break;
+            case "3":
+                textView.setBackgroundResource(R.drawable.rounded_corner_green);
 
-        }else if (color.equals("4"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner_blue);
+                break;
+            case "4":
+                textView.setBackgroundResource(R.drawable.rounded_corner_blue);
 
-        }else if (color.equals("5"))
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner_purple);
-        }else
-        {
-            textView.setBackgroundResource(R.drawable.rounded_corner);
+                break;
+            case "5":
+                textView.setBackgroundResource(R.drawable.rounded_corner_purple);
+                break;
+            default:
+                textView.setBackgroundResource(R.drawable.rounded_corner);
 
+                break;
         }
     }
 

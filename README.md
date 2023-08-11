@@ -20,13 +20,14 @@ A simple and effective calendar application that users can schedule their events
 
 ## Screenshots
 
+| MonthView with different color events.              | NavigationDrawer                             |
+|-----------------------------------------------------|---------------------------------------------|
+| <img class="screenshot" src="https://github.com/Chrisdamia99/CalendarCapital/assets/48257791/8d50e8e8-1569-48d1-a1b2-4794ec4d8d36.png"  width="200"> | <img class="screenshot" src="https://github.com/Chrisdamia99/CalendarCapital/assets/48257791/8a859fc4-e670-421c-98cc-a902722ffc78.png" width="200"> |
+| Repeating events and reminder notification bubble  | Customization of adding or updating an event |
+| <img class="screenshot" src="https://github.com/Chrisdamia99/CalendarCapital/assets/48257791/7f1b4473-babe-40ac-a69b-7599d35e3aa9.png" width="200"> | <img class="screenshot" src="https://github.com/Chrisdamia99/CalendarCapital/assets/48257791/681e57c3-c299-4771-81de-e34fb56ccf00.png" width="200"> |
 
-![App Screenshot 1](![Screenshot_2023-06-22-15-55-36-405_com example calendarcapital](https://github.com/Chrisdamia99/CalendarCapital/assets/48257791/8d50e8e8-1569-48d1-a1b2-4794ec4d8d36))
-![App Screenshot 2](![navDrawer](https://github.com/Chrisdamia99/CalendarCapital/assets/48257791/8a859fc4-e670-421c-98cc-a902722ffc78))
-![App Screenshot 3](![notificationBuble](https://github.com/Chrisdamia99/CalendarCapital/assets/48257791/7f1b4473-babe-40ac-a69b-7599d35e3aa9))
-![App Screenshot 4](![colorSpinner](https://github.com/Chrisdamia99/CalendarCapital/assets/48257791/681e57c3-c299-4771-81de-e34fb56ccf00))
-![App Screenshot 5](![customRepeatWeek](https://github.com/Chrisdamia99/CalendarCapital/assets/48257791/5cae5917-fda1-4a16-92dd-869336e105e2))
-![App Screenshot 6](![newViewEventAlarms](https://github.com/Chrisdamia99/CalendarCapital/assets/48257791/f77bb989-5f3f-47e2-8144-c661ace9662a))
+
+
 
 <!-- Add more screenshots if necessary -->
 
@@ -100,5 +101,5 @@ configurations.implementation {
 
 - Christos Damianidis  
 - Email: chydami@teiemt.gr
-- Project Link: [https://github.com/YourUsername/YourRepo](https://github.com/YourUsername/YourRepo)
+- Project Link: [https://github.com/YourUsername/YourRepo](https://github.com/YourUsername/YourRepo](https://github.com/Chrisdamia99/CalendarCapital.git)https://github.com/Chrisdamia99/CalendarCapital.git)
 

@@ -138,5 +138,5 @@ git clone https://github.com/Chrisdamia99/CalendarCapital.git
 
 - Christos Damianidis  
 - Email: chydami@teiemt.gr
-- Project Link: [https://github.com/YourUsername/YourRepo](https://github.com/YourUsername/YourRepo](https://github.com/Chrisdamia99/CalendarCapital.git)https://github.com/Chrisdamia99/CalendarCapital.git)
+- Project Link: [https://github.com/Chrisdamia99/CalendarCapital](https://github.com/YourUsername/YourRepo](https://github.com/Chrisdamia99/CalendarCapital.git)https://github.com/Chrisdamia99/CalendarCapital.git)
 

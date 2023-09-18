@@ -61,9 +61,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             id = String.valueOf(b.getInt("alarmid"));
 
             text = "Υπενθύμιση για το συμβάν: " + "\n" + event + "\n" + "Σχόλια: " + "\n" + comment;
-        }else
-        {
-            Toast.makeText(context, "Error Alarm Receiver BUNDLE", Toast.LENGTH_SHORT).show();
         }
 
 

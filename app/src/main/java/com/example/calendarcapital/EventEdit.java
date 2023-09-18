@@ -21,6 +21,7 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,8 +121,16 @@ public class EventEdit extends AppCompatActivity {
             Intent i = new Intent(EventEdit.this, MainActivity.class);
 
             i.putExtra("stack", stackNow);
+            String myTemp;
+            if(CalendarUtils.selectedDate==null)
+            {
+                CalendarUtils.selectedDate=LocalDate.now();
+                 myTemp = CalendarUtils.selectedDate.toString();
+            }else
+            {
+                 myTemp = CalendarUtils.selectedDate.toString();
+            }
 
-            String myTemp = CalendarUtils.selectedDate.toString();
             i.putExtra("tempDate", myTemp);
 
             startActivity(i);
@@ -139,7 +148,15 @@ public class EventEdit extends AppCompatActivity {
             cancelRepeat.setVisibility(View.GONE);
             repeatCountTv.setVisibility(View.GONE);
             addRepeatButton.setText(R.string.repeat_gr);
-            CustomRepeatActivity.customDatesToSaveLocalDate.clear();
+            if (!(repeats_list==null))
+            {
+                repeats_list.clear();
+            }
+            if (!(CustomRepeatActivity.customDatesToSaveLocalDate==null))
+            {
+                CustomRepeatActivity.customDatesToSaveLocalDate.clear();
+            }
+
         });
 
 
@@ -1000,23 +1017,28 @@ public class EventEdit extends AppCompatActivity {
 //        repeats_list.sort(Date::compareTo);
         Collections.sort(repeats_list, (item1, item2) -> item1.compareTo(item2));
         if (repeatState == 5) {
-            for (LocalDate localDate : CustomRepeatActivity.customDatesToSaveLocalDate) {
-                Calendar cForCustom = Calendar.getInstance();
 
-                cForCustom.set(Calendar.YEAR, localDate.getYear());
-                cForCustom.set(Calendar.MONTH, localDate.getMonth().getValue() - 1);
-                cForCustom.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
+            if (!(CustomRepeatActivity.customDatesToSaveLocalDate == null))
+            {
+                for (LocalDate localDate : CustomRepeatActivity.customDatesToSaveLocalDate) {
+                    Calendar cForCustom = Calendar.getInstance();
+
+                    cForCustom.set(Calendar.YEAR, localDate.getYear());
+                    cForCustom.set(Calendar.MONTH, localDate.getMonth().getValue() - 1);
+                    cForCustom.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
 
 
-                cForCustom.set(Calendar.HOUR_OF_DAY, 8);
-                cForCustom.set(Calendar.MINUTE, 0);
-                cForCustom.set(Calendar.SECOND, 0);
-                Date dateFromCustomRepeat = cForCustom.getTime();
-                repeats_list.add(dateFromCustomRepeat);
-                if (localDate.equals(date)) {
-                    repeats_list.remove(dateFromCustomRepeat);
+//                cForCustom.set(Calendar.HOUR_OF_DAY, 8);
+                    cForCustom.set(Calendar.HOUR_OF_DAY, time.getHour());
+                    cForCustom.set(Calendar.MINUTE, 0);
+                    cForCustom.set(Calendar.SECOND, 0);
+                    Date dateFromCustomRepeat = cForCustom.getTime();
+                    repeats_list.add(dateFromCustomRepeat);
+                    if (localDate.equals(date)) {
+                        repeats_list.remove(dateFromCustomRepeat);
+                    }
                 }
-            }
+                }
 
 
         }
@@ -1062,6 +1084,7 @@ public class EventEdit extends AppCompatActivity {
 
 
         i1.putExtra("date", date);
+
 
 
         String myTemp = CalendarUtils.selectedDate.toString();

@@ -183,7 +183,7 @@ public class CustomRepeatActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                Toast.makeText(CustomRepeatActivity.this, "test ONNOTHING", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CustomRepeatActivity.this, "", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -741,9 +741,6 @@ public class CustomRepeatActivity extends AppCompatActivity {
                     textForEventEdit = "Ανά " + repeatSeperateCounterInt + " μέρα, μέχρι " + untilRepeatDate.toString().trim();
 
                 }
-            } else {
-                Toast.makeText(this, "dayChoice error", Toast.LENGTH_SHORT).show();
-
             }
 
         }
@@ -820,9 +817,6 @@ public class CustomRepeatActivity extends AppCompatActivity {
                     textForEventEdit = "Ανά " + repeatSeperateCounterInt + " χρόνο, μέχρι " + untilRepeatDate.toString().trim();
 
                 }
-            } else {
-                Toast.makeText(this, "dayChoice error", Toast.LENGTH_SHORT).show();
-
             }
 
         }

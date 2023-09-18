@@ -167,7 +167,6 @@ public class RemindersAdapter extends ArrayAdapter<Date>  {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), alarmId, intent, PendingIntent.FLAG_IMMUTABLE);
 
         alarmManager.cancel(pendingIntent);
-        Toast.makeText(getContext(), "Alarm Cancelled", Toast.LENGTH_SHORT).show();
 
 
     }

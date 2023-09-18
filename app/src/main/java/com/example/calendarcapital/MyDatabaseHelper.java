@@ -172,8 +172,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
         if (result == -1) {
             Toast.makeText(context, "Failed to Update", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Successfully Update", Toast.LENGTH_SHORT).show();
         }
     }
     void updateColor(String row_id,String color)
@@ -188,8 +186,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
         if (result == -1) {
             Toast.makeText(context, "Failed to Update", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Successfully Update", Toast.LENGTH_SHORT).show();
         }
     }
     void updateAlarmNum(String row_id, String alarm) {
@@ -203,8 +199,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
         if (result == -1) {
             Toast.makeText(context, "Failed to Update", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Successfully Update", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -219,8 +213,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
         if (result == -1) {
             Toast.makeText(context, "Failed to Update", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Successfully Update", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -242,8 +234,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
         if (result == -1) {
             Toast.makeText(context, "Failed to Update", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Successfully Update", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -256,12 +246,11 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_COMMENT, comments);
 
 
+
         long result = db.update(TABLE_NAME, cv, "_id=?", new String[]{row_id});
 
         if (result == -1) {
             Toast.makeText(context, "Failed to Update", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Successfully Update", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -278,8 +267,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
         if (result == -1) {
             Toast.makeText(context, "Failed to Update", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Successfully Update", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -294,8 +281,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
         if (result == -1) {
             Toast.makeText(context, "Failed to Update", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Successfully Update", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -310,8 +295,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
         if (result == -1) {
             Toast.makeText(context, "Failed to Update", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Successfully Update", Toast.LENGTH_SHORT).show();
         }
     }
 

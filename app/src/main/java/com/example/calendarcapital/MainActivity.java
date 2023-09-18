@@ -496,8 +496,14 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
 
                         }).setNegativeButton("οχι", (dialog12, which12) -> {
-                            String previousViewType = stack.peekFirst();
-                            switch (Objects.requireNonNull(previousViewType)) {
+                            String previousViewType;
+                            if (stack==null || stack.isEmpty())
+                            {
+
+                                stack.add("month");
+                            }
+                            previousViewType = stack.peekFirst();
+                            switch (previousViewType) {
                                 case "all":
                                     setAllEventsExListView();
                                     break;
@@ -510,7 +516,6 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
                                     setDaily();
                                     break;
-
                                 case "week":
                                     selectedDate = EventDate;
 

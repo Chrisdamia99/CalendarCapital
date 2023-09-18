@@ -186,7 +186,10 @@ public class Edit_Update_Activity extends AppCompatActivity {
             cancelRepeatUPD.setVisibility(View.GONE);
             repeatCountTvUPD.setVisibility(View.GONE);
             addRepeatButtonUPD.setText(R.string.repeat_gr);
-
+            if (!(repeats_listUPD==null))
+            {
+                repeats_listUPD.clear();
+            }
             if (!(CustomRepeatActivity.customDatesToSaveLocalDate == null)) {
                 CustomRepeatActivity.customDatesToSaveLocalDate.clear();
             }
@@ -767,8 +770,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
                 }
 
-            } else {
-                Toast.makeText(mCurrentActivity, "problem showChangeDate_eventEdit_UPDATE", Toast.LENGTH_SHORT).show();
             }
 
 
@@ -1361,24 +1362,25 @@ public class Edit_Update_Activity extends AppCompatActivity {
 //            repeats_listUPD.sort(Date::compareTo);
         Collections.sort(repeats_listUPD, (element, t1) -> element.compareTo(t1));
         if (repeatState == 5) {
-            for (LocalDate localDate : CustomRepeatActivity.customDatesToSaveLocalDate) {
-                Calendar cForCustom = Calendar.getInstance();
+            if (!(CustomRepeatActivity.customDatesToSaveLocalDate == null)) {
+                for (LocalDate localDate : CustomRepeatActivity.customDatesToSaveLocalDate) {
+                    Calendar cForCustom = Calendar.getInstance();
 
-                cForCustom.set(Calendar.YEAR, localDate.getYear());
-                cForCustom.set(Calendar.MONTH, localDate.getMonth().getValue() - 1);
-                cForCustom.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
+                    cForCustom.set(Calendar.YEAR, localDate.getYear());
+                    cForCustom.set(Calendar.MONTH, localDate.getMonth().getValue() - 1);
+                    cForCustom.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
 
 
-                cForCustom.set(Calendar.HOUR_OF_DAY, 8);
-                cForCustom.set(Calendar.MINUTE, 0);
-                cForCustom.set(Calendar.SECOND, 0);
-                Date dateFromCustomRepeat = cForCustom.getTime();
-                repeats_listUPD.add(dateFromCustomRepeat);
-                if (localDate.equals(date)) {
-                    repeats_listUPD.remove(dateFromCustomRepeat);
+                    cForCustom.set(Calendar.HOUR_OF_DAY, 8);
+                    cForCustom.set(Calendar.MINUTE, 0);
+                    cForCustom.set(Calendar.SECOND, 0);
+                    Date dateFromCustomRepeat = cForCustom.getTime();
+                    repeats_listUPD.add(dateFromCustomRepeat);
+                    if (localDate.equals(date)) {
+                        repeats_listUPD.remove(dateFromCustomRepeat);
+                    }
                 }
             }
-
 
         }
 
@@ -1431,13 +1433,11 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
                     if (cursorEvent.getString(0).equals(editAllArray.get(i))) {
                         myDB.updateEventTitleComment(editAllArray.get(i), eventTitle, eventComment);
-
+                        myDB.updateColor(editAllArray.get(i), String.valueOf(color));
                     }
 
                 }
             }
-        } else {
-            Toast.makeText(mCurrentActivity, "ERROR updateAndSaveTittleCommentsFutureEvents", Toast.LENGTH_SHORT).show();
         }
 
         cursorEvent.close();
@@ -1618,24 +1618,25 @@ public class Edit_Update_Activity extends AppCompatActivity {
         Collections.sort(repeats_listUPD, (item1, item2) -> item1.compareTo(item2));
 
         if (repeatState == 5) {
-            for (LocalDate localDate : CustomRepeatActivity.customDatesToSaveLocalDate) {
-                Calendar cForCustom = Calendar.getInstance();
+            if (!(CustomRepeatActivity.customDatesToSaveLocalDate == null)) {
+                for (LocalDate localDate : CustomRepeatActivity.customDatesToSaveLocalDate) {
+                    Calendar cForCustom = Calendar.getInstance();
 
-                cForCustom.set(Calendar.YEAR, localDate.getYear());
-                cForCustom.set(Calendar.MONTH, localDate.getMonth().getValue() - 1);
-                cForCustom.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
+                    cForCustom.set(Calendar.YEAR, localDate.getYear());
+                    cForCustom.set(Calendar.MONTH, localDate.getMonth().getValue() - 1);
+                    cForCustom.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
 
 
-                cForCustom.set(Calendar.HOUR_OF_DAY, 8);
-                cForCustom.set(Calendar.MINUTE, 0);
-                cForCustom.set(Calendar.SECOND, 0);
-                Date dateFromCustomRepeat = cForCustom.getTime();
-                repeats_listUPD.add(dateFromCustomRepeat);
-                if (localDate.equals(date)) {
-                    repeats_listUPD.remove(dateFromCustomRepeat);
+                    cForCustom.set(Calendar.HOUR_OF_DAY, 8);
+                    cForCustom.set(Calendar.MINUTE, 0);
+                    cForCustom.set(Calendar.SECOND, 0);
+                    Date dateFromCustomRepeat = cForCustom.getTime();
+                    repeats_listUPD.add(dateFromCustomRepeat);
+                    if (localDate.equals(date)) {
+                        repeats_listUPD.remove(dateFromCustomRepeat);
+                    }
                 }
             }
-
 
         }
 
@@ -1772,8 +1773,6 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
             }
 
-        } else {
-            Toast.makeText(mCurrentActivity, "ERRORGIVEIDTOSTARTALARMS", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -1806,7 +1805,7 @@ public class Edit_Update_Activity extends AppCompatActivity {
 
                     if (cursorEvent.getString(0).equals(editFutureArray.get(i))) {
                         myDB.updateEventTitleComment(editFutureArray.get(i), eventTitle, eventComment);
-
+                        myDB.updateColor(editFutureArray.get(i), String.valueOf(color));
                     }
 
                 }
@@ -1987,7 +1986,8 @@ public class Edit_Update_Activity extends AppCompatActivity {
         cRepeat.clear();
         cRepeat.set(date.getYear(), date.getMonthValue() - 1, date.getDayOfMonth());
 
-        cRepeat.set(Calendar.HOUR_OF_DAY, 8);
+//        cRepeat.set(Calendar.HOUR_OF_DAY, 8);
+        cRepeat.set(Calendar.HOUR_OF_DAY, time.getHour());
         cRepeat.set(Calendar.MINUTE, 0);
         cRepeat.set(Calendar.SECOND, 0);
         cRepeat.set(Calendar.MILLISECOND, 0);
@@ -2023,24 +2023,25 @@ public class Edit_Update_Activity extends AppCompatActivity {
                 repeats_listUPD.add(cRepeat.getTime());
             }
         } else if (repeatState == 5) {
-            for (LocalDate localDate : CustomRepeatActivity.customDatesToSaveLocalDate) {
-                Calendar cForCustom = Calendar.getInstance();
+            if (!(CustomRepeatActivity.customDatesToSaveLocalDate == null)) {
+                for (LocalDate localDate : CustomRepeatActivity.customDatesToSaveLocalDate) {
+                    Calendar cForCustom = Calendar.getInstance();
 
-                cForCustom.set(Calendar.YEAR, localDate.getYear());
-                cForCustom.set(Calendar.MONTH, localDate.getMonth().getValue() - 1);
-                cForCustom.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
+                    cForCustom.set(Calendar.YEAR, localDate.getYear());
+                    cForCustom.set(Calendar.MONTH, localDate.getMonth().getValue() - 1);
+                    cForCustom.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
 
 
-                cForCustom.set(Calendar.HOUR_OF_DAY, 8);
-                cForCustom.set(Calendar.MINUTE, 0);
-                cForCustom.set(Calendar.SECOND, 0);
-                Date dateFromCustomRepeat = cForCustom.getTime();
-                repeats_listUPD.add(dateFromCustomRepeat);
-                if (localDate.equals(date)) {
-                    repeats_listUPD.remove(dateFromCustomRepeat);
+                    cForCustom.set(Calendar.HOUR_OF_DAY, 8);
+                    cForCustom.set(Calendar.MINUTE, 0);
+                    cForCustom.set(Calendar.SECOND, 0);
+                    Date dateFromCustomRepeat = cForCustom.getTime();
+                    repeats_listUPD.add(dateFromCustomRepeat);
+                    if (localDate.equals(date)) {
+                        repeats_listUPD.remove(dateFromCustomRepeat);
+                    }
                 }
             }
-
 
         }
 
@@ -2164,8 +2165,15 @@ public class Edit_Update_Activity extends AppCompatActivity {
         Intent i1 = new Intent(Edit_Update_Activity.this, MainActivity.class);
         i1.putExtra("date", date);
 
-
-        String myTemp = CalendarUtils.selectedDate.toString();
+        String myTemp;
+        if(CalendarUtils.selectedDate==null)
+        {
+            CalendarUtils.selectedDate=LocalDate.now();
+            myTemp = CalendarUtils.selectedDate.toString();
+        }else
+        {
+            myTemp = CalendarUtils.selectedDate.toString();
+        }
         i1.putExtra("tempDate", myTemp);
         i1.putExtra("stack", stackNow);
 

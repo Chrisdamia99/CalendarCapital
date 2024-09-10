@@ -22,7 +22,7 @@ A simple and effective calendar application that users can schedule their events
 
 | MonthView with different color events.              | NavigationDrawer                             |
 |-----------------------------------------------------|---------------------------------------------|
-| <img class="screenshot" src="https://github.com/Chrisdamia99/CalendarCapital/assets/48257791/8d50e8e8-1569-48d1-a1b2-4794ec4d8d36.png"  width="200"> | <img class="screenshot" src="https://github.com/Chrisdamia99/CalendarCapital/assets/48257791/8a859fc4-e670-421c-98cc-a902722ffc78.png" width="200"> |
+| <img class="screenshot" src="https://github.com/Chrisdamia99/MyCalendar/assets/48257791/8d50e8e8-1569-48d1-a1b2-4794ec4d8d36.png"  width="200"> | <img class="screenshot" src="https://github.com/Chrisdamia99/CalendarCapital/assets/48257791/8a859fc4-e670-421c-98cc-a902722ffc78.png" width="200"> |
 | Repeating events and reminder notification bubble  | Customization of adding or updating an event |
 | <img class="screenshot" src="https://github.com/Chrisdamia99/CalendarCapital/assets/48257791/7f1b4473-babe-40ac-a69b-7599d35e3aa9.png" width="200"> | <img class="screenshot" src="https://github.com/Chrisdamia99/CalendarCapital/assets/48257791/681e57c3-c299-4771-81de-e34fb56ccf00.png" width="200"> |
 

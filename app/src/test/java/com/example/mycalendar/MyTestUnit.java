@@ -1,17 +1,12 @@
-package com.example.calendarcapital;
+package com.example.mycalendar;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 public class MyTestUnit {
     @Test

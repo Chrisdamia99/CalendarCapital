@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.CalendarCapital" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.MyCalendar" parent="Theme.AppCompat.Light.NoActionBar">
 
     </style>
 

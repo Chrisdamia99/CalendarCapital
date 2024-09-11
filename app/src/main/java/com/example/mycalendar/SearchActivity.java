@@ -1,6 +1,6 @@
-package com.example.calendarcapital;
+package com.example.mycalendar;
 
-import static com.example.calendarcapital.CalendarUtils.stringToLocalDate;
+import static com.example.mycalendar.CalendarUtils.stringToLocalDate;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;

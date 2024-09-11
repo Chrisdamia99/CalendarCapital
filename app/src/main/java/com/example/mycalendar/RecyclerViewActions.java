@@ -1,8 +1,8 @@
-package com.example.calendarcapital;
+package com.example.mycalendar;
 
-import static com.example.calendarcapital.CalendarUtils.daysInMonthArray;
-import static com.example.calendarcapital.CalendarUtils.daysInWeekArray;
-import static com.example.calendarcapital.CalendarUtils.selectedDate;
+import static com.example.mycalendar.CalendarUtils.daysInMonthArray;
+import static com.example.mycalendar.CalendarUtils.daysInWeekArray;
+import static com.example.mycalendar.CalendarUtils.selectedDate;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;

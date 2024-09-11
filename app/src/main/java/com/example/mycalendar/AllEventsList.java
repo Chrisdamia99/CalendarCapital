@@ -1,6 +1,6 @@
-package com.example.calendarcapital;
+package com.example.mycalendar;
 
-import static com.example.calendarcapital.CalendarUtils.selectedDate;
+import static com.example.mycalendar.CalendarUtils.selectedDate;
 
 
 import android.content.Context;

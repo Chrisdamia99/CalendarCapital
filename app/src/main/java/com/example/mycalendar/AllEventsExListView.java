@@ -1,6 +1,6 @@
-package com.example.calendarcapital;
+package com.example.mycalendar;
 
-import static com.example.calendarcapital.CalendarUtils.stringToLocalDate;
+import static com.example.mycalendar.CalendarUtils.stringToLocalDate;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +19,6 @@ import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 

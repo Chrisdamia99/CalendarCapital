@@ -1,4 +1,4 @@
-package com.example.calendarcapital;
+package com.example.mycalendar;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -17,7 +17,7 @@ import java.util.List;
 public class MyDatabaseHelper extends SQLiteOpenHelper {
     private Context context;
 
-    private static final String DATABASE_NAME = "CalendarCapital.db";
+    private static final String DATABASE_NAME = "MyCalendar.db";
     private static final int DATABASE_VERSION = 1;
 
     public static final String TABLE_NAME = "my_events_db";

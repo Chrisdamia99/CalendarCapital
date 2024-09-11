@@ -5,10 +5,10 @@ plugins {
 
 
 android {
-    namespace 'com.example.calendarcapital'
+    namespace 'com.example.mycalendar'
     compileSdk 33
     defaultConfig {
-        applicationId "com.example.calendarcapital"
+        applicationId "com.example.mycalendar"
         minSdk 16
         targetSdk 33
         versionCode 1

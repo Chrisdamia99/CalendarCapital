@@ -1,4 +1,4 @@
-package com.example.calendarcapital;
+package com.example.mycalendar;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;

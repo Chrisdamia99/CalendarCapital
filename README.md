@@ -1,9 +1,9 @@
-# CalendarCapital
+# MyCalendar
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![GitHub stars](https://img.shields.io/github/stars/Chrisdamia99/CalendarCapital.svg)]([https://github.com/YourUsername/YourRepo/stargazers](https://github.com/Chrisdamia99/CalendarCapital/stargazers))
-[![GitHub forks](https://img.shields.io/github/forks/Chrisdamia99/CalendarCapital.svg)]([https://github.com/YourUsername/YourRepo/network](https://github.com/Chrisdamia99/CalendarCapital/forks))
-[![GitHub issues](https://img.shields.io/github/issues/Chrisdamia99/CalendarCapital.svg)]([https://github.com/YourUsername/YourRepo/issues](https://github.com/Chrisdamia99/CalendarCapital/issues))
+[![GitHub stars](https://img.shields.io/github/stars/Chrisdamia99/MyCalendar.svg)]([https://github.com/YourUsername/YourRepo/stargazers](https://github.com/Chrisdamia99/MyCalendar/stargazers))
+[![GitHub forks](https://img.shields.io/github/forks/Chrisdamia99/MyCalendar.svg)]([https://github.com/YourUsername/YourRepo/network](https://github.com/Chrisdamia99/MyCalendar/forks))
+[![GitHub issues](https://img.shields.io/github/issues/Chrisdamia99/MyCalendar.svg)]([https://github.com/YourUsername/YourRepo/issues](https://github.com/Chrisdamia99/MyCalendar/issues))
 
 A simple and effective calendar application that users can schedule their events.
 
@@ -129,7 +129,7 @@ For more details, refer to our [Privacy Policy](PRIVACY_POLICY).
 ## Installation
 
 1. Clone the repository:
-git clone https://github.com/Chrisdamia99/CalendarCapital.git
+git clone https://github.com/Chrisdamia99/MyCalendar.git
 2. Open the project in Android Studio.
 3. Build and run the app on an emulator or a physical device.
 
@@ -139,4 +139,4 @@ git clone https://github.com/Chrisdamia99/CalendarCapital.git
 - Christos Damianidis  
 - Email: chydami@teiemt.gr
 - WebSite: https://christosdamia.000webhostapp.com
-- Project Link: [CalendarCapital](https://github.com/Chrisdamia99/CalendarCapital)
+- Project Link: [MyCalendar](https://github.com/Chrisdamia99/MyCalendar)

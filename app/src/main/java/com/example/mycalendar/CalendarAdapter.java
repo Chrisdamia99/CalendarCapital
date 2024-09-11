@@ -1,4 +1,4 @@
-package com.example.calendarcapital;
+package com.example.mycalendar;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -17,7 +17,6 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 

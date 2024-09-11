@@ -1,4 +1,4 @@
-package com.example.calendarcapital;
+package com.example.mycalendar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;

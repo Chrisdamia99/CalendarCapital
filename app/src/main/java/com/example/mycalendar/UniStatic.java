@@ -1,6 +1,6 @@
-package com.example.calendarcapital;
+package com.example.mycalendar;
 
-import static com.example.calendarcapital.CalendarUtils.stringToLocalDate;
+import static com.example.mycalendar.CalendarUtils.stringToLocalDate;
 import android.database.Cursor;
 import java.time.LocalDate;
 import java.util.ArrayList;
